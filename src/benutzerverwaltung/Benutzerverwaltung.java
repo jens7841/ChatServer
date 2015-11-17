@@ -83,18 +83,13 @@ public class Benutzerverwaltung {
 	}
 
 	public void benutzerRegistrieren(String name, String passwort) throws BenutzerSchonVorhandenException {
-		try {
-			for (User user : benutzer) {
-				if (user.getName().equals(name)) {
-					throw new BenutzerSchonVorhandenException();
-				}
+		for (User user : benutzer) {
+			if (user.getName().equals(name)) {
+				throw new BenutzerSchonVorhandenException();
 			}
-			letzteId++;
-			MessageDigest m = MessageDigest.getInstance("MD5");
-			m.update(passwort.getBytes(), 0, passwort.length());
-			benutzer.add(new User(name, new BigInteger(1, m.digest()).toString(16), letzteId));
-		} catch (NoSuchAlgorithmException e) {
 		}
+		letzteId++;
+		benutzer.add(new User(name, getMD5(passwort), letzteId));
 	}
 
 	public String getMD5(String s) {
