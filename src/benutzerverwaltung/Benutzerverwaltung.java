@@ -1,5 +1,9 @@
 package benutzerverwaltung;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -13,15 +17,17 @@ public class Benutzerverwaltung {
 
 	private ArrayList<User> benutzer;
 	private int letzteId;
+	private String dateiname;
 
-	private Benutzerverwaltung(List<User> benutzer) {
-		this.benutzer = new ArrayList<>();
-
+	public Benutzerverwaltung(String dateiname) {
+		try {
+			this.benutzer = (ArrayList<User>) liesUserDaten();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.dateiname = dateiname;
 		this.benutzer.addAll(benutzer);
-	}
-
-	public Benutzerverwaltung() {
-		this(new ArrayList<>()); // TODO aktuelle user liste aus datei
+		this.dateiname = dateiname;
 	}
 
 	public void schreibeUserDaten(OutputStream out) {
@@ -41,6 +47,39 @@ public class Benutzerverwaltung {
 		writer.flush();
 	}
 
+	private List<User> liesUserDaten() throws IOException {
+		LineNumberReader reader = new LineNumberReader(new FileReader(dateiErstellen()));
+		reader.readLine();
+		List<User> user = new ArrayList<>();
+		String s;
+		while ((s = reader.readLine()) != null) {
+			s.trim();
+			String[] userDaten = s.split(";");
+			user.add(new User(userDaten[1], userDaten[2], Integer.parseInt(userDaten[0])));
+		}
+		reader.close();
+		return user;
+
+	}
+
+	private int liesLetzteId() throws IOException {
+		LineNumberReader reader = new LineNumberReader(new FileReader(dateiErstellen()));
+		String s;
+		if ((s = reader.readLine()) != null) {
+			s.trim();
+			return Integer.parseInt(s);
+		}
+		return 0;
+	}
+
+	private File dateiErstellen() throws IOException {
+		File datei = new File(dateiname);
+		if (!datei.exists()) {
+			datei.createNewFile();
+		}
+		return datei;
+	}
+
 	public void benutzerRegistrieren(String name, String passwort) throws BenutzerSchonVorhandenException {
 		try {
 			for (User user : benutzer) {
@@ -57,7 +96,7 @@ public class Benutzerverwaltung {
 	}
 
 	public static void main(String[] args) throws Throwable {
-		Benutzerverwaltung verw = new Benutzerverwaltung();
+		Benutzerverwaltung verw = new Benutzerverwaltung("users.csv");
 
 		verw.benutzerRegistrieren("test", "test");
 
