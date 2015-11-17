@@ -10,4 +10,8 @@ public class Benutzerverwaltung {
 	public Benutzerverwaltung(List<User> benutzer) {
 
 	}
+
+	public void benutzerRegistrieren(String name, String passwort) {
+		benutzer.add(new User(name, passwort, benutzer.size()));
+	}
 }
