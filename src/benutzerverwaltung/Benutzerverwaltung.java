@@ -13,14 +13,14 @@ public class Benutzerverwaltung {
 	private ArrayList<User> benutzer;
 	private int letzteId;
 
-	public Benutzerverwaltung(List<User> benutzer) {
+	private Benutzerverwaltung(List<User> benutzer) {
 		this.benutzer = new ArrayList<>();
 
 		this.benutzer.addAll(benutzer);
 	}
 
 	public Benutzerverwaltung() {
-		this(new ArrayList<>());
+		this(null); // TODO aktuelle user liste aus datei
 	}
 
 	public void schreibeUserDaten(OutputStream out) {
