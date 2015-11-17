@@ -97,9 +97,13 @@ public class Benutzerverwaltung {
 		}
 	}
 
-	public String getMD5(String s) throws NoSuchAlgorithmException {
-		MessageDigest m = MessageDigest.getInstance("MD5");
-		m.update(s.getBytes(), 0, s.length());
+	public String getMD5(String s) {
+		MessageDigest m = null;
+		try {
+			m = MessageDigest.getInstance("MD5");
+			m.update(s.getBytes(), 0, s.length());
+		} catch (NoSuchAlgorithmException e) {
+		}
 		return new BigInteger(1, m.digest()).toString(16);
 	}
 
@@ -113,7 +117,7 @@ public class Benutzerverwaltung {
 	}
 
 	public void benutzerLogin(String name, String passwort, Socket s) throws UserException {
-		User o = new User(name, passwort, -1);
+		User o = new User(name, getMD5(passwort), -1);
 		if (benutzer.contains(o)) {
 			User u = benutzer.get(benutzer.indexOf(o));
 			u.login(s);
