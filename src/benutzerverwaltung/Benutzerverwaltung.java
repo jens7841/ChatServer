@@ -29,7 +29,6 @@ public class Benutzerverwaltung {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.benutzer.addAll(benutzer);
 	}
 
 	public void schreibeUserDaten(OutputStream out) {
@@ -56,8 +55,10 @@ public class Benutzerverwaltung {
 		String s;
 		while ((s = reader.readLine()) != null) {
 			s.trim();
-			String[] userDaten = s.split(";");
-			user.add(new User(userDaten[1], userDaten[2], Integer.parseInt(userDaten[0])));
+			if (!s.isEmpty()) {
+				String[] userDaten = s.split(";");
+				user.add(new User(userDaten[1], userDaten[2], Integer.parseInt(userDaten[0])));
+			}
 		}
 		reader.close();
 		return user;
@@ -69,8 +70,10 @@ public class Benutzerverwaltung {
 		String s;
 		if ((s = reader.readLine()) != null) {
 			s.trim();
-			reader.close();
-			return Integer.parseInt(s);
+			if (!s.isEmpty()) {
+				reader.close();
+				return Integer.parseInt(s);
+			}
 		}
 		reader.close();
 		return 0;
@@ -93,6 +96,7 @@ public class Benutzerverwaltung {
 			}
 		}
 		letzteId++;
+		System.out.println(benutzer.size());
 		benutzer.add(new User(name, getMD5(passwort), letzteId));
 		schreibeUserDaten(new FileOutputStream(dateiErstellen()));
 
@@ -111,9 +115,10 @@ public class Benutzerverwaltung {
 	public static void main(String[] args) throws Throwable {
 		Benutzerverwaltung verw = new Benutzerverwaltung("users.csv");
 
-		verw.benutzerRegistrieren("test", "test");
-
-		verw.benutzerLogin("test", "test", null);
+		for (int i = 0; i < 20; i++) {
+			System.out.println(verw.letzteId);
+			verw.benutzerRegistrieren("test" + i, "test");
+		}
 
 	}
 
