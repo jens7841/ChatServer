@@ -97,6 +97,12 @@ public class Benutzerverwaltung {
 		}
 	}
 
+	public String getMD5(String s) throws NoSuchAlgorithmException {
+		MessageDigest m = MessageDigest.getInstance("MD5");
+		m.update(s.getBytes(), 0, s.length());
+		return new BigInteger(1, m.digest()).toString(16);
+	}
+
 	public static void main(String[] args) throws Throwable {
 		Benutzerverwaltung verw = new Benutzerverwaltung("users.csv");
 
