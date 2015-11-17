@@ -40,11 +40,18 @@ public class Benutzerverwaltung {
 		writer.flush();
 	}
 
-	public void benutzerRegistrieren(String name, String passwort) throws NoSuchAlgorithmException {
-		letzteId++;
-		MessageDigest m = MessageDigest.getInstance("MD5");
-		m.update(passwort.getBytes(), 0, passwort.length());
-		String verschluesseltesPW = new BigInteger(1, m.digest()).toString(16);
-		benutzer.add(new User(name, verschluesseltesPW, letzteId));
+	public void benutzerRegistrieren(String name, String passwort) throws BenutzerSchonVorhandenException {
+		try {
+			for (User user : benutzer) {
+				if (user.getName().equals(name)) {
+					throw new BenutzerSchonVorhandenException();
+				}
+			}
+			letzteId++;
+			MessageDigest m = MessageDigest.getInstance("MD5");
+			m.update(passwort.getBytes(), 0, passwort.length());
+			benutzer.add(new User(name, new BigInteger(1, m.digest()).toString(16), letzteId));
+		} catch (NoSuchAlgorithmException e) {
+		}
 	}
 }
