@@ -1,6 +1,7 @@
 package server;
 
 import java.net.ServerSocket;
+import java.net.Socket;
 
 import benutzerverwaltung.Benutzerverwaltung;
 
@@ -19,10 +20,11 @@ public class VerbindungsListener {
 	public static int i = 1;
 
 	private void warteAufVerbindung() throws Exception {
-		i++;
-		verw.benutzerRegistrieren("test" + i, "test");
-		verw.benutzerLogin("test" + i, "test", server.accept());
+		Socket s = server.accept();
 
+		s.getOutputStream().write(1);
+
+		s.getOutputStream().write(-1);
 		System.out.println("Warte auf neue verbindung...");
 		warteAufVerbindung();
 
