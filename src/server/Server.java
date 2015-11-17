@@ -6,8 +6,8 @@ public class Server {
 
 	public static void main(String[] args) throws Throwable {
 
-		System.out.println("Starte ChatServer");
+		System.out.println("Start ChatServer");
 
-		new VerbindungsListener(new ServerSocket(12345));
+		new ConnectionListener(new ServerSocket(12345));
 	}
 }
