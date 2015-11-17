@@ -1,5 +1,9 @@
 package benutzerverwaltung;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -40,7 +44,16 @@ public class Benutzerverwaltung {
 		writer.flush();
 	}
 
-	public void benutzerRegistrieren(String name, String passwort) throws BenutzerSchonVorhandenException {
+	public File dateiErstellen() throws IOException {
+		File file = new File("users.csv");
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		return file;
+	}
+
+	public void benutzerRegistrieren(String name, String passwort)
+			throws BenutzerSchonVorhandenException, FileNotFoundException {
 		try {
 			for (User user : benutzer) {
 				if (user.getName().equals(name)) {
@@ -51,6 +64,10 @@ public class Benutzerverwaltung {
 			MessageDigest m = MessageDigest.getInstance("MD5");
 			m.update(passwort.getBytes(), 0, passwort.length());
 			benutzer.add(new User(name, new BigInteger(1, m.digest()).toString(16), letzteId));
+			try {
+				schreibeUserDaten(new FileOutputStream(dateiErstellen()));
+			} catch (IOException e) {
+			}
 		} catch (NoSuchAlgorithmException e) {
 		}
 	}
