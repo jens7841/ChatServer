@@ -16,4 +16,8 @@ public class Benutzerverwaltung {
 	public Benutzerverwaltung() {
 		this(new ArrayList<>());
 	}
+
+	public void benutzerRegistrieren(String name, String passwort) {
+		benutzer.add(new User(name, passwort, benutzer.size()));
+	}
 }
