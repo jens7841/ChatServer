@@ -3,7 +3,9 @@ package benutzerverwaltung;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -42,6 +44,12 @@ public class Benutzerverwaltung {
 		}
 
 		writer.flush();
+	}
+
+	public void liesUserDaten() throws IOException {
+		LineNumberReader reader = new LineNumberReader(new FileReader(dateiErstellen()));
+		int id = Integer.parseInt(reader.readLine().trim());
+
 	}
 
 	public File dateiErstellen() throws IOException {
