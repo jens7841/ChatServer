@@ -3,13 +3,13 @@ package server;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import benutzerverwaltung.Benutzerverwaltung;
+import usermanager.Usermanager;
 
 public class VerbindungsListener {
 
 	ServerSocket server;
 
-	private Benutzerverwaltung verw = new Benutzerverwaltung("users.csv");
+	private Usermanager verw = new Usermanager("users.csv");
 
 	public VerbindungsListener(ServerSocket server) throws Throwable {
 		this.server = server;
