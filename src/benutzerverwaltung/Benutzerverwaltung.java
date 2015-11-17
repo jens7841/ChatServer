@@ -3,6 +3,7 @@ package benutzerverwaltung;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.OutputStream;
@@ -78,7 +79,9 @@ public class Benutzerverwaltung {
 	private File dateiErstellen() throws IOException {
 		File datei = new File(dateiname);
 		if (!datei.exists()) {
-			datei.createNewFile();
+			PrintWriter writer = new PrintWriter(new FileWriter(datei));
+			writer.println(0);
+			writer.close();
 		}
 		return datei;
 	}
