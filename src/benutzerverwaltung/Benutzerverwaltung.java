@@ -1,6 +1,7 @@
 package benutzerverwaltung;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -82,7 +83,7 @@ public class Benutzerverwaltung {
 		return datei;
 	}
 
-	public void benutzerRegistrieren(String name, String passwort) throws BenutzerSchonVorhandenException {
+	public void benutzerRegistrieren(String name, String passwort) throws BenutzerSchonVorhandenException, IOException {
 		for (User user : benutzer) {
 			if (user.getName().equals(name)) {
 				throw new BenutzerSchonVorhandenException();
@@ -90,6 +91,8 @@ public class Benutzerverwaltung {
 		}
 		letzteId++;
 		benutzer.add(new User(name, getMD5(passwort), letzteId));
+		schreibeUserDaten(new FileOutputStream(dateiErstellen()));
+
 	}
 
 	public String getMD5(String s) {
