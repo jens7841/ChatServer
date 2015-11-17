@@ -63,12 +63,13 @@ public class Benutzerverwaltung {
 
 	}
 
-	public static void main(String[] args) throws IOException {
-		Benutzerverwaltung verw = new Benutzerverwaltung("users.csv");
-		verw.liesUserDaten();
-	}
-
-	private int liesLetzteId() {
+	private int liesLetzteId() throws IOException {
+		LineNumberReader reader = new LineNumberReader(new FileReader(dateiErstellen()));
+		String s;
+		if ((s = reader.readLine()) != null) {
+			s.trim();
+			return Integer.parseInt(s);
+		}
 		return 0;
 	}
 

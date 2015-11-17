@@ -3,7 +3,7 @@ package benutzerverwaltung;
 public class Test {
 
 	public static void main(String[] args) throws Exception {
-		Benutzerverwaltung ver = new Benutzerverwaltung();
+		Benutzerverwaltung ver = new Benutzerverwaltung("users.csv");
 		ver.benutzerRegistrieren("Test1", "TestPw1");
 		ver.benutzerRegistrieren("Test2", "TestPw2");
 		ver.benutzerRegistrieren("Test3", "TestPw3");
