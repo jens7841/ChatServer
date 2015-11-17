@@ -20,14 +20,13 @@ public class Benutzerverwaltung {
 	private String dateiname;
 
 	public Benutzerverwaltung(String dateiname) {
+		this.dateiname = dateiname;
 		try {
 			this.benutzer = (ArrayList<User>) liesUserDaten();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.dateiname = dateiname;
 		this.benutzer.addAll(benutzer);
-		this.dateiname = dateiname;
 	}
 
 	public void schreibeUserDaten(OutputStream out) {
