@@ -23,6 +23,7 @@ public class Benutzerverwaltung {
 		this.dateiname = dateiname;
 		try {
 			this.benutzer = (ArrayList<User>) liesUserDaten();
+			this.letzteId = liesLetzteId();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -66,8 +67,10 @@ public class Benutzerverwaltung {
 		String s;
 		if ((s = reader.readLine()) != null) {
 			s.trim();
+			reader.close();
 			return Integer.parseInt(s);
 		}
+		reader.close();
 		return 0;
 	}
 
