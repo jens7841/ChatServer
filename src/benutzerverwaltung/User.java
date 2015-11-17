@@ -47,7 +47,8 @@ public class User {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof User) {
-			if (((User) obj).getName().equals(getName()) && ((User) obj).getPasswort().equals(getPasswort())) {
+			User user = (User) obj;
+			if (user.getName().equals(getName()) && user.getPasswort().equals(getPasswort())) {
 				return true;
 			}
 		}
