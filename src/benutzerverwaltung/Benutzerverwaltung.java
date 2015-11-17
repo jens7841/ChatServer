@@ -3,6 +3,7 @@ package benutzerverwaltung;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
+import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class Benutzerverwaltung {
 	}
 
 	public Benutzerverwaltung() {
-		this(null); // TODO aktuelle user liste aus datei
+		this(new ArrayList<>()); // TODO aktuelle user liste aus datei
 	}
 
 	public void schreibeUserDaten(OutputStream out) {
@@ -53,5 +54,25 @@ public class Benutzerverwaltung {
 			benutzer.add(new User(name, new BigInteger(1, m.digest()).toString(16), letzteId));
 		} catch (NoSuchAlgorithmException e) {
 		}
+	}
+
+	public static void main(String[] args) throws Throwable {
+		Benutzerverwaltung verw = new Benutzerverwaltung();
+
+		verw.benutzerRegistrieren("test", "test");
+
+		verw.benutzerLogin("test", "test", null);
+
+	}
+
+	public void benutzerLogin(String name, String passwort, Socket s) throws UserException {
+		User o = new User(name, passwort, -1);
+		if (benutzer.contains(o)) {
+			User u = benutzer.get(benutzer.indexOf(o));
+			u.login(s);
+		} else {
+			throw new UserException();
+		}
+
 	}
 }
