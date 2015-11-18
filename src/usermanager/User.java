@@ -56,4 +56,8 @@ public class User {
 		}
 		return false;
 	}
+
+	public Socket getSocket() {
+		return socket;
+	}
 }
