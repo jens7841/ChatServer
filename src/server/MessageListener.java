@@ -6,18 +6,23 @@ import java.io.InputStream;
 import java.net.Socket;
 
 import usermanager.User;
+import usermanager.UserAlreadyExistsException;
+import usermanager.UserException;
+import usermanager.Usermanager;
 
 public class MessageListener extends Thread {
-	public static final int CHAT_MESSAGE = 1;
+	public static final int CHAT_MESSAGE = 2;
 	public static final int LOGIN = 3;
-	public static final int END_OF_MESSAGE = 4;
+	public static final int END_OF_MESSAGE = 1;
 
 	private Socket socket;
 	private User user;
+	private Usermanager usermanager;
 
-	public MessageListener(Socket socket) {
+	public MessageListener(Socket socket, Usermanager usermanager) {
 		this.socket = socket;
 		this.start();
+		this.usermanager = usermanager;
 	}
 
 	@Override
@@ -41,7 +46,14 @@ public class MessageListener extends Thread {
 					break;
 				case LOGIN:
 					String[] split = builder.toString().split("\\" + (char) ((byte) 0));
-
+					try {
+						usermanager.userLogin(split[0], split[1], socket);
+					} catch (UserException e) {
+						try {
+							usermanager.userRegistration(split[0], split[1]);
+						} catch (UserAlreadyExistsException e1) {
+						}
+					}
 					break;
 				}
 

@@ -26,7 +26,7 @@ public class Server {
 
 	private void connectionListener() throws IOException {
 		while (running) {
-			new MessageListener(serverSocket.accept());
+			new MessageListener(serverSocket.accept(), usermanager);
 		}
 	}
 

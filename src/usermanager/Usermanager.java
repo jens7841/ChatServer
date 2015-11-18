@@ -130,7 +130,7 @@ public class Usermanager {
 			User u = user.get(user.indexOf(o));
 			u.login(s);
 		} else {
-			throw new UserException();
+			throw new UserException("Username/password wrong or user not registered");
 		}
 
 	}
