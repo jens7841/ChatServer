@@ -41,7 +41,9 @@ public class User {
 	}
 
 	public boolean isOnline() {
-		return socket != null;
+		if (socket != null)
+			return socket.isConnected();
+		return false;
 	}
 
 	@Override
