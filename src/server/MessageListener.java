@@ -11,9 +11,10 @@ import usermanager.UserException;
 import usermanager.Usermanager;
 
 public class MessageListener extends Thread {
+	public static final int END_OF_MESSAGE = 1;
 	public static final int CHAT_MESSAGE = 2;
 	public static final int LOGIN = 3;
-	public static final int END_OF_MESSAGE = 1;
+	public static final int ERROR_MESSAGE = 4; // TODO datentyp draus machen?!
 
 	private Socket socket;
 	private User user;
@@ -52,6 +53,7 @@ public class MessageListener extends Thread {
 						try {
 							usermanager.userRegistration(split[0], split[1]);
 						} catch (UserAlreadyExistsException e1) {
+							// TODO sende passwort falsch
 						}
 					}
 					break;
