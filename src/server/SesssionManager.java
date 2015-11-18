@@ -1,8 +1,22 @@
 package server;
 
-import usermanager.User;
+import java.net.Socket;
 
-public class SesssionManager {
+import usermanager.User;
+import usermanager.Usermanager;
+
+public class SesssionManager implements Runnable {
 	private User user;
+	private Usermanager usermanager;
+	private Socket socket;
+
+	public SesssionManager(Usermanager usermanager) {
+		this.usermanager = usermanager;
+	}
+
+	@Override
+	public void run() {
+
+	}
 
 }
