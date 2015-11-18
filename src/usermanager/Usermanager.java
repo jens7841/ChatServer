@@ -98,7 +98,9 @@ public class Usermanager {
 		lastID++;
 		System.out.println(user.size());
 		user.add(new User(name, getSHA(password), lastID));
-		writeUserData(new FileOutputStream(createFile()));
+		FileOutputStream out = new FileOutputStream(createFile());
+		writeUserData(out);
+		out.close();
 
 	}
 
