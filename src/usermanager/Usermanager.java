@@ -97,15 +97,15 @@ public class Usermanager {
 		}
 		lastID++;
 		System.out.println(user.size());
-		user.add(new User(name, getMD5(password), lastID));
+		user.add(new User(name, getSHA(password), lastID));
 		writeUserData(new FileOutputStream(createFile()));
 
 	}
 
-	public String getMD5(String s) {
+	public String getSHA(String s) {
 		MessageDigest m = null;
 		try {
-			m = MessageDigest.getInstance("MD5");
+			m = MessageDigest.getInstance("SHA-512");
 			m.update(s.getBytes(), 0, s.length());
 		} catch (NoSuchAlgorithmException e) {
 		}
@@ -123,7 +123,7 @@ public class Usermanager {
 	}
 
 	public void userLogin(String name, String password, Socket s) throws UserException {
-		User o = new User(name, getMD5(password), -1);
+		User o = new User(name, getSHA(password), -1);
 		if (user.contains(o)) {
 			User u = user.get(user.indexOf(o));
 			u.login(s);
