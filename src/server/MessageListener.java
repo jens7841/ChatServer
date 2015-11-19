@@ -42,10 +42,12 @@ public class MessageListener extends Thread {
 					if (user != null) {
 						for (User u : userManager.getUserList()) {
 
-							if (u.isOnline())
+							if (u.isOnline()) {
 								new MessageSender(u.getSocket()).sendMessage(user.getName() + ": " + builder.toString(),
 										Messages.CHAT_MESSAGE);
+							}
 						}
+						System.out.println("-> " + user.getName() + ": " + builder.toString());
 
 					} else {
 						new MessageSender(socket).sendMessage("Du bist nicht eingeloggt!", Messages.ERROR_MESSAGE);
@@ -57,11 +59,17 @@ public class MessageListener extends Thread {
 						user = userManager.loginUser(split[0], split[1], socket);
 						new MessageSender(socket).sendMessage("Login erfolgreich!".getBytes(),
 								Messages.SUCCESS_MESSAGE);
+
+						System.out.println("User " + split[0] + " hat sich eingeloggt!");
+
 					} catch (UserException e) {
 						try {
 							userManager.registerUser(split[0], split[1]);
 							new MessageSender(socket).sendMessage("Registrierung erfolgreich!".getBytes(),
 									Messages.SUCCESS_MESSAGE);
+
+							System.out.println("User: " + split[0] + " hat sich soeben registriert!");
+
 						} catch (UserAlreadyExistsException e1) {
 							new MessageSender(socket).sendMessage("Das eingegebene Passwort ist falsch!".getBytes(),
 									Messages.ERROR_MESSAGE);
