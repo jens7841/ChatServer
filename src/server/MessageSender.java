@@ -6,17 +6,12 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import chatshared.Messages;
-import usermanager.User;
 
 public class MessageSender extends Thread {
 
 	private Socket receiver;
 	private int type;
 	private byte[] message;
-
-	public MessageSender(User receiver) {
-		this.receiver = receiver.getSocket();
-	}
 
 	public MessageSender(Socket receiver) {
 		this.receiver = receiver;

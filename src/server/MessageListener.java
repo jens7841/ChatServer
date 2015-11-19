@@ -40,12 +40,17 @@ public class MessageListener extends Thread {
 
 				switch (first) {
 				case Messages.CHAT_MESSAGE:
-					for (User u : usermanager.getUserList()) {
-						if (user != null) {
-							new MessageSender(socket).sendMessage(builder.toString().getBytes(), Messages.CHAT_MESSAGE);
-						} else {
-							new MessageSender(socket).sendMessage(builder.toString().getBytes(), Messages.CHAT_MESSAGE);
+					if (user != null) {
+						for (User u : usermanager.getUserList()) {
+
+							if (u.isOnline())
+								new MessageSender(u.getSocket()).sendMessage(user.getName() + ": " + builder.toString(),
+										Messages.CHAT_MESSAGE);
+							System.out.println(u.getName() + u.isOnline());
 						}
+
+					} else {
+						new MessageSender(socket).sendMessage("Du bist nicht eingeloggt!", Messages.ERROR_MESSAGE);
 					}
 					break;
 				case Messages.LOGIN:
