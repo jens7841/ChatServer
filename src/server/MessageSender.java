@@ -28,6 +28,10 @@ public class MessageSender extends Thread {
 		start();
 	}
 
+	public void sendMessage(String message, int type) {
+		sendMessage(message.getBytes(), type);
+	}
+
 	@Override
 	public void run() {
 		try {
