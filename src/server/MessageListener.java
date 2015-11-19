@@ -40,12 +40,18 @@ public class MessageListener extends Thread {
 
 				switch (first) {
 				case Messages.CHAT_MESSAGE:
-
+					for (User u : usermanager.getUserList()) {
+						if (user != null) {
+							new MessageSender(socket).sendMessage(builder.toString().getBytes(), Messages.CHAT_MESSAGE);
+						} else {
+							new MessageSender(socket).sendMessage(builder.toString().getBytes(), Messages.CHAT_MESSAGE);
+						}
+					}
 					break;
 				case Messages.LOGIN:
 					String[] split = builder.toString().split("\\" + (char) ((byte) Messages.DELIMITER));
 					try {
-						usermanager.userLogin(split[0], split[1], socket);
+						user = usermanager.userLogin(split[0], split[1], socket);
 						new MessageSender(socket).sendMessage("Login erfolgreich!".getBytes(),
 								Messages.SUCCESS_MESSAGE);
 					} catch (UserException e) {
@@ -58,7 +64,7 @@ public class MessageListener extends Thread {
 									Messages.ERROR_MESSAGE);
 						}
 						try {
-							usermanager.userLogin(split[0], split[1], socket);
+							user = usermanager.userLogin(split[0], split[1], socket);
 						} catch (UserException e1) {
 							new MessageSender(socket).sendMessage("Fehler!".getBytes(), Messages.ERROR_MESSAGE);
 						}

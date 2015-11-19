@@ -17,14 +17,14 @@ import java.util.List;
 
 public class Usermanager {
 
-	private ArrayList<User> user;
+	private ArrayList<User> userList;
 	private int lastID;
 	private String filename;
 
 	public Usermanager(String filename) {
 		this.filename = filename;
 		try {
-			this.user = (ArrayList<User>) readUserData();
+			this.userList = (ArrayList<User>) readUserData();
 			this.lastID = readLastID();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -35,7 +35,7 @@ public class Usermanager {
 		PrintWriter writer = new PrintWriter(out);
 		writer.println(lastID);
 
-		for (User user : user) {
+		for (User user : userList) {
 			StringBuilder builder = new StringBuilder();
 			builder.append(user.getID());
 			builder.append(';');
@@ -90,22 +90,22 @@ public class Usermanager {
 	}
 
 	public void userRegistration(String name, String password) throws UserAlreadyExistsException, IOException {
-		for (User user : user) {
+		for (User user : userList) {
 			if (user.getName().equals(name)) {
 				throw new UserAlreadyExistsException();
 			}
 		}
 		lastID++;
-		System.out.println(user.size());
-		user.add(new User(name, getSHA(password), lastID));
+		System.out.println(userList.size());
+		userList.add(new User(name, getSHA(password), lastID));
 		FileOutputStream out = new FileOutputStream(createFile());
 		writeUserData(out);
 		out.close();
 
 	}
 
-	public ArrayList<User> getUser() {
-		return user;
+	public ArrayList<User> getUserList() {
+		return userList;
 	}
 
 	public String getSHA(String s) {
@@ -128,14 +128,14 @@ public class Usermanager {
 
 	}
 
-	public void userLogin(String name, String password, Socket s) throws UserException {
+	public User userLogin(String name, String password, Socket s) throws UserException {
 		User o = new User(name, getSHA(password), -1);
-		if (user.contains(o)) {
-			User u = user.get(user.indexOf(o));
+		if (userList.contains(o)) {
+			User u = userList.get(userList.indexOf(o));
 			u.login(s);
+			return u;
 		} else {
 			throw new UserException("Username/password wrong or user not registered");
 		}
-
 	}
 }
