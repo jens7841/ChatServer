@@ -9,18 +9,17 @@ import chatshared.Messages;
 import usermanager.User;
 import usermanager.UserAlreadyExistsException;
 import usermanager.UserException;
-import usermanager.Usermanager;
+import usermanager.UserManager;
 
 public class MessageListener extends Thread {
 
 	private Socket socket;
 	private User user;
-	private Usermanager usermanager;
+	private UserManager userManager;
 
-	public MessageListener(Socket socket, Usermanager usermanager) {
+	public MessageListener(Socket socket, UserManager usermanager) {
 		this.socket = socket;
-		this.usermanager = usermanager;
-		this.start();
+		this.userManager = usermanager;
 	}
 
 	@Override
@@ -41,7 +40,7 @@ public class MessageListener extends Thread {
 				switch (first) {
 				case Messages.CHAT_MESSAGE:
 					if (user != null) {
-						for (User u : usermanager.getUserList()) {
+						for (User u : userManager.getUserList()) {
 
 							if (u.isOnline())
 								new MessageSender(u.getSocket()).sendMessage(user.getName() + ": " + builder.toString(),
@@ -56,12 +55,12 @@ public class MessageListener extends Thread {
 				case Messages.LOGIN:
 					String[] split = builder.toString().split("\\" + (char) ((byte) Messages.DELIMITER));
 					try {
-						user = usermanager.userLogin(split[0], split[1], socket);
+						user = userManager.loginUser(split[0], split[1], socket);
 						new MessageSender(socket).sendMessage("Login erfolgreich!".getBytes(),
 								Messages.SUCCESS_MESSAGE);
 					} catch (UserException e) {
 						try {
-							usermanager.userRegistration(split[0], split[1]);
+							userManager.registerUser(split[0], split[1]);
 							new MessageSender(socket).sendMessage("Registrierung erfolgreich!".getBytes(),
 									Messages.SUCCESS_MESSAGE);
 						} catch (UserAlreadyExistsException e1) {
@@ -69,7 +68,7 @@ public class MessageListener extends Thread {
 									Messages.ERROR_MESSAGE);
 						}
 						try {
-							user = usermanager.userLogin(split[0], split[1], socket);
+							user = userManager.loginUser(split[0], split[1], socket);
 						} catch (UserException e1) {
 							new MessageSender(socket).sendMessage("Fehler!".getBytes(), Messages.ERROR_MESSAGE);
 						}

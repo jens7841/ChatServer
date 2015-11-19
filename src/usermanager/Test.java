@@ -3,10 +3,10 @@ package usermanager;
 public class Test {
 
 	public static void main(String[] args) throws Exception {
-		Usermanager mgr = new Usermanager("users.csv");
-		mgr.userRegistration("Test1", "TestPw1");
+		UserManager mgr = new UserManager("users.csv");
+		mgr.registerUser("Test1", "TestPw1");
 
-		mgr.userLogin("Test1", "TestPw1", null);
+		mgr.loginUser("Test1", "TestPw1", null);
 
 	}
 }

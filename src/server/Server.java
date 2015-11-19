@@ -3,12 +3,11 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import usermanager.Usermanager;
+import usermanager.UserManager;
 
 public class Server {
 
-	private Usermanager usermanager;
-	// private ArrayList<Räume> räume
+	private UserManager userManager;
 	private ServerSocket serverSocket;
 	private boolean running;
 	private int port;
@@ -16,7 +15,7 @@ public class Server {
 	public Server(int port, String usersFileName) {
 		this.port = port;
 		this.running = true;
-		usermanager = new Usermanager(usersFileName);
+		userManager = new UserManager(usersFileName);
 	}
 
 	public void startServer() throws IOException {
@@ -26,7 +25,7 @@ public class Server {
 
 	private void connectionListener() throws IOException {
 		while (running) {
-			new MessageListener(serverSocket.accept(), usermanager);
+			new MessageListener(serverSocket.accept(), userManager).start();
 		}
 	}
 

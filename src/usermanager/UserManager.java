@@ -15,16 +15,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Usermanager {
+public class UserManager {
 
-	private ArrayList<User> userList;
+	private List<User> userList;
 	private int lastID;
 	private String filename;
 
-	public Usermanager(String filename) {
+	public UserManager(String filename) {
 		this.filename = filename;
 		try {
-			this.userList = (ArrayList<User>) readUserData();
+			this.userList = readUserData();
 			this.lastID = readLastID();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -49,14 +49,13 @@ public class Usermanager {
 	}
 
 	private List<User> readUserData() throws IOException {
-		LineNumberReader reader = new LineNumberReader(new FileReader(createFile()));
+		LineNumberReader reader = new LineNumberReader(new FileReader(createEmtpyUserFile()));
 		reader.readLine();
 		List<User> user = new ArrayList<>();
 		String s;
 		while ((s = reader.readLine()) != null) {
-			s.trim();
 			if (!s.isEmpty()) {
-				String[] userData = s.split(";");
+				String[] userData = s.split(";"); // TODO überprüfen ob 3
 				user.add(new User(userData[1], userData[2], Integer.parseInt(userData[0])));
 			}
 		}
@@ -66,7 +65,7 @@ public class Usermanager {
 	}
 
 	private int readLastID() throws IOException {
-		LineNumberReader reader = new LineNumberReader(new FileReader(createFile()));
+		LineNumberReader reader = new LineNumberReader(new FileReader(createEmtpyUserFile()));
 		String s;
 		if ((s = reader.readLine()) != null) {
 			s.trim();
@@ -79,7 +78,7 @@ public class Usermanager {
 		return 0;
 	}
 
-	private File createFile() throws IOException {
+	private File createEmtpyUserFile() throws IOException {
 		File file = new File(filename);
 		if (!file.exists()) {
 			PrintWriter writer = new PrintWriter(new FileWriter(file));
@@ -89,7 +88,7 @@ public class Usermanager {
 		return file;
 	}
 
-	public void userRegistration(String name, String password) throws UserAlreadyExistsException, IOException {
+	public void registerUser(String name, String password) throws UserAlreadyExistsException, IOException {
 		for (User user : userList) {
 			if (user.getName().equals(name)) {
 				throw new UserAlreadyExistsException();
@@ -98,13 +97,25 @@ public class Usermanager {
 		lastID++;
 		System.out.println(userList.size());
 		userList.add(new User(name, getSHA(password), lastID));
-		FileOutputStream out = new FileOutputStream(createFile());
+		FileOutputStream out = new FileOutputStream(createEmtpyUserFile());
 		writeUserData(out);
 		out.close();
 
 	}
 
-	public ArrayList<User> getUserList() {
+	// TODO evtl user übergeben
+	public User loginUser(String name, String password, Socket s) throws UserException {
+		User o = new User(name, getSHA(password), -1);
+		if (userList.contains(o)) {
+			User u = userList.get(userList.indexOf(o));
+			u.setSocket(s);
+			return u;
+		} else {
+			throw new UserException("Username/password wrong or user not registered");
+		}
+	}
+
+	public List<User> getUserList() {
 		return userList;
 	}
 
@@ -114,28 +125,9 @@ public class Usermanager {
 			m = MessageDigest.getInstance("SHA-512");
 			m.update(s.getBytes(), 0, s.length());
 		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
 		}
 		return new BigInteger(1, m.digest()).toString(16);
 	}
 
-	public static void main(String[] args) throws Throwable {
-		Usermanager mgr = new Usermanager("users.csv");
-
-		for (int i = 0; i < 20; i++) {
-			System.out.println(mgr.lastID);
-			mgr.userRegistration("test" + i, "test");
-		}
-
-	}
-
-	public User userLogin(String name, String password, Socket s) throws UserException {
-		User o = new User(name, getSHA(password), -1);
-		if (userList.contains(o)) {
-			User u = userList.get(userList.indexOf(o));
-			u.login(s);
-			return u;
-		} else {
-			throw new UserException("Username/password wrong or user not registered");
-		}
-	}
 }

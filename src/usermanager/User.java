@@ -28,7 +28,11 @@ public class User {
 		return id;
 	}
 
-	public void login(Socket s) {
+	public Socket getSocket() {
+		return socket;
+	}
+
+	public void setSocket(Socket s) {
 		this.socket = s;
 	}
 
@@ -44,10 +48,6 @@ public class User {
 		if (socket != null)
 			return !socket.isClosed();
 		return false;
-	}
-
-	public Socket getSocket() {
-		return socket;
 	}
 
 	@Override
