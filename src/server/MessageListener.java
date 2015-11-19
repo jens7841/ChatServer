@@ -45,7 +45,6 @@ public class MessageListener extends Thread {
 							if (u.isOnline())
 								new MessageSender(u.getSocket()).sendMessage(user.getName() + ": " + builder.toString(),
 										Messages.CHAT_MESSAGE);
-							System.out.println(u.getName() + u.isOnline());
 						}
 
 					} else {
