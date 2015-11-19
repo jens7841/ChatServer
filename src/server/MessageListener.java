@@ -16,6 +16,7 @@ public class MessageListener extends Thread {
 	public static final int CHAT_MESSAGE = 2;
 	public static final int LOGIN = 3;
 	public static final int ERROR_MESSAGE = 4;
+	public static final int SUCCESS_MESSAGE = 5;
 
 	private Socket socket;
 	private User user;
@@ -50,9 +51,13 @@ public class MessageListener extends Thread {
 					String[] split = builder.toString().split("\\" + (char) ((byte) DELIMITER));
 					try {
 						usermanager.userLogin(split[0], split[1], socket);
+						new MessageSender(socket).sendMessage("Login erfolgreich!".getBytes(),
+								MessageListener.SUCCESS_MESSAGE);
 					} catch (UserException e) {
 						try {
 							usermanager.userRegistration(split[0], split[1]);
+							new MessageSender(socket).sendMessage("Registrierung erfolgreich!".getBytes(),
+									MessageListener.SUCCESS_MESSAGE);
 						} catch (UserAlreadyExistsException e1) {
 							new MessageSender(socket).sendMessage("Das eingegebene Passwort ist falsch!".getBytes(),
 									MessageListener.ERROR_MESSAGE);
