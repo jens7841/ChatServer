@@ -2,7 +2,7 @@ package server;
 
 import java.io.IOException;
 
-public class Test {
+public class TestServer {
 
 	public static void main(String[] args) {
 		System.out.println("Server");
