@@ -46,6 +46,10 @@ public class User {
 		return false;
 	}
 
+	public Socket getSocket() {
+		return socket;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof User) {
@@ -55,9 +59,5 @@ public class User {
 			}
 		}
 		return false;
-	}
-
-	public Socket getSocket() {
-		return socket;
 	}
 }

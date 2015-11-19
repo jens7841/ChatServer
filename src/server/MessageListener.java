@@ -54,6 +54,10 @@ public class MessageListener extends Thread {
 							usermanager.userRegistration(split[0], split[1]);
 						} catch (UserAlreadyExistsException e1) {
 							// TODO sende passwort falsch
+
+							new MessageSender(socket).sendMessage("Das eingegebene Passwort ist falsch!".getBytes(),
+									MessageListener.ERROR_MESSAGE);
+
 						}
 					}
 					break;
