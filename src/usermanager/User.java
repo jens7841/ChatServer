@@ -41,8 +41,8 @@ public class User {
 	}
 
 	public boolean isOnline() {
-		if (socket != null)
-			return socket.isConnected();
+		if (getSocket() != null)
+			return !getSocket().isConnected();
 		return false;
 	}
 

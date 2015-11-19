@@ -8,7 +8,7 @@ public class Test {
 		System.out.println("Server");
 		Server s = new Server(12345, "users.csv");
 		try {
-			s.start();
+			s.startServer();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

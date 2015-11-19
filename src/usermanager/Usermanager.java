@@ -104,6 +104,10 @@ public class Usermanager {
 
 	}
 
+	public ArrayList<User> getUser() {
+		return user;
+	}
+
 	public String getSHA(String s) {
 		MessageDigest m = null;
 		try {

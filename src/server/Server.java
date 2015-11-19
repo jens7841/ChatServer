@@ -19,7 +19,7 @@ public class Server {
 		usermanager = new Usermanager(usersFileName);
 	}
 
-	public void start() throws IOException {
+	public void startServer() throws IOException {
 		serverSocket = new ServerSocket(port);
 		connectionListener();
 	}
