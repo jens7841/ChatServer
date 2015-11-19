@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import chatshared.Messages;
 import usermanager.User;
 
 public class MessageSender extends Thread {
@@ -33,7 +34,7 @@ public class MessageSender extends Thread {
 			OutputStream out = new BufferedOutputStream(receiver.getOutputStream());
 			out.write(type);
 			out.write(message);
-			out.write(MessageListener.END_OF_MESSAGE);
+			out.write(Messages.END_OF_MESSAGE);
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
