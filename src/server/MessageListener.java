@@ -29,7 +29,7 @@ public class MessageListener extends Thread {
 
 			try {
 				InputStream in = new BufferedInputStream(socket.getInputStream());
-				int first = in.read();
+				int messageType = in.read();
 
 				StringBuilder builder = new StringBuilder();
 				int read;
@@ -37,7 +37,7 @@ public class MessageListener extends Thread {
 					builder.append((char) read);
 				}
 
-				switch (first) {
+				switch (messageType) {
 				case Messages.CHAT_MESSAGE:
 					if (user != null) {
 						for (User u : userManager.getUserList()) {
