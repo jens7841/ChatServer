@@ -55,8 +55,10 @@ public class UserManager {
 		String s;
 		while ((s = reader.readLine()) != null) {
 			if (!s.isEmpty()) {
-				String[] userData = s.split(";"); // TODO überprüfen ob 3
-				user.add(new User(userData[1], userData[2], Integer.parseInt(userData[0])));
+				String[] userData = s.split(";");
+				if (userData.length == 3) {
+					user.add(new User(userData[1], userData[2], Integer.parseInt(userData[0])));
+				}
 			}
 		}
 		reader.close();
@@ -103,7 +105,6 @@ public class UserManager {
 
 	}
 
-	// TODO evtl user übergeben
 	public User loginUser(String name, String password, Socket s) throws UserException {
 		User o = new User(name, getSHA(password), -1);
 		if (userList.contains(o)) {
