@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 
 import usermanager.UserManager;
 
-public class Server {
+public class Server extends Thread {
 
 	private UserManager userManager;
 	private ServerSocket serverSocket;
@@ -14,18 +14,27 @@ public class Server {
 
 	public Server(int port, String usersFileName) {
 		this.port = port;
-		this.running = true;
 		userManager = new UserManager(usersFileName);
 	}
 
 	public void startServer() throws IOException {
 		serverSocket = new ServerSocket(port);
-		connectionListener();
+		this.running = true;
+		this.start();
 	}
 
 	private void connectionListener() throws IOException {
 		while (running) {
 			new MessageListener(serverSocket.accept(), userManager).start();
+		}
+	}
+
+	@Override
+	public void run() {
+		try {
+			connectionListener();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
