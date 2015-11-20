@@ -57,27 +57,26 @@ public class MessageListener extends Thread {
 					String[] split = builder.toString().split("\\" + (char) ((byte) Messages.DELIMITER));
 					try {
 						user = userManager.loginUser(split[0], split[1], socket);
-						new MessageSender(socket).sendMessage("Login erfolgreich!".getBytes(),
-								Messages.SUCCESS_MESSAGE);
+						new MessageSender(socket).sendMessage("Login Erfolgreich",Messages.LOGIN_SUCCESS_MESSAGE);
 
 						System.out.println("User " + split[0] + " hat sich eingeloggt!");
 
 					} catch (UserException e) {
 						try {
 							userManager.registerUser(split[0], split[1]);
-							new MessageSender(socket).sendMessage("Registrierung erfolgreich!".getBytes(),
-									Messages.SUCCESS_MESSAGE);
+							new MessageSender(socket).sendMessage("Registrierung erfolgreich!", Messages.SUCCESS_MESSAGE);
 
 							System.out.println("User: " + split[0] + " hat sich soeben registriert!");
 
 						} catch (UserAlreadyExistsException e1) {
-							new MessageSender(socket).sendMessage("Das eingegebene Passwort ist falsch!".getBytes(),
-									Messages.ERROR_MESSAGE);
+							new MessageSender(socket).sendMessage("Das eingegebene Passwort ist falsch!",
+									Messages.LOGIN_ERROR_MESSAGE);
 						}
 						try {
 							user = userManager.loginUser(split[0], split[1], socket);
 						} catch (UserException e1) {
-							new MessageSender(socket).sendMessage("Fehler!".getBytes(), Messages.ERROR_MESSAGE);
+							new MessageSender(socket).sendMessage("Fehler beim einloggen nach dem Registrieren!",
+									Messages.ERROR_MESSAGE);
 						}
 					}
 					break;

@@ -18,7 +18,9 @@ public class MessageSender extends Thread {
 	}
 
 	public void sendMessage(byte[] message, int type) {
-		this.message = message;
+		if (message.length != 0) {
+			this.message = message;
+		}
 		this.type = type;
 		start();
 	}
@@ -32,7 +34,9 @@ public class MessageSender extends Thread {
 		try {
 			OutputStream out = new BufferedOutputStream(receiver.getOutputStream());
 			out.write(type);
-			out.write(message);
+			if (message != null) {
+				out.write(message);
+			}
 			out.write(Messages.END_OF_MESSAGE);
 			out.flush();
 		} catch (IOException e) {
@@ -40,4 +44,5 @@ public class MessageSender extends Thread {
 		}
 
 	}
+
 }
