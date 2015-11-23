@@ -107,7 +107,7 @@ public class UserManager {
 
 	public User loginUser(String name, String password, Socket s) throws UserException {
 		User o = new User(name, getSHA(password), -1);
-		if (userList.contains(o)) {
+		if (userList.contains(o) && !o.isOnline()) {
 			User u = userList.get(userList.indexOf(o));
 			u.setSocket(s);
 			return u;
