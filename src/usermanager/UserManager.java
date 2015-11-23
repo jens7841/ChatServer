@@ -102,6 +102,7 @@ public class UserManager {
 		FileOutputStream out = new FileOutputStream(createEmtpyUserFile());
 		writeUserData(out);
 		out.close();
+		System.out.println("User " + name + " hat sich soeben registriert!");
 
 	}
 
@@ -111,6 +112,7 @@ public class UserManager {
 		if (userList.contains(o)) {
 			if (!(u = userList.get(userList.indexOf(o))).isOnline()) {
 				u.setSocket(s);
+				System.out.println("User: " + name + " hat sich eingeloggt!");
 				return u;
 			} else {
 				throw new UserAlreadyLoggedInException();

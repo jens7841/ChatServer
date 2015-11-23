@@ -63,13 +63,11 @@ public class MessageListener extends Thread {
 							user = userManager.loginUser(split[0], split[1], socket);
 							new MessageSender(socket).sendMessage("Login Erfolgreich", Messages.LOGIN_SUCCESS_MESSAGE);
 
-							System.out.println("User " + split[0] + " hat sich eingeloggt!");
 						}
 
 					} catch (UserAlreadyLoggedInException e1) {
 						new MessageSender(socket).sendMessage("User ist bereits eingeloggt!",
 								Messages.LOGIN_ERROR_MESSAGE);
-						System.out.println("User " + split[0] + " hat sich eingeloggt!");
 
 					} catch (UserException e) {
 						try {
@@ -77,13 +75,10 @@ public class MessageListener extends Thread {
 							new MessageSender(socket).sendMessage("Registrierung erfolgreich!",
 									Messages.SUCCESS_MESSAGE);
 
-							System.out.println("User: " + split[0] + " hat sich soeben registriert!");
-
 							try {
 								user = userManager.loginUser(split[0], split[1], socket);
 								new MessageSender(socket).sendMessage("Login Erfolgreich",
 										Messages.LOGIN_SUCCESS_MESSAGE);
-								System.out.println("User: " + split[0] + " hat sich soeben eingeloggt!");
 							} catch (UserException e1) {
 								new MessageSender(socket).sendMessage("Fehler beim einloggen nach dem Registrieren!",
 										Messages.ERROR_MESSAGE);
@@ -99,7 +94,7 @@ public class MessageListener extends Thread {
 
 			} catch (IOException e) {
 				try {
-					socket.close();
+					user.logout();
 				} catch (IOException e1) {
 				}
 			}

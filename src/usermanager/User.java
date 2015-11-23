@@ -42,6 +42,7 @@ public class User {
 		} finally {
 			socket = null;
 		}
+		System.out.println("User: " + this.getName() + " hat sich ausgeloggt!");
 	}
 
 	public boolean isOnline() {
