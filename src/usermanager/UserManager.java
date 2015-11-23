@@ -105,7 +105,7 @@ public class UserManager {
 
 	}
 
-	public User loginUser(String name, String password, Socket s) throws UserException, UserAlreadyLoggedInException {
+	public User loginUser(String name, String password, Socket s) throws UserException {
 		User o = new User(name, getSHA(password), -1);
 		User u;
 		if (userList.contains(o)) {

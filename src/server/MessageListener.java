@@ -57,14 +57,20 @@ public class MessageListener extends Thread {
 				case Messages.LOGIN:
 					String[] split = builder.toString().split("\\" + (char) ((byte) Messages.DELIMITER));
 					try {
-						user = userManager.loginUser(split[0], split[1], socket);
-						new MessageSender(socket).sendMessage("Login Erfolgreich", Messages.LOGIN_SUCCESS_MESSAGE);
+						if (split.length < 2) {
+							new MessageSender(socket).sendMessage("LoginMessageFehler", Messages.LOGIN_ERROR_MESSAGE);
+						} else {
+							user = userManager.loginUser(split[0], split[1], socket);
+							new MessageSender(socket).sendMessage("Login Erfolgreich", Messages.LOGIN_SUCCESS_MESSAGE);
 
-						System.out.println("User " + split[0] + " hat sich eingeloggt!");
+							System.out.println("User " + split[0] + " hat sich eingeloggt!");
+						}
 
 					} catch (UserAlreadyLoggedInException e1) {
 						new MessageSender(socket).sendMessage("User ist bereits eingeloggt!",
 								Messages.LOGIN_ERROR_MESSAGE);
+						System.out.println("User " + split[0] + " hat sich eingeloggt!");
+
 					} catch (UserException e) {
 						try {
 							userManager.registerUser(split[0], split[1]);
