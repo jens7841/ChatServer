@@ -105,12 +105,16 @@ public class UserManager {
 
 	}
 
-	public User loginUser(String name, String password, Socket s) throws UserException {
+	public User loginUser(String name, String password, Socket s) throws UserException, UserAlreadyLoggedInException {
 		User o = new User(name, getSHA(password), -1);
 		User u;
-		if (userList.contains(o) && !(u = userList.get(userList.indexOf(o))).isOnline()) {
-			u.setSocket(s);
-			return u;
+		if (userList.contains(o)) {
+			if (!(u = userList.get(userList.indexOf(o))).isOnline()) {
+				u.setSocket(s);
+				return u;
+			} else {
+				throw new UserAlreadyLoggedInException();
+			}
 		} else {
 			throw new UserException("Username/password wrong or user not registered");
 		}

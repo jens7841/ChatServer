@@ -8,6 +8,7 @@ import java.net.Socket;
 import chatshared.Messages;
 import usermanager.User;
 import usermanager.UserAlreadyExistsException;
+import usermanager.UserAlreadyLoggedInException;
 import usermanager.UserException;
 import usermanager.UserManager;
 
@@ -61,6 +62,9 @@ public class MessageListener extends Thread {
 
 						System.out.println("User " + split[0] + " hat sich eingeloggt!");
 
+					} catch (UserAlreadyLoggedInException e1) {
+						new MessageSender(socket).sendMessage("User ist bereits eingeloggt!",
+								Messages.LOGIN_ERROR_MESSAGE);
 					} catch (UserException e) {
 						try {
 							userManager.registerUser(split[0], split[1]);
