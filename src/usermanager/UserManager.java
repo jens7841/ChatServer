@@ -97,7 +97,6 @@ public class UserManager {
 			}
 		}
 		lastID++;
-		System.out.println(userList.size());
 		userList.add(new User(name, getSHA(password), lastID));
 		FileOutputStream out = new FileOutputStream(createEmtpyUserFile());
 		writeUserData(out);
