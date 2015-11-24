@@ -18,6 +18,9 @@ public class Server extends Thread {
 	public Server(int port, String usersFileName) {
 		this.port = port;
 		userManager = new UserManager(usersFileName);
+		commandHandler = new CommandHandler();
+		fileManager = new FileManager(userManager);
+		initializeCommands();
 	}
 
 	public void startServer() throws IOException {
@@ -28,7 +31,7 @@ public class Server extends Thread {
 
 	private void connectionListener() throws IOException {
 		while (running) {
-			new MessageListener(serverSocket.accept(), userManager, fileManager).start();
+			new MessageListener(serverSocket.accept(), userManager, fileManager, commandHandler).start();
 		}
 	}
 

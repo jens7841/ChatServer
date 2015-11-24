@@ -18,11 +18,14 @@ public class MessageListener extends Thread {
 	private User user;
 	private UserManager userManager;
 	private FileManager fileManager;
+	private CommandHandler commandHandler;
 
-	public MessageListener(Socket socket, UserManager usermanager, FileManager fileManager) {
+	public MessageListener(Socket socket, UserManager usermanager, FileManager fileManager,
+			CommandHandler commandHandler) {
 		this.fileManager = fileManager;
 		this.socket = socket;
 		this.userManager = usermanager;
+		this.commandHandler = commandHandler;
 	}
 
 	@Override
@@ -46,7 +49,7 @@ public class MessageListener extends Thread {
 					if (user != null) {
 
 						if (builder.charAt(0) == '/') {
-							CommandHandler.handleCommand(user, builder.toString());
+							commandHandler.handleCommand(user, builder.toString().substring(1));
 						}
 
 						for (User u : userManager.getUserList()) {

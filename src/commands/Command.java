@@ -1,5 +1,7 @@
 package commands;
 
+import usermanager.User;
+
 public abstract class Command {
 	protected String command;
 	protected String[] aliases;
@@ -10,9 +12,16 @@ public abstract class Command {
 	}
 
 	public boolean contains(String command) {
+		if (command.equalsIgnoreCase(this.command)) {
+			return true;
+		}
+		for (String alias : aliases) {
+			if (command.equalsIgnoreCase(alias)) {
+				return true;
+			}
+		}
 		return false;
-
 	}
 
-	public abstract void execute();
+	public abstract void execute(User user);
 }

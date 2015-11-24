@@ -14,7 +14,11 @@ public class CommandHandler {
 		commands.add(command);
 	}
 
-	public static void handleCommand(User user, String command) {
-
+	public void handleCommand(User user, String commandString) {
+		for (Command command : commands) {
+			if (command.contains(commandString)) {
+				command.execute(user);
+			}
+		}
 	}
 }
