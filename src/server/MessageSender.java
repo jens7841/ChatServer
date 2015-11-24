@@ -40,7 +40,6 @@ public class MessageSender extends Thread {
 			out.write(Messages.END_OF_MESSAGE);
 			out.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 
 	}

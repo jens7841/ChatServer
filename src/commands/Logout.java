@@ -1,7 +1,7 @@
 package commands;
 
-import java.io.IOException;
-
+import chatshared.Messages;
+import server.MessageSender;
 import usermanager.User;
 
 public class Logout extends Command {
@@ -12,12 +12,7 @@ public class Logout extends Command {
 
 	@Override
 	public void execute(User user) {
-		try {
-			System.out.println("hi");
-			user.logout();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		new MessageSender(user.getSocket()).sendMessage("Disconnected!", Messages.DISCONNECT);
 	}
 
 }

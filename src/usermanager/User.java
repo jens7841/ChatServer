@@ -37,12 +37,12 @@ public class User {
 	}
 
 	public void logout() throws IOException {
+		System.out.println("User: " + this.getName() + " hat sich ausgeloggt!");
 		try {
 			socket.close();
 		} finally {
 			socket = null;
 		}
-		System.out.println("User: " + this.getName() + " hat sich ausgeloggt!");
 	}
 
 	public boolean isOnline() {
