@@ -8,6 +8,7 @@ import usermanager.UserManager;
 public class Server extends Thread {
 
 	private UserManager userManager;
+	private FileManager fileManager;
 	private ServerSocket serverSocket;
 	private boolean running;
 	private int port;
@@ -25,7 +26,7 @@ public class Server extends Thread {
 
 	private void connectionListener() throws IOException {
 		while (running) {
-			new MessageListener(serverSocket.accept(), userManager).start();
+			new MessageListener(serverSocket.accept(), userManager, fileManager).start();
 		}
 	}
 

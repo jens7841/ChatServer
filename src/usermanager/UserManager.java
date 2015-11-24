@@ -127,6 +127,14 @@ public class UserManager {
 		}
 	}
 
+	public User getUser(String name) {
+		for (User user : userList) {
+			if (user.getName().equals(name))
+				return user;
+		}
+		return null;
+	}
+
 	public List<User> getUserList() {
 		return userList;
 	}

@@ -17,8 +17,10 @@ public class MessageListener extends Thread {
 	private Socket socket;
 	private User user;
 	private UserManager userManager;
+	private FileManager fileManager;
 
-	public MessageListener(Socket socket, UserManager usermanager) {
+	public MessageListener(Socket socket, UserManager usermanager, FileManager fileManager) {
+		this.fileManager = fileManager;
 		this.socket = socket;
 		this.userManager = usermanager;
 	}
