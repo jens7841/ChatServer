@@ -50,7 +50,7 @@ public class MessageListener extends Thread {
 				case Messages.CHAT_MESSAGE:
 					if (user != null) {
 
-						if (builder.charAt(0) == '/' && !builder.toString().isEmpty()) {
+						if (builder.charAt(0) == '/') {
 							commandHandler.handleCommand(user, builder.toString().substring(1));
 							continue;
 						}
