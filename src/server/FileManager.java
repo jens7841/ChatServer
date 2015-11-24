@@ -1,10 +1,14 @@
 package server;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +39,36 @@ public class FileManager {
 			PrintWriter writer = new PrintWriter(new FileWriter(file));
 			writer.println(0);
 			writer.close();
+			System.out.println("hi");
 		}
 		return file;
+	}
+
+	public void writeUserData(OutputStream out) {
+		PrintWriter writer = new PrintWriter(out);
+		writer.println(lastID);
+
+		for (UploadedFile file : files) {
+			StringBuilder builder = new StringBuilder();
+			builder.append(file.getId());
+			builder.append(';');
+			builder.append(file.getFile().toPath().toString());
+			builder.append(';');
+			builder.append(file.getFrom().getName());
+			writer.println(builder.toString());
+		}
+
+		writer.flush();
+	}
+
+	public void addFile(UploadedFile file) {
+		lastID++;
+		files.add(file);
+		try {
+			writeUserData(new BufferedOutputStream(new FileOutputStream(new File(filename))));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public UploadedFile getFile(int id) {
@@ -46,7 +78,6 @@ public class FileManager {
 				return file;
 			}
 		}
-
 		return null;
 	}
 
