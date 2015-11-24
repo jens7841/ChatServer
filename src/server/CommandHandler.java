@@ -1,18 +1,20 @@
 package server;
 
-import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
+import commands.Command;
 import usermanager.User;
 
 public class CommandHandler {
 
-	public static void handleCommand(Socket socket, User user, String command) {
+	private List<Command> commands = new ArrayList<Command>();
 
-		switch (command) {
+	public void addCommand(Command command) {
+		commands.add(command);
+	}
 
-		case ("/logout"):
-
-		}
+	public static void handleCommand(User user, String command) {
 
 	}
 }

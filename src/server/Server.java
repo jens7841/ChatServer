@@ -3,12 +3,14 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+import commands.Logout;
 import usermanager.UserManager;
 
 public class Server extends Thread {
 
 	private UserManager userManager;
 	private FileManager fileManager;
+	private CommandHandler commandHandler;
 	private ServerSocket serverSocket;
 	private boolean running;
 	private int port;
@@ -28,6 +30,11 @@ public class Server extends Thread {
 		while (running) {
 			new MessageListener(serverSocket.accept(), userManager, fileManager).start();
 		}
+	}
+
+	private void initializeCommands() {
+		commandHandler.addCommand(new Logout("logout", "quit", "exit"));
+
 	}
 
 	@Override
