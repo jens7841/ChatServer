@@ -36,10 +36,12 @@ public class MessageListener extends Thread {
 			try {
 				InputStream in = new BufferedInputStream(socket.getInputStream());
 				int messageType = in.read();
-
 				StringBuilder builder = new StringBuilder();
 				int read;
 				while ((read = in.read()) != Messages.END_OF_MESSAGE) {
+					if (read == -1) {
+						throw new IOException();
+					}
 					builder.append((char) read);
 				}
 
@@ -50,6 +52,7 @@ public class MessageListener extends Thread {
 
 						if (builder.charAt(0) == '/' && !builder.toString().isEmpty()) {
 							commandHandler.handleCommand(user, builder.toString().substring(1));
+							continue;
 						}
 
 						for (User u : userManager.getUserList()) {
@@ -107,12 +110,14 @@ public class MessageListener extends Thread {
 				}
 
 			} catch (IOException e) {
-				try {
-					user.logout();
-				} catch (IOException e1) {
-				}
+				break;
 			}
-
 		}
+
+		try {
+			user.logout();
+		} catch (IOException e1) {
+		}
+
 	}
 }
