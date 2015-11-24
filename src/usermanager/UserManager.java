@@ -90,12 +90,18 @@ public class UserManager {
 		return file;
 	}
 
-	public void registerUser(String name, String password) throws UserAlreadyExistsException, IOException {
+	public void registerUser(String name, String password)
+			throws UserAlreadyExistsException, UserException, IOException {
 		for (User user : userList) {
 			if (user.getName().equals(name)) {
 				throw new UserAlreadyExistsException();
 			}
 		}
+
+		if (name.length() > 10 || name.length() < 2) {
+			throw new UserException("Benutzername muss zwischen 2 und 10 Zeichen lang sein!");
+		}
+
 		lastID++;
 		userList.add(new User(name, getSHA(password), lastID));
 		FileOutputStream out = new FileOutputStream(createEmtpyUserFile());

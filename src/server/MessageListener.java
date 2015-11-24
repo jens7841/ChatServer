@@ -87,6 +87,8 @@ public class MessageListener extends Thread {
 						} catch (UserAlreadyExistsException e1) {
 							new MessageSender(socket).sendMessage("Das eingegebene Passwort ist falsch!",
 									Messages.LOGIN_ERROR_MESSAGE);
+						} catch (UserException e2) {
+							new MessageSender(socket).sendMessage(e2.getMessage(), Messages.LOGIN_ERROR_MESSAGE);
 						}
 					}
 					break;
