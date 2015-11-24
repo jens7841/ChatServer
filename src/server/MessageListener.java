@@ -46,7 +46,7 @@ public class MessageListener extends Thread {
 					if (user != null) {
 
 						if (builder.charAt(0) == '/') {
-							CommandHandler.handleCommand(builder.toString());
+							CommandHandler.handleCommand(socket, user, builder.toString());
 						}
 
 						for (User u : userManager.getUserList()) {
