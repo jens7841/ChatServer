@@ -41,8 +41,14 @@ public class MessageListener extends Thread {
 				}
 
 				switch (messageType) {
+
 				case Messages.CHAT_MESSAGE:
 					if (user != null) {
+
+						if (builder.charAt(0) == '/') {
+							CommandHandler.handleCommand(builder.toString());
+						}
+
 						for (User u : userManager.getUserList()) {
 
 							if (u.isOnline() && !u.equals(user)) {
@@ -56,6 +62,7 @@ public class MessageListener extends Thread {
 						new MessageSender(socket).sendMessage("Du bist nicht eingeloggt!", Messages.ERROR_MESSAGE);
 					}
 					break;
+
 				case Messages.LOGIN:
 					String[] split = builder.toString().split("\\" + (char) ((byte) Messages.DELIMITER));
 					try {
