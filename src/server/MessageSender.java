@@ -3,37 +3,37 @@ package server;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.Socket;
 
 import chatshared.Messages;
+import usermanager.User;
 
 public class MessageSender extends Thread {
 
-	private Socket receiver;
-	private int type;
+	private User receiver;
+	private int messageType;
 	private byte[] message;
 
-	public MessageSender(Socket receiver) {
+	public MessageSender(User receiver) {
 		this.receiver = receiver;
 	}
 
-	public void sendMessage(byte[] message, int type) {
+	public void sendMessage(byte[] message, int messageType) {
 		if (message.length != 0) {
 			this.message = message;
 		}
-		this.type = type;
+		this.messageType = messageType;
 		start();
 	}
 
-	public void sendMessage(String message, int type) {
-		sendMessage(message.getBytes(), type);
+	public void sendMessage(String message, int messageType) {
+		sendMessage(message.getBytes(), messageType);
 	}
 
 	@Override
 	public void run() {
 		try {
 			OutputStream out = new BufferedOutputStream(receiver.getOutputStream());
-			out.write(type);
+			out.write(messageType);
 			if (message != null) {
 				out.write(message);
 			}

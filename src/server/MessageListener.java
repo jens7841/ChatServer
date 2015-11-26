@@ -111,14 +111,14 @@ public class MessageListener extends Thread {
 						for (User u : userManager.getUserList()) {
 
 							if (u.isOnline() && !u.equals(user)) {
-								new MessageSender(u.getSocket()).sendMessage(user.getName() + ": " + builder.toString(),
+								new MessageSender(u).sendMessage(user.getName() + ": " + builder.toString(),
 										Messages.CHAT_MESSAGE);
 							}
 						}
 						System.out.println("-> " + user.getName() + ": " + builder.toString());
 
 					} else {
-						new MessageSender(socket).sendMessage("Du bist nicht eingeloggt!", Messages.ERROR_MESSAGE);
+						new MessageSender(user).sendMessage("Du bist nicht eingeloggt!", Messages.ERROR_MESSAGE);
 					}
 					break;
 
@@ -126,37 +126,36 @@ public class MessageListener extends Thread {
 					String[] split = builder.toString().split("\\" + (char) ((byte) Messages.DELIMITER));
 					try {
 						if (split.length < 2) {
-							new MessageSender(socket).sendMessage("LoginMessageFehler", Messages.LOGIN_ERROR_MESSAGE);
+							new MessageSender(user).sendMessage("LoginMessageFehler", Messages.LOGIN_ERROR_MESSAGE);
 						} else {
 							user = userManager.loginUser(split[0], split[1], socket);
-							new MessageSender(socket).sendMessage("Login Erfolgreich", Messages.LOGIN_SUCCESS_MESSAGE);
+							new MessageSender(user).sendMessage("Login Erfolgreich", Messages.LOGIN_SUCCESS_MESSAGE);
 
 						}
 
 					} catch (UserAlreadyLoggedInException e1) {
-						new MessageSender(socket).sendMessage("User ist bereits eingeloggt!",
+						new MessageSender(user).sendMessage("User ist bereits eingeloggt!",
 								Messages.LOGIN_ERROR_MESSAGE);
 
 					} catch (UserException e) {
 						try {
 							userManager.registerUser(split[0], split[1]);
-							new MessageSender(socket).sendMessage("Registrierung erfolgreich!",
-									Messages.SUCCESS_MESSAGE);
+							new MessageSender(user).sendMessage("Registrierung erfolgreich!", Messages.SUCCESS_MESSAGE);
 
 							try {
 								user = userManager.loginUser(split[0], split[1], socket);
-								new MessageSender(socket).sendMessage("Login Erfolgreich",
+								new MessageSender(user).sendMessage("Login Erfolgreich",
 										Messages.LOGIN_SUCCESS_MESSAGE);
 							} catch (UserException e1) {
-								new MessageSender(socket).sendMessage("Fehler beim einloggen nach dem Registrieren!",
+								new MessageSender(user).sendMessage("Fehler beim einloggen nach dem Registrieren!",
 										Messages.ERROR_MESSAGE);
 							}
 
 						} catch (UserAlreadyExistsException e1) {
-							new MessageSender(socket).sendMessage("Das eingegebene Passwort ist falsch!",
+							new MessageSender(user).sendMessage("Das eingegebene Passwort ist falsch!",
 									Messages.LOGIN_ERROR_MESSAGE);
 						} catch (UserException e2) {
-							new MessageSender(socket).sendMessage(e2.getMessage(), Messages.LOGIN_ERROR_MESSAGE);
+							new MessageSender(user).sendMessage(e2.getMessage(), Messages.LOGIN_ERROR_MESSAGE);
 						}
 					}
 					break;
