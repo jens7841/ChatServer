@@ -1,6 +1,7 @@
 package usermanager;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 
 public class User {
@@ -14,6 +15,14 @@ public class User {
 		this.name = name;
 		this.password = passwort;
 		this.id = id;
+	}
+
+	public synchronized OutputStream getOutputStream() {
+		try {
+			return getSocket().getOutputStream();
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 	public String getName() {

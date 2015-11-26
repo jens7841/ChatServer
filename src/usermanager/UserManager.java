@@ -15,6 +15,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import server.MessageSender;
+
 public class UserManager {
 
 	private List<User> userList;
@@ -46,6 +48,13 @@ public class UserManager {
 		}
 
 		writer.flush();
+	}
+
+	public void sendToAllUsers(String message, int messageType) {
+		for (User user : getUserList()) {
+			if (user.isOnline())
+				new MessageSender(user).sendMessage(message, messageType);
+		}
 	}
 
 	private List<User> readUserData() throws IOException {
