@@ -21,6 +21,7 @@ public class MessageListener extends Thread {
 	private UserManager userManager;
 	private FileManager fileManager;
 	private CommandHandler commandHandler;
+	private MessageHandler messageHandler;
 
 	public MessageListener(Socket socket, UserManager usermanager, FileManager fileManager,
 			CommandHandler commandHandler) {
@@ -28,6 +29,7 @@ public class MessageListener extends Thread {
 		this.socket = socket;
 		this.userManager = usermanager;
 		this.commandHandler = commandHandler;
+		this.messageHandler = new MessageHandler();
 	}
 
 	@Override
