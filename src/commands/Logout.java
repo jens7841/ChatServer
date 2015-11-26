@@ -12,7 +12,7 @@ public class Logout extends Command {
 
 	@Override
 	public void execute(User user) {
-		new MessageSender(user.getSocket()).sendMessage("Disconnected!", Messages.DISCONNECT);
+		new MessageSender(user).sendMessage("Disconnected!", Messages.DISCONNECT);
 	}
 
 }

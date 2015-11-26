@@ -31,6 +31,7 @@ public class MessageSender extends Thread {
 
 	@Override
 	public void run() {
+
 		try {
 			OutputStream out = new BufferedOutputStream(receiver.getOutputStream());
 			out.write(messageType);

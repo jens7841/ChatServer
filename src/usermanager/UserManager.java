@@ -53,7 +53,7 @@ public class UserManager {
 	public void sendToAllUsers(String message, int messageType) {
 		for (User user : getUserList()) {
 			if (user.isOnline())
-				new MessageSender(user.getSocket()).sendMessage(message, messageType);
+				new MessageSender(user).sendMessage(message, messageType);
 		}
 	}
 
