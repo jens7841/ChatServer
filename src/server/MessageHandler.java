@@ -12,7 +12,7 @@ public class MessageHandler {
 	}
 
 	public void login(String message) {
-		String[] split = builder.toString().split("\\" + (char) ((byte) Messages.DELIMITER));
+		String[] split = message.split("\\" + (char) ((byte) Messages.DELIMITER));
 		try {
 			if (split.length < 2) {
 				new MessageSender(socket).sendMessage("LoginMessageFehler", Messages.LOGIN_ERROR_MESSAGE);
