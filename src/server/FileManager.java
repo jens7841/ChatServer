@@ -21,6 +21,7 @@ public class FileManager {
 	private static final String filename = "files.csv";
 	int lastID;
 	private UserManager userManager;
+	private String tempPath = "tempFiles";
 
 	public FileManager(UserManager userManager) {
 		this.userManager = userManager;
@@ -111,6 +112,10 @@ public class FileManager {
 		}
 		reader.close();
 		return uploadedFiles;
+	}
+
+	public String getTempPath() {
+		return tempPath;
 	}
 
 }

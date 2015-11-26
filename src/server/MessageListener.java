@@ -1,6 +1,8 @@
 package server;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -37,12 +39,51 @@ public class MessageListener extends Thread {
 				InputStream in = new BufferedInputStream(socket.getInputStream());
 				int messageType = in.read();
 				StringBuilder builder = new StringBuilder();
-				int read;
-				while ((read = in.read()) != Messages.END_OF_MESSAGE) {
-					if (read == -1) {
-						throw new IOException();
+
+				if (messageType == Messages.FILE) {
+
+					StringBuilder fileName = new StringBuilder();
+
+					{
+						int read;
+
+						while ((read = in.read()) != Messages.DELIMITER) {
+							fileName.append((char) read);
+						}
 					}
-					builder.append((char) read);
+
+					StringBuilder byteLengthBuilder = new StringBuilder();
+
+					{
+						int read;
+						while ((read = in.read()) != Messages.DELIMITER) {
+							byteLengthBuilder.append((char) read);
+						}
+					}
+
+					long byteLength = Long.valueOf(byteLengthBuilder.toString());
+					File writtenFile = new File(fileManager.getTempPath());
+					if (!writtenFile.exists()) {
+						writtenFile.mkdir();
+					}
+					FileOutputStream writer = new FileOutputStream(
+							writtenFile.getAbsolutePath() + "/" + fileName.toString());
+
+					for (int i = 0; i < byteLength; i++) {
+						writer.write(in.read());
+					}
+					in.read();
+					writer.close();
+
+				} else {
+
+					int read;
+					while ((read = in.read()) != Messages.END_OF_MESSAGE) {
+						if (read == -1) {
+							throw new IOException();
+						}
+						builder.append((char) read);
+					}
 				}
 
 				switch (messageType) {
@@ -110,6 +151,7 @@ public class MessageListener extends Thread {
 				}
 
 			} catch (IOException e) {
+				e.printStackTrace();
 				break;
 			}
 		}
