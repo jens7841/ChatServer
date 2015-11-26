@@ -15,11 +15,11 @@ public class Server extends Thread {
 	private boolean running;
 	private int port;
 
-	public Server(int port, String usersFileName) {
+	public Server(int port, String usersFileName, String tempPath) {
 		this.port = port;
 		userManager = new UserManager(usersFileName);
 		commandHandler = new CommandHandler();
-		fileManager = new FileManager(userManager);
+		fileManager = new FileManager(userManager, tempPath);
 		initializeCommands();
 	}
 

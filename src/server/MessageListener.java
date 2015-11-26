@@ -62,18 +62,30 @@ public class MessageListener extends Thread {
 					}
 
 					long byteLength = Long.valueOf(byteLengthBuilder.toString());
-					File writtenFile = new File(fileManager.getTempPath());
-					if (!writtenFile.exists()) {
-						writtenFile.mkdir();
+
+					File folder = new File(fileManager.getTempPath());
+
+					if (!folder.exists()) {
+						folder.mkdir();
 					}
+
 					FileOutputStream writer = new FileOutputStream(
-							writtenFile.getAbsolutePath() + "/" + fileName.toString());
+							fileManager.getTempPath() + "/" + fileName.toString());
 
 					for (int i = 0; i < byteLength; i++) {
 						writer.write(in.read());
 					}
 					in.read();
 					writer.close();
+					File file = new File(fileManager.getTempPath() + "/" + fileName.toString());
+					UploadedFile uploadedFile = new UploadedFile(file, fileManager.getLastID(), user);
+					fileManager.addFile(uploadedFile);
+
+					userManager.sendToAllUsers("Der User " + user.getName() + " hat soeben die Datei "
+							+ uploadedFile.getFile().getName() + " hochgeladen. ID: " + uploadedFile.getId(),
+							Messages.CHAT_MESSAGE);
+					System.out.println("User: " + user.getName() + " uploaded " + uploadedFile.getFile().getName()
+							+ ", ID: " + uploadedFile.getId());
 
 				} else {
 
@@ -151,7 +163,6 @@ public class MessageListener extends Thread {
 				}
 
 			} catch (IOException e) {
-				e.printStackTrace();
 				break;
 			}
 		}
