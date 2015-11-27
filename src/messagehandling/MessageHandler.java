@@ -14,10 +14,12 @@ public class MessageHandler {
 	private User user;
 	private Connection connection;
 	private UserManager userManager;
+	private CommandHandler commandHandler;
 
-	public MessageHandler(Connection connection, UserManager userManager) {
+	public MessageHandler(Connection connection, UserManager userManager, CommandHandler commandHandler) {
 		this.userManager = userManager;
 		this.connection = connection;
+		this.commandHandler = commandHandler;
 	}
 
 	public void loginMessage(Message message) {
@@ -70,11 +72,17 @@ public class MessageHandler {
 			connection.sendMessage(new Message("Du bist nicht eingeloggt!", MessageType.LOGIN_ERROR_MESSAGE));
 		} else {
 
+			if (message.toString().startsWith("/")) {
+				if (!commandHandler.handleCommand(message)) {
+					System.out.println("Command not found! " + user.getName() + " " + message.toString());
+					connection.sendMessage(new Message("Befehl nicht gefunden!", MessageType.ERROR_MESSAGE));
+				}
+			}
+
 			Message toAllMessage = new Message(user.getName() + ": " + message.toString(), MessageType.CHAT_MESSAGE);
 			userManager.sendToAllUsers(toAllMessage, user);
 
 			System.out.println("-> " + toAllMessage);
-
 		}
 	}
 

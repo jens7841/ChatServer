@@ -3,7 +3,9 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+import commands.Logout;
 import filemanagement.FileManager;
+import messagehandling.CommandHandler;
 import messagehandling.MessageListener;
 import usermanagement.UserManager;
 
@@ -12,6 +14,7 @@ public class Server extends Thread {
 	private UserManager userManager;
 	private FileManager fileManager;
 	private ServerSocket serverSocket;
+	private CommandHandler commandHandler;
 
 	private int port;
 	private boolean running;
@@ -20,6 +23,12 @@ public class Server extends Thread {
 		this.port = port;
 		this.userManager = new UserManager(usersFileName);
 		this.fileManager = new FileManager(filesTempPath);
+		this.commandHandler = new CommandHandler();
+		initializeCommands();
+	}
+
+	private void initializeCommands() {
+		commandHandler.addCommand(new Logout("logout", "exit", "quit"));
 	}
 
 	public void startServer() throws IOException {
@@ -44,7 +53,7 @@ public class Server extends Thread {
 
 	private void connectionListener() throws IOException {
 		while (running) {
-			new MessageListener(new Connection(serverSocket.accept()), userManager).start();
+			new MessageListener(new Connection(serverSocket.accept()), userManager, commandHandler).start();
 		}
 	}
 

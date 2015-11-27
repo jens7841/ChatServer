@@ -12,12 +12,10 @@ public class MessageListener extends Thread {
 
 	private MessageHandler messageHandler;
 	private Connection connection;
-	private UserManager userManager;
 
-	public MessageListener(Connection connection, UserManager userManager) {
+	public MessageListener(Connection connection, UserManager userManager, CommandHandler commandHandler) {
 		this.connection = connection;
-		this.userManager = userManager;
-		this.messageHandler = new MessageHandler(connection, userManager);
+		this.messageHandler = new MessageHandler(connection, userManager, commandHandler);
 	}
 
 	@Override
