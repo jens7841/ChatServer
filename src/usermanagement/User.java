@@ -1,15 +1,17 @@
-package usermanager;
+package usermanagement;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+
+import server.Connection;
 
 public class User {
 
 	private String name;
 	private String password;
 	private int id;
-	private Socket socket;
+	private Connection connection;
 
 	public User(String name, String passwort, int id) {
 		this.name = name;
@@ -38,25 +40,29 @@ public class User {
 	}
 
 	public Socket getSocket() {
-		return socket;
+		return connection.getSocket();
 	}
 
-	public void setSocket(Socket s) {
-		this.socket = s;
+	public Connection getConnection() {
+		return connection;
+	}
+
+	public void setConnection(Connection connection) {
+		this.connection = connection;
 	}
 
 	public void logout() throws IOException {
 		System.out.println("User: " + this.getName() + " hat sich ausgeloggt!");
 		try {
-			socket.close();
+			connection.getSocket().close();
 		} finally {
-			socket = null;
+			connection = null;
 		}
 	}
 
 	public boolean isOnline() {
-		if (socket != null)
-			return !socket.isClosed();
+		if (connection != null)
+			return !connection.getSocket().isClosed();
 		return false;
 	}
 

@@ -1,4 +1,4 @@
-package usermanager;
+package usermanagement;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,13 +9,13 @@ import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
-import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import server.MessageSender;
+import messagehandling.Message;
+import server.Connection;
 
 public class UserManager {
 
@@ -50,14 +50,24 @@ public class UserManager {
 		writer.flush();
 	}
 
-	public void sendToAllUsers(String message, int messageType) {
+	public void sendToAllUsers(Message message, User sender) {
 		for (User user : getUserList()) {
-			if (user.isOnline())
-				new MessageSender(user).sendMessage(message, messageType);
+			if (user.isOnline()) {
+				if (sender != null && !user.equals(sender))
+					user.getConnection().sendMessage(message);
+			}
 		}
 	}
 
+	public void sendToAllUsers(Message message) {
+
+		sendToAllUsers(message, null);
+	}
+
 	private List<User> readUserData() throws IOException {
+
+		System.out.println("");
+
 		LineNumberReader reader = new LineNumberReader(new FileReader(createEmtpyUserFile()));
 		reader.readLine();
 		List<User> user = new ArrayList<>();
@@ -120,12 +130,13 @@ public class UserManager {
 
 	}
 
-	public User loginUser(String name, String password, Socket s) throws UserException {
+	public User loginUser(String name, String password, Connection connection)
+			throws UserException, UserAlreadyExistsException {
 		User o = new User(name, getSHA(password), -1);
 		User u;
 		if (userList.contains(o)) {
 			if (!(u = userList.get(userList.indexOf(o))).isOnline()) {
-				u.setSocket(s);
+				u.setConnection(connection);
 				System.out.println("User: " + name + " hat sich eingeloggt!");
 				return u;
 			} else {

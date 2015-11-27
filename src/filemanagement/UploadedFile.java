@@ -1,8 +1,8 @@
-package server;
+package filemanagement;
 
 import java.io.File;
 
-import usermanager.User;
+import usermanagement.User;
 
 public class UploadedFile {
 

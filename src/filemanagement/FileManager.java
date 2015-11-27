@@ -1,20 +1,18 @@
-package server;
+package filemanagement;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import usermanager.UserManager;
+import usermanagement.UserManager;
 
 public class FileManager {
 
 	private List<UploadedFile> files;
 	private int lastID;
-	private UserManager userManager;
 	private String tempPath;
 
-	public FileManager(UserManager userManager, String tempPath) {
-		this.userManager = userManager;
+	public FileManager(String tempPath) {
 		this.tempPath = tempPath;
 
 		new File(tempPath).mkdir();

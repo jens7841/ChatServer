@@ -1,4 +1,4 @@
-package usermanager;
+package usermanagement;
 
 public class UserException extends Exception {
 
