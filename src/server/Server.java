@@ -32,6 +32,7 @@ public class Server extends Thread {
 	}
 
 	public void startServer() throws IOException {
+		System.out.println("Starting Server....");
 		serverSocket = new ServerSocket(port);
 		this.running = true;
 		this.start();

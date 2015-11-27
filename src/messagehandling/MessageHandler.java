@@ -73,7 +73,7 @@ public class MessageHandler {
 		} else {
 
 			if (message.toString().startsWith("/")) {
-				if (!commandHandler.handleCommand(message)) {
+				if (!commandHandler.handleCommand(message, user)) {
 					System.out.println("Command not found! " + user.getName() + " " + message.toString());
 					connection.sendMessage(new Message("Befehl nicht gefunden!", MessageType.ERROR_MESSAGE));
 				}

@@ -23,5 +23,5 @@ public abstract class Command {
 		return false;
 	}
 
-	public abstract void execute(User user);
+	public abstract void execute(User user, String input);
 }
