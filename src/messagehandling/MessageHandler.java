@@ -77,12 +77,14 @@ public class MessageHandler {
 					System.out.println("Command not found! " + user.getName() + " " + message.toString());
 					connection.sendMessage(new Message("Befehl nicht gefunden!", MessageType.ERROR_MESSAGE));
 				}
+			} else {
+
+				Message toAllMessage = new Message(user.getName() + ": " + message.toString(),
+						MessageType.CHAT_MESSAGE);
+				userManager.sendToAllUsers(toAllMessage, user);
+
+				System.out.println("-> " + toAllMessage);
 			}
-
-			Message toAllMessage = new Message(user.getName() + ": " + message.toString(), MessageType.CHAT_MESSAGE);
-			userManager.sendToAllUsers(toAllMessage, user);
-
-			System.out.println("-> " + toAllMessage);
 		}
 	}
 
