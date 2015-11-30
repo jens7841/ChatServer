@@ -12,6 +12,7 @@ public class User {
 	private String password;
 	private int id;
 	private Connection connection;
+	private boolean isUploadingFile;
 
 	public User(String name, String passwort, int id) {
 		this.name = name;
@@ -64,6 +65,10 @@ public class User {
 		if (connection != null)
 			return !connection.getSocket().isClosed();
 		return false;
+	}
+
+	public boolean isUploadingFile() {
+		return isUploadingFile;
 	}
 
 	@Override

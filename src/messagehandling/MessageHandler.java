@@ -1,6 +1,7 @@
 package messagehandling;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 
 import chatshared.Messages;
 import server.Connection;
@@ -85,6 +86,16 @@ public class MessageHandler {
 
 				System.out.println("-> " + toAllMessage);
 			}
+		}
+	}
+
+	public void uploadRequest(Message message) {
+		try {
+
+			ServerSocket fileSocket = new ServerSocket();
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

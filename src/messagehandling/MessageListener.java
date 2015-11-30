@@ -48,8 +48,10 @@ public class MessageListener extends Thread {
 					messageHandler.chatMessage(message);
 					break;
 				case LOGIN:
-					System.out.println(message);
 					messageHandler.loginMessage(message);
+					break;
+				case UPLOAD_REQUEST:
+					messageHandler.uploadRequest(message);
 					break;
 				default:
 					break;
