@@ -1,9 +1,11 @@
 package messagehandling;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import chatshared.Messages;
 import filemanagement.FileListener;
 import filemanagement.FileManager;
 import server.Connection;
@@ -31,12 +33,18 @@ public class MessageHandler {
 
 	public void loginMessage(Message message) {
 		if (user == null) {
+			try {
 
-			String[] split = message.toString().split("\\" + (char) ((byte) Messages.DELIMITER));
-			if (split.length >= 2) {
+				DataInputStream in = new DataInputStream(
+						new BufferedInputStream(new ByteArrayInputStream(message.getMessage())));
 
-				String username = split[0];
-				String password = split[1];
+				byte[] usernameBytes = new byte[in.readInt()];
+				in.readFully(usernameBytes);
+				String username = new String(usernameBytes, "UTF-8");
+
+				byte[] passwordBytes = new byte[in.readInt()];
+				in.readFully(passwordBytes);
+				String password = new String(passwordBytes, "UTF-8");
 
 				try {
 					userManager.registerUser(username, password);
@@ -68,9 +76,11 @@ public class MessageHandler {
 					e.printStackTrace();
 				}
 
-			} else {
+			} catch (IOException e2) {
 				connection.sendMessage(new Message("LoginMessageFehler!", MessageType.LOGIN_ERROR_MESSAGE));
 			}
+		} else {
+			connection.sendMessage(new Message("LoginMessageFehler!", MessageType.LOGIN_ERROR_MESSAGE));
 		}
 	}
 

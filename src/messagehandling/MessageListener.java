@@ -1,10 +1,9 @@
 package messagehandling;
 
 import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
-import chatshared.Messages;
 import filemanagement.FileManager;
 import server.Connection;
 import usermanagement.UserManager;
@@ -24,7 +23,7 @@ public class MessageListener extends Thread {
 	public void run() {
 
 		try {
-			InputStream in = new BufferedInputStream(connection.getSocket().getInputStream());
+			DataInputStream in = new DataInputStream(new BufferedInputStream(connection.getSocket().getInputStream()));
 
 			while (!connection.getSocket().isClosed()) {
 				int firstByte;
@@ -34,16 +33,13 @@ public class MessageListener extends Thread {
 
 				MessageType messageType = MessageType.getType(firstByte);
 
-				StringBuilder builder = new StringBuilder();
+				int inputLenght = in.readInt();
 
-				int read;
-				while ((read = in.read()) != Messages.END_OF_MESSAGE) {
-					if (read == -1)
-						throw new IOException();
-					builder.append((char) read);
-				}
+				byte[] input = new byte[inputLenght];
 
-				Message message = new Message(builder.toString(), messageType);
+				in.readFully(input);
+
+				Message message = new Message(input, messageType);
 
 				switch (messageType) {
 				case CHAT_MESSAGE:
