@@ -54,7 +54,8 @@ public class Server extends Thread {
 
 	private void connectionListener() throws IOException {
 		while (running) {
-			new MessageListener(new Connection(serverSocket.accept()), userManager, commandHandler).start();
+			new MessageListener(new Connection(serverSocket.accept()), userManager, commandHandler, fileManager)
+					.start();
 		}
 	}
 

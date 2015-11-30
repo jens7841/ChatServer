@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import chatshared.Messages;
+import filemanagement.FileManager;
 import server.Connection;
 import usermanagement.UserManager;
 
@@ -13,9 +14,10 @@ public class MessageListener extends Thread {
 	private MessageHandler messageHandler;
 	private Connection connection;
 
-	public MessageListener(Connection connection, UserManager userManager, CommandHandler commandHandler) {
+	public MessageListener(Connection connection, UserManager userManager, CommandHandler commandHandler,
+			FileManager fileManager) {
 		this.connection = connection;
-		this.messageHandler = new MessageHandler(connection, userManager, commandHandler);
+		this.messageHandler = new MessageHandler(connection, userManager, commandHandler, fileManager);
 	}
 
 	@Override
@@ -56,6 +58,7 @@ public class MessageListener extends Thread {
 				default:
 					break;
 				}
+				System.out.println(connection.getSocket().getLocalPort());
 			}
 
 		} catch (IOException e) {

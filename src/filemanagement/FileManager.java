@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import usermanagement.UserManager;
-
 public class FileManager {
 
 	private List<UploadedFile> files;
@@ -25,8 +23,18 @@ public class FileManager {
 
 	private void clearTempFolder() {
 		File tempFolder = new File(tempPath);
-		tempFolder.delete();
+		deleteFolder(tempFolder);
 		tempFolder.mkdir();
+	}
+
+	private void deleteFolder(File path) {
+		for (File file : path.listFiles()) {
+			if (file.isDirectory()) {
+				deleteFolder(file);
+			}
+			file.delete();
+		}
+		path.delete();
 	}
 
 	public void addFile(UploadedFile file) {

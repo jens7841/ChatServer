@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 import chatshared.Messages;
+import filemanagement.FileListener;
+import filemanagement.FileManager;
 import server.Connection;
 import usermanagement.User;
 import usermanagement.UserAlreadyExistsException;
@@ -17,10 +19,14 @@ public class MessageHandler {
 	private UserManager userManager;
 	private CommandHandler commandHandler;
 
-	public MessageHandler(Connection connection, UserManager userManager, CommandHandler commandHandler) {
+	private FileManager fileManager;
+
+	public MessageHandler(Connection connection, UserManager userManager, CommandHandler commandHandler,
+			FileManager fileManager) {
 		this.userManager = userManager;
 		this.connection = connection;
 		this.commandHandler = commandHandler;
+		this.fileManager = fileManager;
 	}
 
 	public void loginMessage(Message message) {
@@ -90,13 +96,18 @@ public class MessageHandler {
 	}
 
 	public void uploadRequest(Message message) {
-		try {
-
-			ServerSocket fileSocket = new ServerSocket();
-
-		} catch (IOException e) {
-			e.printStackTrace();
+		ServerSocket fileSocket = null;
+		int port = 0;
+		while (fileSocket == null) {
+			try {
+				port = (int) Math.random() * 10000 + 300;
+				fileSocket = new ServerSocket(port);
+			} catch (IOException e) {
+			}
 		}
+		FileListener fileListener = new FileListener(fileSocket, fileManager);
+		fileListener.start();
+		connection.sendMessage(new Message(String.valueOf(port), MessageType.UPLOAD_CONFIRMATION));
 	}
 
 }
