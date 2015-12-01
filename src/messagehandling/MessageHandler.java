@@ -11,6 +11,7 @@ import filemanagement.FileManager;
 import server.Connection;
 import usermanagement.User;
 import usermanagement.UserAlreadyExistsException;
+import usermanagement.UserAlreadyLoggedInException;
 import usermanagement.UserException;
 import usermanagement.UserManager;
 
@@ -62,18 +63,15 @@ public class MessageHandler {
 						connection
 								.sendMessage(new Message("Erfolgreich eingeloggt!", MessageType.LOGIN_SUCCESS_MESSAGE));
 
-					} catch (UserAlreadyExistsException e1) {
+					} catch (UserAlreadyLoggedInException e1) {
 						connection.sendMessage(
 								new Message("Der User ist bereits eingeloggt!", MessageType.LOGIN_ERROR_MESSAGE));
 					} catch (UserException e1) {
-						connection.sendMessage(
-								new Message("Das eingegebene Passwort ist falsch!", MessageType.LOGIN_ERROR_MESSAGE));
+						connection.sendMessage(new Message(e.getMessage(), MessageType.LOGIN_ERROR_MESSAGE));
 					}
 
 				} catch (UserException e) {
 					connection.sendMessage(new Message(e.getMessage(), MessageType.LOGIN_ERROR_MESSAGE));
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
 
 			} catch (IOException e2) {
@@ -118,6 +116,15 @@ public class MessageHandler {
 		FileListener fileListener = new FileListener(fileSocket, fileManager);
 		fileListener.start();
 		connection.sendMessage(new Message(String.valueOf(port), MessageType.UPLOAD_CONFIRMATION));
+	}
+
+	public void logout() {
+		if (user != null) {
+			try {
+				user.logout();
+			} catch (IOException e) {
+			}
+		}
 	}
 
 }

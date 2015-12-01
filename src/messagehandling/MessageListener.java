@@ -54,15 +54,10 @@ public class MessageListener extends Thread {
 				default:
 					break;
 				}
-				System.out.println(connection.getSocket().getLocalPort());
 			}
 
 		} catch (IOException e) {
-			try {
-				connection.getSocket().close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+			messageHandler.logout();
 			e.printStackTrace();
 		}
 	}
