@@ -109,12 +109,19 @@ public class UserManager {
 		return file;
 	}
 
-	public void registerUser(String name, String password)
-			throws UserAlreadyExistsException, UserException, IOException {
+	public boolean userExists(String name) {
 		for (User user : userList) {
-			if (user.getName().equals(name)) {
-				throw new UserAlreadyExistsException();
+			if (user.getName().equalsIgnoreCase(name)) {
+				return true;
 			}
+		}
+		return false;
+	}
+
+	public void registerUser(String name, String password) throws UserException, IOException {
+
+		if (userExists(name)) {
+			return;
 		}
 
 		if (name.length() > 10 || name.length() < 2) {
@@ -131,7 +138,7 @@ public class UserManager {
 	}
 
 	public User loginUser(String name, String password, Connection connection)
-			throws UserException, UserAlreadyExistsException {
+			throws UserException, UserAlreadyLoggedInException {
 		User o = new User(name, getSHA(password), -1);
 		User u;
 		if (userList.contains(o)) {

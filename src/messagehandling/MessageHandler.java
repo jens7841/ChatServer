@@ -10,7 +10,10 @@ import filemanagement.FileListener;
 import filemanagement.FileManager;
 import server.Connection;
 import usermanagement.User;
+<<<<<<< HEAD
 import usermanagement.UserAlreadyExistsException;
+=======
+>>>>>>> branch 'master' of https://github.com/jens7841/ChatServer.git
 import usermanagement.UserAlreadyLoggedInException;
 import usermanagement.UserException;
 import usermanagement.UserManager;
@@ -47,10 +50,10 @@ public class MessageHandler {
 				in.readFully(passwordBytes);
 				String password = new String(passwordBytes, "UTF-8");
 
-				try {
+				if (!userManager.userExists(username)) {
 					userManager.registerUser(username, password);
-
 					connection.sendMessage(new Message("Erfolgreich Registriert!", MessageType.SUCCESS_MESSAGE));
+<<<<<<< HEAD
 
 					user = userManager.loginUser(username, password, connection);
 
@@ -72,11 +75,21 @@ public class MessageHandler {
 
 				} catch (UserException e) {
 					connection.sendMessage(new Message(e.getMessage(), MessageType.LOGIN_ERROR_MESSAGE));
+=======
+>>>>>>> branch 'master' of https://github.com/jens7841/ChatServer.git
 				}
+				user = userManager.loginUser(username, password, connection);
+				connection.sendMessage(new Message("Erfolgreich eingeloggt!", MessageType.LOGIN_SUCCESS_MESSAGE));
 
-			} catch (IOException e2) {
+			} catch (UserAlreadyLoggedInException e) {
+				connection.sendMessage(
+						new Message("Dieser User ist bereits eingeloggt!", MessageType.LOGIN_ERROR_MESSAGE));
+			} catch (UserException e) {
+				connection.sendMessage(new Message(e.getMessage(), MessageType.LOGIN_ERROR_MESSAGE));
+			} catch (IOException e) {
 				connection.sendMessage(new Message("LoginMessageFehler!", MessageType.LOGIN_ERROR_MESSAGE));
 			}
+
 		} else {
 			connection.sendMessage(new Message("LoginMessageFehler!", MessageType.LOGIN_ERROR_MESSAGE));
 		}
