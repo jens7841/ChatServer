@@ -4,16 +4,12 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
 
-import filemanagement.FileListener;
 import filemanagement.FileManager;
+import filemanagement.FileSaver;
+import filemanagement.UploadedFile;
 import server.Connection;
 import usermanagement.User;
-<<<<<<< HEAD
-import usermanagement.UserAlreadyExistsException;
-=======
->>>>>>> branch 'master' of https://github.com/jens7841/ChatServer.git
 import usermanagement.UserAlreadyLoggedInException;
 import usermanagement.UserException;
 import usermanagement.UserManager;
@@ -53,30 +49,6 @@ public class MessageHandler {
 				if (!userManager.userExists(username)) {
 					userManager.registerUser(username, password);
 					connection.sendMessage(new Message("Erfolgreich Registriert!", MessageType.SUCCESS_MESSAGE));
-<<<<<<< HEAD
-
-					user = userManager.loginUser(username, password, connection);
-
-					connection.sendMessage(new Message("Erfolgreich eingeloggt!", MessageType.LOGIN_SUCCESS_MESSAGE));
-
-				} catch (UserAlreadyExistsException e) {
-
-					try {
-						user = userManager.loginUser(username, password, connection);
-						connection
-								.sendMessage(new Message("Erfolgreich eingeloggt!", MessageType.LOGIN_SUCCESS_MESSAGE));
-
-					} catch (UserAlreadyLoggedInException e1) {
-						connection.sendMessage(
-								new Message("Der User ist bereits eingeloggt!", MessageType.LOGIN_ERROR_MESSAGE));
-					} catch (UserException e1) {
-						connection.sendMessage(new Message(e.getMessage(), MessageType.LOGIN_ERROR_MESSAGE));
-					}
-
-				} catch (UserException e) {
-					connection.sendMessage(new Message(e.getMessage(), MessageType.LOGIN_ERROR_MESSAGE));
-=======
->>>>>>> branch 'master' of https://github.com/jens7841/ChatServer.git
 				}
 				user = userManager.loginUser(username, password, connection);
 				connection.sendMessage(new Message("Erfolgreich eingeloggt!", MessageType.LOGIN_SUCCESS_MESSAGE));
@@ -117,18 +89,7 @@ public class MessageHandler {
 	}
 
 	public void uploadRequest(Message message) {
-		ServerSocket fileSocket = null;
-		int port = 0;
-		while (fileSocket == null) {
-			try {
-				port = (int) Math.random() * 10000 + 300;
-				fileSocket = new ServerSocket(port);
-			} catch (IOException e) {
-			}
-		}
-		FileListener fileListener = new FileListener(fileSocket, fileManager);
-		fileListener.start();
-		connection.sendMessage(new Message(String.valueOf(port), MessageType.UPLOAD_CONFIRMATION));
+
 	}
 
 	public void logout() {
@@ -137,6 +98,58 @@ public class MessageHandler {
 				user.logout();
 			} catch (IOException e) {
 			}
+		}
+	}
+
+	public void uploadBegin(Message message) {
+		try {
+
+			DataInputStream in = new DataInputStream(
+					new BufferedInputStream(new ByteArrayInputStream(message.getMessage())));
+
+			int fileID = in.readInt();
+			long size = in.readLong();
+
+			int fileNameLength = in.readInt();
+			byte[] fileNameArray = new byte[fileNameLength];
+			in.readFully(fileNameArray);
+			String fileName = new String(fileNameArray, "UTF-8");
+
+			int dataLength = in.readInt();
+
+			byte[] data = new byte[dataLength];
+			in.readFully(data);
+
+			FileSaver saver = fileManager.saveFile(fileName, size, user);
+			saver.addPackgage(data);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void uplaodPackage(Message message) {
+		try {
+
+			DataInputStream in = new DataInputStream(
+					new BufferedInputStream(new ByteArrayInputStream(message.getMessage())));
+
+			int fileID = in.readInt();
+			int dataLength = in.readInt();
+
+			byte[] data = new byte[dataLength];
+			in.readFully(data);
+
+			UploadedFile file = fileManager.getFile(fileID);
+
+			FileSaver saver = fileManager.getSaver(file);
+			if (saver != null) {
+				System.out.println("save DATA");
+				saver.addPackgage(data);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

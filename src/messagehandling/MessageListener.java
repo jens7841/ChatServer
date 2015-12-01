@@ -33,9 +33,9 @@ public class MessageListener extends Thread {
 
 				MessageType messageType = MessageType.getType(firstByte);
 
-				int inputLenght = in.readInt();
+				int inputLength = in.readInt();
 
-				byte[] input = new byte[inputLenght];
+				byte[] input = new byte[inputLength];
 
 				in.readFully(input);
 
@@ -50,6 +50,12 @@ public class MessageListener extends Thread {
 					break;
 				case UPLOAD_REQUEST:
 					messageHandler.uploadRequest(message);
+					break;
+				case UPLOAD_BEGIN:
+					messageHandler.uploadBegin(message);
+					break;
+				case UPLOAD_PACKAGE:
+					messageHandler.uplaodPackage(message);
 					break;
 				default:
 					break;
