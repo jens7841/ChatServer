@@ -10,7 +10,7 @@ import filemanagement.FileListener;
 import filemanagement.FileManager;
 import server.Connection;
 import usermanagement.User;
-import usermanagement.UserAlreadyExistsException;
+import usermanagement.UserAlreadyLoggedInException;
 import usermanagement.UserException;
 import usermanagement.UserManager;
 
@@ -46,39 +46,22 @@ public class MessageHandler {
 				in.readFully(passwordBytes);
 				String password = new String(passwordBytes, "UTF-8");
 
-				try {
+				if (!userManager.userExists(username)) {
 					userManager.registerUser(username, password);
-
 					connection.sendMessage(new Message("Erfolgreich Registriert!", MessageType.SUCCESS_MESSAGE));
-
-					user = userManager.loginUser(username, password, connection);
-
-					connection.sendMessage(new Message("Erfolgreich eingeloggt!", MessageType.LOGIN_SUCCESS_MESSAGE));
-
-				} catch (UserAlreadyExistsException e) {
-
-					try {
-						user = userManager.loginUser(username, password, connection);
-						connection
-								.sendMessage(new Message("Erfolgreich eingeloggt!", MessageType.LOGIN_SUCCESS_MESSAGE));
-
-					} catch (UserAlreadyExistsException e1) {
-						connection.sendMessage(
-								new Message("Der User ist bereits eingeloggt!", MessageType.LOGIN_ERROR_MESSAGE));
-					} catch (UserException e1) {
-						connection.sendMessage(
-								new Message("Das eingegebene Passwort ist falsch!", MessageType.LOGIN_ERROR_MESSAGE));
-					}
-
-				} catch (UserException e) {
-					connection.sendMessage(new Message(e.getMessage(), MessageType.LOGIN_ERROR_MESSAGE));
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
+				user = userManager.loginUser(username, password, connection);
+				connection.sendMessage(new Message("Erfolgreich eingeloggt!", MessageType.LOGIN_SUCCESS_MESSAGE));
 
-			} catch (IOException e2) {
+			} catch (UserAlreadyLoggedInException e) {
+				connection.sendMessage(
+						new Message("Dieser User ist bereits eingeloggt!", MessageType.LOGIN_ERROR_MESSAGE));
+			} catch (UserException e) {
+				connection.sendMessage(new Message(e.getMessage(), MessageType.LOGIN_ERROR_MESSAGE));
+			} catch (IOException e) {
 				connection.sendMessage(new Message("LoginMessageFehler!", MessageType.LOGIN_ERROR_MESSAGE));
 			}
+
 		} else {
 			connection.sendMessage(new Message("LoginMessageFehler!", MessageType.LOGIN_ERROR_MESSAGE));
 		}
