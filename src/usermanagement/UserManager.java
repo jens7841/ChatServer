@@ -66,8 +66,6 @@ public class UserManager {
 
 	private List<User> readUserData() throws IOException {
 
-		System.out.println("");
-
 		LineNumberReader reader = new LineNumberReader(new FileReader(createEmtpyUserFile()));
 		reader.readLine();
 		List<User> user = new ArrayList<>();

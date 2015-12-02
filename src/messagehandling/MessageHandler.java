@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import filemanagement.FileManager;
 import filemanagement.FileSaver;
@@ -88,10 +89,6 @@ public class MessageHandler {
 		}
 	}
 
-	public void uploadRequest(Message message) {
-
-	}
-
 	public void logout() {
 		if (user != null) {
 			try {
@@ -99,6 +96,38 @@ public class MessageHandler {
 			} catch (IOException e) {
 			}
 		}
+	}
+
+	public void uploadRequest(Message message) {
+
+		try {
+
+			DataInputStream in = new DataInputStream(
+					new BufferedInputStream(new ByteArrayInputStream(message.getMessage())));
+
+			int fileNameLength = in.readInt();
+			byte[] fileNameArray = new byte[fileNameLength];
+			in.readFully(fileNameArray);
+			String fileName = new String(fileNameArray, "UTF-8");
+
+			long size = in.readLong();
+
+			if (user == null) {
+				connection.sendMessage(new Message(message.getMessage(), MessageType.UPLOAD_REJECT));
+				return;
+			}
+
+			UploadedFile file = fileManager.saveFile(fileName, size, user);
+
+			byte[] confirmation = ByteBuffer.allocate(message.getMessage().length + 4).put(message.getMessage())
+					.putInt(file.getId()).array();
+
+			connection.sendMessage(new Message(confirmation, MessageType.UPLOAD_CONFIRMATION));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public void uploadBegin(Message message) {
@@ -120,15 +149,19 @@ public class MessageHandler {
 			byte[] data = new byte[dataLength];
 			in.readFully(data);
 
-			FileSaver saver = fileManager.saveFile(fileName, size, user);
-			saver.addPackgage(data);
+			UploadedFile file = fileManager.getFile(fileID);
+			if (file == null) {
+				connection.sendMessage(new Message("Error while uploading a File!", MessageType.ERROR_MESSAGE));
+			} else {
+				fileManager.getSaver(file).addPackgage(data);
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void uplaodPackage(Message message) {
+	public void uploadPackage(Message message) {
 		try {
 
 			DataInputStream in = new DataInputStream(
@@ -136,6 +169,8 @@ public class MessageHandler {
 
 			int fileID = in.readInt();
 			int dataLength = in.readInt();
+			System.out.println("Fileid" + fileID);
+			System.out.println("data Length" + dataLength);
 
 			byte[] data = new byte[dataLength];
 			in.readFully(data);

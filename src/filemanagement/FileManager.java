@@ -40,7 +40,6 @@ public class FileManager {
 			}
 			file.delete();
 		}
-		path.delete();
 	}
 
 	public void addFile(UploadedFile file) {
@@ -48,7 +47,7 @@ public class FileManager {
 		files.add(file);
 	}
 
-	public FileSaver saveFile(String filename, long size, User from) {
+	public UploadedFile saveFile(String filename, long size, User from) {
 
 		UploadedFile file = new UploadedFile(new File(tempPath + "/" + filename), lastID, from);
 		addFile(file);
@@ -59,7 +58,7 @@ public class FileManager {
 
 		uploads.put(file, saver);
 
-		return saver;
+		return file;
 	}
 
 	public UploadedFile getFile(int id) {

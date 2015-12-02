@@ -1,9 +1,10 @@
 package messagehandling;
 
+import java.io.UnsupportedEncodingException;
+
 public class Message {
 
 	private byte[] message;
-	private String messageString;
 	private MessageType type;
 
 	public Message(byte[] message, MessageType type) {
@@ -12,8 +13,15 @@ public class Message {
 	}
 
 	public Message(String message, MessageType type) {
-		this(message.getBytes(), type);
-		messageString = message;
+
+		try {
+
+			this.message = message.getBytes("UTF-8");
+			this.type = type;
+
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public MessageType getType() {
@@ -27,16 +35,11 @@ public class Message {
 	@Override
 	public String toString() {
 
-		if (messageString != null) {
-			return messageString;
+		try {
+			return new String(getMessage(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
-
-		StringBuilder builder = new StringBuilder();
-
-		for (byte b : message) {
-			builder.append((char) b);
-		}
-
-		return builder.toString();
+		return new String(getMessage());
 	}
 }

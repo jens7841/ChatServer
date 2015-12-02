@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -18,6 +19,7 @@ public class FileSaver extends Thread {
 		this.file = file;
 		this.size = size;
 		this.lock = new Semaphore(1);
+		packages = new ArrayList<>();
 	}
 
 	public void addPackgage(byte[] data) {
@@ -33,16 +35,19 @@ public class FileSaver extends Thread {
 
 			OutputStream out = new BufferedOutputStream(new FileOutputStream(file.getFile()));
 
+			System.out.println(size);
+
 			while (!file.isUploadFinished()) {
 
 				while (packages.size() > 0) {
 					out.write(packages.get(0));
 					packages.remove(0);
-				}
-				if (file.getFile().length() == size) {
-					System.out.println("JAAAAA!!!!111111 FileSaver funktioniert!!!11111");
-					file.setUploadFinished();
-					break;
+					System.out.println(file.getFile().length());
+					if (file.getFile().length() >= size) {
+						System.out.println("JAAAAA!!!!111111 FileSaver funktioniert!!!11111");
+						file.setUploadFinished();
+						break;
+					}
 				}
 				lock.acquire();
 			}

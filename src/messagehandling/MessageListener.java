@@ -51,11 +51,8 @@ public class MessageListener extends Thread {
 				case UPLOAD_REQUEST:
 					messageHandler.uploadRequest(message);
 					break;
-				case UPLOAD_BEGIN:
-					messageHandler.uploadBegin(message);
-					break;
 				case UPLOAD_PACKAGE:
-					messageHandler.uplaodPackage(message);
+					messageHandler.uploadPackage(message);
 					break;
 				default:
 					break;
