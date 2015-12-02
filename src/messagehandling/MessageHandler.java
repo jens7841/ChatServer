@@ -161,8 +161,11 @@ public class MessageHandler {
 		}
 	}
 
+	private static int i = 0;
+
 	public void uploadPackage(Message message) {
 		try {
+			System.out.println("count: " + (++i));
 
 			DataInputStream in = new DataInputStream(
 					new BufferedInputStream(new ByteArrayInputStream(message.getMessage())));

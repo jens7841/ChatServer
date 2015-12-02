@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -19,7 +20,7 @@ public class FileSaver extends Thread {
 		this.file = file;
 		this.size = size;
 		this.lock = new Semaphore(1);
-		packages = new ArrayList<>();
+		packages = new LinkedList<>();
 	}
 
 	public void addPackgage(byte[] data) {
@@ -33,7 +34,7 @@ public class FileSaver extends Thread {
 		try {
 			lock.acquire();
 
-			OutputStream out = new BufferedOutputStream(new FileOutputStream(file.getFile()));
+			OutputStream out = new BufferedOutputStream(new FileOutputStream(file.getFile(), true));
 
 			System.out.println(size);
 
