@@ -24,7 +24,7 @@ public class SimpleMessageSender implements MessageSender {
 	public void sendMessage(Message message) {
 		try {
 			socket.getOutputStream().write(message.getType().getTypeNumber());
-			socket.getOutputStream().write(message.getMessage());
+			socket.getOutputStream().write(message.getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

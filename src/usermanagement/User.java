@@ -1,17 +1,19 @@
 package usermanagement;
 
+import messagehandling.Connection;
+
 public class User {
 
 	private String name;
 	private String password;
 	private int id;
+	private Connection connection;
 
 	public User(String name, String password, int id) {
 
 		this.name = name;
 		this.password = password;
 		this.id = id;
-
 	}
 
 	public String getName() {
@@ -22,8 +24,16 @@ public class User {
 		return password;
 	}
 
-	public int getId() {
+	public int getID() {
 		return id;
+	}
+
+	public void setConnection(Connection connection) {
+		this.connection = connection;
+	}
+
+	public Connection getConnection() {
+		return connection;
 	}
 
 	@Override
