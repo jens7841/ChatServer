@@ -1,6 +1,6 @@
 package usermanagement;
 
-public class UserException extends Exception {
+public class UserException extends RuntimeException {
 
 	/**
 	 * 
