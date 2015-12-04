@@ -52,7 +52,7 @@ public class MessageSenderAndReceiverTest {
 		MessageReceiver receiver = new MessageReceiver(handler, new Connection(server));
 		receiver.start();
 
-		byte[] message = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		byte[] message = new byte[] { 1, 2, 3, 127, 5, 6, 7, 8, 9, 10 };
 		sender.sendMessage(new Message(message, MessageType.CHAT_MESSAGE));
 
 		Assert.assertArrayEquals(message, handler.getMessage().getBytes());

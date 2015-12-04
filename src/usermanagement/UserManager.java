@@ -16,19 +16,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import messagehandling.Connection;
+import messagehandling.Message;
+import messagehandling.MessageSender;
 
 public class UserManager {
 
 	private List<User> userList;
 	private List<User> onlineUsers;
 	private String fileName;
-	int lastID;
+	private int nextID;
 
 	public UserManager(String fileName) {
 		this.fileName = fileName;
 		try {
 			userList = readUserData();
-			lastID = readLastID();
+			nextID = readLastID();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -37,7 +39,7 @@ public class UserManager {
 
 	public void writeUserData(OutputStream out) {
 		PrintWriter writer = new PrintWriter(out);
-		writer.println(lastID);
+		writer.println(nextID);
 
 		for (User user : userList) {
 			StringBuilder builder = new StringBuilder();
@@ -68,7 +70,7 @@ public class UserManager {
 
 	private List<User> readUserData() throws IOException {
 
-		LineNumberReader reader = new LineNumberReader(new FileReader(createEmtpyUserFile()));
+		LineNumberReader reader = new LineNumberReader(new FileReader(getUserFile()));
 		reader.readLine();
 		List<User> user = new ArrayList<>();
 		String s;
@@ -85,18 +87,40 @@ public class UserManager {
 
 	}
 
-	private File createEmtpyUserFile() throws IOException {
+	private File getUserFile() {
 		File file = new File(fileName);
+
 		if (!file.exists()) {
+			createEmtpyUserFile();
+		}
+
+		return file;
+	}
+
+	public void clearUserList() {
+		userList.clear();
+		onlineUsers.clear();
+		nextID = 0;
+		createEmtpyUserFile();
+	}
+
+	private File createEmtpyUserFile() {
+		File file = new File(fileName);
+
+		try {
+
 			PrintWriter writer = new PrintWriter(new FileWriter(file));
 			writer.println(0);
 			writer.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return file;
 	}
 
 	private int readLastID() throws IOException {
-		LineNumberReader reader = new LineNumberReader(new FileReader(createEmtpyUserFile()));
+		LineNumberReader reader = new LineNumberReader(new FileReader(getUserFile()));
 		String s;
 		if ((s = reader.readLine()) != null) {
 			s.trim();
@@ -114,7 +138,7 @@ public class UserManager {
 			throw new UserAlreadyExistsException("User " + user.getName() + " does already exists!");
 		}
 		userList.add(user);
-		lastID++;
+		nextID++;
 		saveUserData();
 	}
 
@@ -125,11 +149,15 @@ public class UserManager {
 	}
 
 	public User addUser(String userName, String password) {
-		return addUser(userName, password, lastID);
+		return addUser(userName, password, nextID);
 	}
 
 	public boolean isUserOnline(User user) {
 		return onlineUsers.contains(user);
+	}
+
+	public int getNextID() {
+		return nextID;
 	}
 
 	public void logout(User user) {
@@ -150,12 +178,25 @@ public class UserManager {
 		onlineUsers.remove(user);
 	}
 
-	public void login(User user, Connection connection) {
+	public void login(User loginUser, Connection connection, MessageSender messageSender) {
 
-		if (getUser(user.getName()) != null) {
-			user.setConnection(connection);
-			onlineUsers.add(user);
+		User user = getUser(loginUser.getName());
+		if (user != null && user.getPassword().equals(loginUser.getPassword())) {
+			loginUser.setConnection(connection);
+			loginUser.setMessageSender(messageSender);
+			onlineUsers.add(loginUser);
 		}
+	}
+
+	public User getUser(Connection connection) {
+
+		for (User user : userList) {
+			if (connection.equals(user.getConnection())) {
+				return user;
+			}
+		}
+
+		return null;
 	}
 
 	public User getUser(String name) {
@@ -169,6 +210,12 @@ public class UserManager {
 		return null;
 	}
 
+	public void sendToAllUsers(Message message) {
+		for (User user : onlineUsers) {
+			user.getMessageSender().sendMessage(message);
+		}
+	}
+
 	public String getSHA(String s) {
 		MessageDigest m = null;
 		try {
@@ -178,6 +225,10 @@ public class UserManager {
 			e.printStackTrace();
 		}
 		return new BigInteger(1, m.digest()).toString(16);
+	}
+
+	public List<User> getOnlineUsers() {
+		return onlineUsers;
 	}
 
 }

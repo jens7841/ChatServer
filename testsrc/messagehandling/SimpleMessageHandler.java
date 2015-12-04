@@ -12,7 +12,7 @@ public class SimpleMessageHandler implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(Message message) {
+	public void handleMessage(Message message, Connection connection) {
 
 		messages.add(message);
 
