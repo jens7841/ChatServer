@@ -1,6 +1,6 @@
 package usermanagement;
 
-import messagehandling.Connection;
+import server.Connection;
 
 public class User {
 

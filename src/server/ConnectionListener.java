@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import messagehandling.Connection;
+import messagehandling.MessageInputStream;
+import messagehandling.MessageOutputstream;
 import messagehandling.ThreadedMessageListener;
-import messagehandling.MessageSender;
 
 public class ConnectionListener extends Thread {
 
@@ -26,10 +26,12 @@ public class ConnectionListener extends Thread {
 			try {
 				Socket socket = serverSocket.accept();
 
-				ThreadedMessageListener listener = new ThreadedMessageListener(socket.getInputStream());
-				listener.start();
+				Connection connection = new Connection(new MessageOutputstream(socket.getOutputStream()),
+						new MessageInputStream(socket.getInputStream()));
 
-				new Connection(listener, new MessageSender(socket.getOutputStream()));
+				ThreadedMessageListener listener = new ThreadedMessageListener(connection);
+
+				listener.start();
 
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -15,8 +15,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import messagehandling.Connection;
 import messagehandling.Message;
+import server.Connection;
 
 public class UserManager {
 

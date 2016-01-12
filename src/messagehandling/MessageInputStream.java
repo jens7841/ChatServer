@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 public class MessageInputStream extends FilterInputStream {
 
-	protected MessageInputStream(InputStream in) {
+	public MessageInputStream(InputStream in) {
 		super(in);
 	}
 
@@ -15,6 +15,8 @@ public class MessageInputStream extends FilterInputStream {
 		byte[] arr;
 		DataInputStream input = new DataInputStream(in);
 		int messageType = input.read();
+		if (messageType == -1)
+			throw new IOException("Stream closed");
 		arr = new byte[input.readInt()];
 		input.readFully(arr);
 		return new Message(arr, MessageType.getType(messageType));

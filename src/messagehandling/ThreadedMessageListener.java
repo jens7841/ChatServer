@@ -1,24 +1,23 @@
 package messagehandling;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-public class ThreadedMessageListener extends MessageListener {
+import server.Connection;
 
-	public ThreadedMessageListener(InputStream in) {
-		super(in);
+public class ThreadedMessageListener extends Thread implements MessageListener {
+
+	private Connection connection;
+
+	public ThreadedMessageListener(Connection connection) {
+		this.connection = connection;
 	}
 
 	@Override
 	public void run() {
-		byte[] arr;
-
 		try {
-			int messageType = in.read();
-			arr = new byte[in.readInt()];
-			in.readFully(arr);
-			Message message = new Message(arr, MessageType.getType(messageType));
-			MessageHandlerFactory.getMessageHandler(MessageType.getType(messageType)).handleMessage(message);
+
+			Message message = connection.getInputstream().readMessage();
+			MessageHandlerFactory.getMessageHandler(message.getType()).handleMessage(message);
 
 		} catch (IOException e) {
 			e.printStackTrace();

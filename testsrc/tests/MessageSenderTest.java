@@ -8,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import messagehandling.Message;
-import messagehandling.MessageSender;
+import messagehandling.DefaultMessageSender;
 import messagehandling.MessageType;
 
 public class MessageSenderTest {
@@ -26,7 +26,7 @@ public class MessageSenderTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		MessageSender sender = new MessageSender(out);
+		DefaultMessageSender sender = new DefaultMessageSender(out);
 		Message message = new Message(arr, MessageType.CHAT_MESSAGE);
 		sender.sendMessage(message);
 		Assert.assertArrayEquals(outputArray.toByteArray(), out.toByteArray());
