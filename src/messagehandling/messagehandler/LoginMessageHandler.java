@@ -6,7 +6,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import messagehandling.Message;
-import server.Connection;
+import server.ConnectionHandler;
 import usermanagement.UserManager;
 
 public class LoginMessageHandler implements MessageHandler {
@@ -18,19 +18,19 @@ public class LoginMessageHandler implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(Message message, Connection connection) {
+	public void handleMessage(Message message, ConnectionHandler connectionHandler) {
 		DataInputStream in = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(message.getBytes())));
 		try {
 			int length = in.readInt();
 			byte[] usernameBytes = new byte[length];
 			in.readFully(usernameBytes, 0, length);
-			String username = usernameBytes.toString();
+			String username = new String(usernameBytes, "UTF-8");
 			length = in.readInt();
 			byte[] passwordBytes = new byte[length];
 			in.readFully(passwordBytes, 0, length);
-			String password = passwordBytes.toString();
+			String password = new String(passwordBytes, "UTF-8");
 
-			// usermanager.login(username, password, con); TODO
+			usermanager.login(username, password, connectionHandler);
 
 		} catch (IOException e) {
 			e.printStackTrace();

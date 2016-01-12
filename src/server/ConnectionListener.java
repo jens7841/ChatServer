@@ -5,10 +5,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import messagehandling.messageinput.MessageInputStream;
-import messagehandling.messageinput.ThreadedMessageListener;
 import messagehandling.messageoutput.MessageOutputstream;
 
-public class ConnectionListener extends Thread {
+public class ConnectionListener {
 
 	private ServerSocket serverSocket;
 
@@ -20,18 +19,16 @@ public class ConnectionListener extends Thread {
 		}
 	}
 
-	@Override
-	public void run() {
+	public void start() {
 		while (!serverSocket.isClosed()) {
 			try {
 				Socket socket = serverSocket.accept();
+				System.out.println("Client connected to Server :o IP: " + socket.getInetAddress());
 
 				Connection connection = new Connection(new MessageOutputstream(socket.getOutputStream()),
 						new MessageInputStream(socket.getInputStream()));
 
-				ThreadedMessageListener listener = new ThreadedMessageListener(connection);
-
-				listener.start();
+				new ConnectionHandler(connection);
 
 			} catch (IOException e) {
 				e.printStackTrace();

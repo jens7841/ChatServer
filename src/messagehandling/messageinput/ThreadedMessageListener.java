@@ -4,22 +4,22 @@ import java.io.IOException;
 
 import messagehandling.Message;
 import messagehandling.MessageHandlerFactory;
-import server.Connection;
+import server.ConnectionHandler;
 
 public class ThreadedMessageListener extends Thread implements MessageListener {
 
-	private Connection connection;
+	private ConnectionHandler connectionHandler;
 
-	public ThreadedMessageListener(Connection connection) {
-		this.connection = connection;
+	public ThreadedMessageListener(ConnectionHandler connectionHandler) {
+		this.connectionHandler = connectionHandler;
 	}
 
 	@Override
 	public void run() {
 		try {
 
-			Message message = connection.getInputstream().readMessage();
-			MessageHandlerFactory.getMessageHandler(message.getType()).handleMessage(message, connection);
+			Message message = connectionHandler.getConnection().getInputstream().readMessage();
+			MessageHandlerFactory.getMessageHandler(message.getType()).handleMessage(message, connectionHandler);
 
 		} catch (IOException e) {
 			e.printStackTrace();
