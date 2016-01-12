@@ -6,26 +6,31 @@ import messagehandling.messagehandler.UploadPackageMessageHandler;
 import messagehandling.messagehandler.UploadRequestMessageHandler;
 import usermanagement.UserManager;
 
-public class Server extends Thread {
+public class Server {
+
+	public static void main(String[] args) {
+		new Server(12345, "users.csv").start();
+
+	}
 
 	private String filename;
+	private int port;
 
-	public Server(String filename) {
+	public Server(int port, String filename) {
 		this.filename = filename;
+		this.port = port;
 	}
 
-	@Override
-	public void run() {
-	}
+	public void start() {
+		UserManager usermanager = new UserManager(filename);
 
-	@Override
-	public synchronized void start() {
 		ServiceRegistry.fillHashMap(new ChatMessageHandler(), ServiceRegistry.chatMessageHandler);
-		ServiceRegistry.fillHashMap(new LoginMessageHandler(null), ServiceRegistry.loginMessageHandler); // TODO
+		ServiceRegistry.fillHashMap(new LoginMessageHandler(usermanager), ServiceRegistry.loginMessageHandler);
 		ServiceRegistry.fillHashMap(new UploadPackageMessageHandler(), ServiceRegistry.uploadPackageMessageHandler);
 		ServiceRegistry.fillHashMap(new UploadRequestMessageHandler(), ServiceRegistry.uploadRequestMessageHandler);
 
-		UserManager usermanager = new UserManager(filename);
+		ConnectionListener connectionListener = new ConnectionListener(port);
+		connectionListener.start();
 
 	}
 }

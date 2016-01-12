@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import messagehandling.Message;
-import server.Connection;
+import server.ConnectionHandler;
 
 public class UserManager {
 
@@ -161,41 +161,31 @@ public class UserManager {
 
 	public void logout(User user) {
 
-		if (user.getConnection() != null) {
+		if (user.getConnectionHandler() != null) {
 
 			try {
-				if (user.getConnection().getOut() != null) {
-					user.getConnection().getOut().close();
-					user.getConnection().getIn().close();
+				if (user.getConnectionHandler().getConnection().getOutputstream() != null) {
+					user.getConnectionHandler().getConnection().getOutputstream().close();
+					user.getConnectionHandler().getConnection().getInputstream().close();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
-			user.setConnection(null);
+			user.setConnectionHandler(null);
 		}
 
 		onlineUsers.remove(user);
 	}
 
-	public void login(String username, String password, Connection con) {
+	public void login(String username, String password, ConnectionHandler con) {
 
 		User user = getUser(username);
-		if (user != null && user.getPassword().equals(password)) {
-			user.setConnection(con);
+		if (user != null && user.getPassword().equals(getSHA(password))) {
+			user.setConnectionHandler(con);
 			onlineUsers.add(user);
+			System.out.println("Der Benutzer " + user.getName() + " hat sich eingeloggt!");
 		}
-	}
-
-	public User getUser(Connection connection) {
-
-		for (User user : userList) {
-			if (connection.equals(user.getConnection())) {
-				return user;
-			}
-		}
-
-		return null;
 	}
 
 	public User getUser(String name) {

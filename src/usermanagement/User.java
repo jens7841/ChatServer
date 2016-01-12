@@ -1,13 +1,14 @@
 package usermanagement;
 
-import server.Connection;
+import server.ConnectionHandler;
 
 public class User {
 
 	private String name;
 	private String password;
 	private int id;
-	private Connection connection;
+
+	private ConnectionHandler connectionHandler;
 
 	public User(String name, String password, int id) {
 		this.name = name;
@@ -27,12 +28,8 @@ public class User {
 		return id;
 	}
 
-	public void setConnection(Connection connection) {
-		this.connection = connection;
-	}
-
-	public Connection getConnection() {
-		return connection;
+	public ConnectionHandler getConnectionHandler() {
+		return connectionHandler;
 	}
 
 	@Override
@@ -46,6 +43,10 @@ public class User {
 		}
 
 		return false;
+	}
+
+	public void setConnectionHandler(ConnectionHandler con) {
+		this.connectionHandler = con;
 	}
 
 }

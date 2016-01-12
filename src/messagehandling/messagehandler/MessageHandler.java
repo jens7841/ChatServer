@@ -1,11 +1,11 @@
 package messagehandling.messagehandler;
 
 import messagehandling.Message;
-import server.Connection;
+import server.ConnectionHandler;
 import server.Service;
 
 public interface MessageHandler extends Service {
 
-	public void handleMessage(Message message, Connection connection);
+	public void handleMessage(Message message, ConnectionHandler connectionHandler);
 
 }
