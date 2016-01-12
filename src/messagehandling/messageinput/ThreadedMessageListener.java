@@ -17,10 +17,10 @@ public class ThreadedMessageListener extends Thread implements MessageListener {
 	@Override
 	public void run() {
 		try {
-
-			Message message = connectionHandler.getConnection().getInputstream().readMessage();
-			MessageHandlerFactory.getMessageHandler(message.getType()).handleMessage(message, connectionHandler);
-
+			while (true) {
+				Message message = connectionHandler.getConnection().getInputstream().readMessage();
+				MessageHandlerFactory.getMessageHandler(message.getType()).handleMessage(message, connectionHandler);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
