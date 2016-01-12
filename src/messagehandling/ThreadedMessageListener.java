@@ -1,11 +1,13 @@
 package messagehandling;
 
+import java.io.InputStream;
+
 public class ThreadedMessageListener extends Thread implements MessageListener {
 
-	private Connection connection;
+	private InputStream in;
 
-	public ThreadedMessageListener(Connection con) {
-		connection = con;
+	public ThreadedMessageListener(InputStream in) {
+		this.in = in;
 	}
 
 	@Override

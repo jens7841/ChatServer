@@ -6,6 +6,7 @@ import java.net.Socket;
 
 import messagehandling.Connection;
 import messagehandling.ThreadedMessageListener;
+import messagehandling.MessageSender;
 
 public class ConnectionListener extends Thread {
 
@@ -24,8 +25,12 @@ public class ConnectionListener extends Thread {
 		while (!serverSocket.isClosed()) {
 			try {
 				Socket socket = serverSocket.accept();
-				Connection connection = new Connection(socket.getInputStream(), socket.getOutputStream());
-				new ThreadedMessageListener(connection).start();
+
+				ThreadedMessageListener listener = new ThreadedMessageListener(socket.getInputStream());
+				listener.start();
+
+				new Connection(listener, new MessageSender(socket.getOutputStream()));
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
