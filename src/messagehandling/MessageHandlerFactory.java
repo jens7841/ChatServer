@@ -8,16 +8,16 @@ public class MessageHandlerFactory {
 
 		switch (type) {
 		case CHAT_MESSAGE:
-			return ServiceRegistry.getMessageHandler(ServiceRegistry.chatMessageHandler);
+			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.chatMessageHandler);
 
 		case LOGIN:
-			return ServiceRegistry.getMessageHandler(ServiceRegistry.loginMessageHandler);
+			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.loginMessageHandler);
 
 		case UPLOAD_PACKAGE:
-			return ServiceRegistry.getMessageHandler(ServiceRegistry.uploadPackageMessageHandler);
+			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.uploadPackageMessageHandler);
 
 		case UPLOAD_REQUEST:
-			return ServiceRegistry.getMessageHandler(ServiceRegistry.uploadRequestMessageHandler);
+			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.uploadRequestMessageHandler);
 
 		default:
 			break;

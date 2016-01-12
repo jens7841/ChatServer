@@ -17,7 +17,6 @@ import java.util.List;
 
 import messagehandling.Connection;
 import messagehandling.Message;
-import messagehandling.MultiThreadedMessageSender;
 
 public class UserManager {
 
@@ -212,7 +211,9 @@ public class UserManager {
 
 	public void sendToAllUsers(Message message) {
 		for (User user : onlineUsers) {
-			new MultiThreadedMessageSender(user.getConnection()).sendMessage(message);
+			// new
+			// MultiThreadedMessageSender(user.getConnection()).sendMessage(message);
+			// TODO
 		}
 	}
 

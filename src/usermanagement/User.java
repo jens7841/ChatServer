@@ -10,7 +10,6 @@ public class User {
 	private Connection connection;
 
 	public User(String name, String password, int id) {
-
 		this.name = name;
 		this.password = password;
 		this.id = id;

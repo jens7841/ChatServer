@@ -21,7 +21,7 @@ public class Server extends Thread {
 	@Override
 	public synchronized void start() {
 		ServiceRegistry.fillHashMap(new ChatMessageHandler(), ServiceRegistry.chatMessageHandler);
-		ServiceRegistry.fillHashMap(new LoginMessageHandler(), ServiceRegistry.loginMessageHandler);
+		ServiceRegistry.fillHashMap(new LoginMessageHandler(null), ServiceRegistry.loginMessageHandler); // TODO
 		ServiceRegistry.fillHashMap(new UploadPackageMessageHandler(), ServiceRegistry.uploadPackageMessageHandler);
 		ServiceRegistry.fillHashMap(new UploadRequestMessageHandler(), ServiceRegistry.uploadRequestMessageHandler);
 

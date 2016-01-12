@@ -16,7 +16,7 @@ public class LoginMessageHandler implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(Message message, Connection con) {
+	public void handleMessage(Message message) {
 		DataInputStream in = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(message.getBytes())));
 		try {
 			int length = in.readInt();
@@ -28,7 +28,7 @@ public class LoginMessageHandler implements MessageHandler {
 			in.readFully(passwordBytes, 0, length);
 			String password = passwordBytes.toString();
 
-			usermanager.login(username, password, con);
+			// usermanager.login(username, password, con); TODO
 
 		} catch (IOException e) {
 			e.printStackTrace();
