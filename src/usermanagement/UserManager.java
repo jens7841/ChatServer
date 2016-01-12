@@ -23,13 +23,13 @@ public class UserManager {
 	private List<User> userList;
 	private List<User> onlineUsers;
 	private String fileName;
-	private int nextID;
+	private int lastID;
 
 	public UserManager(String fileName) {
 		this.fileName = fileName;
 		try {
 			userList = readUserData();
-			nextID = readLastID();
+			lastID = readLastID();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -38,7 +38,7 @@ public class UserManager {
 
 	public void writeUserData(OutputStream out) {
 		PrintWriter writer = new PrintWriter(out);
-		writer.println(nextID);
+		writer.println(lastID);
 
 		for (User user : userList) {
 			StringBuilder builder = new StringBuilder();
@@ -99,7 +99,7 @@ public class UserManager {
 	public void clearUserList() {
 		userList.clear();
 		onlineUsers.clear();
-		nextID = 0;
+		lastID = 0;
 		createEmtpyUserFile();
 	}
 
@@ -137,7 +137,7 @@ public class UserManager {
 			throw new UserAlreadyExistsException("User " + user.getName() + " does already exists!");
 		}
 		userList.add(user);
-		nextID++;
+		lastID++;
 		saveUserData();
 	}
 
@@ -148,7 +148,7 @@ public class UserManager {
 	}
 
 	public User addUser(String userName, String password) {
-		return addUser(userName, password, nextID);
+		return addUser(userName, password, lastID);
 	}
 
 	public boolean isUserOnline(User user) {
@@ -156,7 +156,7 @@ public class UserManager {
 	}
 
 	public int getNextID() {
-		return nextID;
+		return lastID;
 	}
 
 	public void logout(User user) {
@@ -182,10 +182,36 @@ public class UserManager {
 
 		User user = getUser(username);
 		if (user != null && user.getPassword().equals(getSHA(password))) {
-			user.setConnectionHandler(con);
-			onlineUsers.add(user);
-			System.out.println("Der Benutzer " + user.getName() + " hat sich eingeloggt!");
+			if (onlineUsers.contains(user)) {
+				throw new UserAlreadyLoggedInException("Benutzer ist bereits eingeloggt!");
+			} else {
+				user.setConnectionHandler(con);
+				onlineUsers.add(user);
+				System.out.println("Der Benutzer " + user.getName() + " hat sich eingeloggt!");
+			}
+		} else {
+			throw new UserException("Benutzer nicht gefunden oder Passwort falsch!");
 		}
+	}
+
+	public void register(String username, String password) throws IOException {
+
+		for (User user : userList) {
+			if (user.getName().equalsIgnoreCase(username)) {
+				throw new UserAlreadyExistsException("Benutzer bereits registriert!");
+			}
+		}
+
+		if (username.length() > 10 || username.length() < 2) {
+			throw new UserException("Benutzername muss zwischen 2 und 10 Zeichen lang sein!");
+		}
+
+		lastID++;
+		userList.add(new User(username, getSHA(password), lastID));
+		FileOutputStream out = new FileOutputStream(createEmtpyUserFile());
+		writeUserData(out);
+		out.close();
+		System.out.println("User " + username + " hat sich soeben registriert!");
 	}
 
 	public User getUser(String name) {

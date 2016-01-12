@@ -30,7 +30,12 @@ public class LoginMessageHandler implements MessageHandler {
 			in.readFully(passwordBytes, 0, length);
 			String password = new String(passwordBytes, "UTF-8");
 
-			usermanager.login(username, password, connectionHandler);
+			if (usermanager.getUser(username) != null) {
+				usermanager.login(username, password, connectionHandler);
+			} else {
+				usermanager.register(username, password);
+				usermanager.login(username, password, connectionHandler);
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
