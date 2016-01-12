@@ -1,7 +1,6 @@
 package usermanagement;
 
 import messagehandling.Connection;
-import messagehandling.MessageSender;
 
 public class User {
 
@@ -9,7 +8,6 @@ public class User {
 	private String password;
 	private int id;
 	private Connection connection;
-	private MessageSender messageSender;
 
 	public User(String name, String password, int id) {
 
@@ -36,14 +34,6 @@ public class User {
 
 	public Connection getConnection() {
 		return connection;
-	}
-
-	public void setMessageSender(MessageSender messageSender) {
-		this.messageSender = messageSender;
-	}
-
-	public MessageSender getMessageSender() {
-		return messageSender;
 	}
 
 	@Override

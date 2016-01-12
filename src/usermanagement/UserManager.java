@@ -17,7 +17,7 @@ import java.util.List;
 
 import messagehandling.Connection;
 import messagehandling.Message;
-import messagehandling.MessageSender;
+import messagehandling.MultiThreadedMessageSender;
 
 public class UserManager {
 
@@ -165,8 +165,9 @@ public class UserManager {
 		if (user.getConnection() != null) {
 
 			try {
-				if (user.getConnection().getSocket() != null) {
-					user.getConnection().getSocket().close();
+				if (user.getConnection().getOut() != null) {
+					user.getConnection().getOut().close();
+					user.getConnection().getIn().close();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -178,13 +179,12 @@ public class UserManager {
 		onlineUsers.remove(user);
 	}
 
-	public void login(User loginUser, Connection connection, MessageSender messageSender) {
+	public void login(String username, String password, Connection con) {
 
-		User user = getUser(loginUser.getName());
-		if (user != null && user.getPassword().equals(loginUser.getPassword())) {
-			loginUser.setConnection(connection);
-			loginUser.setMessageSender(messageSender);
-			onlineUsers.add(loginUser);
+		User user = getUser(username);
+		if (user != null && user.getPassword().equals(password)) {
+			user.setConnection(con);
+			onlineUsers.add(user);
 		}
 	}
 
@@ -212,7 +212,7 @@ public class UserManager {
 
 	public void sendToAllUsers(Message message) {
 		for (User user : onlineUsers) {
-			user.getMessageSender().sendMessage(message);
+			new MultiThreadedMessageSender(user.getConnection()).sendMessage(message);
 		}
 	}
 
