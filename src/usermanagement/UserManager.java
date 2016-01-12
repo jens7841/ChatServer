@@ -36,15 +36,6 @@ public class UserManager {
 		onlineUsers = new ArrayList<>();
 	}
 
-	public User getUser(ConnectionHandler handler) {
-		for (User user : onlineUsers) {
-			if (handler.equals(user.getConnectionHandler())) {
-				return user;
-			}
-		}
-		return null;
-	}
-
 	public void writeUserData(OutputStream out) {
 		PrintWriter writer = new PrintWriter(out);
 		writer.println(lastID);
@@ -196,6 +187,7 @@ public class UserManager {
 			} else {
 				user.setConnectionHandler(con);
 				onlineUsers.add(user);
+				con.setUser(user);
 				System.out.println("Der Benutzer " + user.getName() + " hat sich eingeloggt!");
 			}
 		} else {

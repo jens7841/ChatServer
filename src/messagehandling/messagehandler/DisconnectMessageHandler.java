@@ -15,9 +15,13 @@ public class DisconnectMessageHandler implements MessageHandler {
 
 	@Override
 	public void handleMessage(Message message, ConnectionHandler connectionHandler) {
-		User user = userManager.getUser(connectionHandler);
-		userManager.logout(user);
-		System.out.println("Der Benutzer " + user.getName() + " hat sich ausgeloggt!");
+		User user = connectionHandler.getUser();
+		if (user != null) {
+			userManager.logout(user);
+			System.out.println("Der Benutzer " + user.getName() + " hat sich ausgeloggt!");
+		} else {
+			System.out.println("Eine Verbindung wurde getrennt");
+		}
 	}
 
 }

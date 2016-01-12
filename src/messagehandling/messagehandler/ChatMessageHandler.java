@@ -10,7 +10,9 @@ public class ChatMessageHandler implements MessageHandler {
 	@Override
 	public void handleMessage(Message message, ConnectionHandler connectionHandler) {
 		try {
-			System.out.println(new String(message.getBytes(), "UTF-8"));
+			if (connectionHandler.getUser() != null) {
+				System.out.println(new String(message.getBytes(), "UTF-8"));
+			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
