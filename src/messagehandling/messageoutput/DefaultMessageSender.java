@@ -1,7 +1,5 @@
 package messagehandling.messageoutput;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -19,11 +17,9 @@ public class DefaultMessageSender implements MessageSender {
 	public void sendMessage(Message message) {
 
 		try {
-			DataOutputStream output = new DataOutputStream(new BufferedOutputStream(out));
+			MessageOutputstream output = new MessageOutputstream(out);
 
-			output.write(message.getType().getTypeNumber());
-			output.writeInt(message.getBytes().length);
-			output.write(message.getBytes());
+			output.writeMessage(message);
 			output.flush();
 
 		} catch (IOException e) {
