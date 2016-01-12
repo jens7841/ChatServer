@@ -6,6 +6,7 @@ public class ServiceRegistry {
 
 	public static final String loginMessageHandler = "lmh";
 	public static final String chatMessageHandler = "cmh";
+	public static final String disconnectMessageHandler = "dmh";
 	public static final String uploadRequestMessageHandler = "urmh";
 	public static final String uploadPackageMessageHandler = "upmh";
 

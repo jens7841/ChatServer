@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import messagehandling.Message;
 import messagehandling.MessageHandlerFactory;
+import messagehandling.MessageType;
 import server.ConnectionHandler;
 
 public class ThreadedMessageListener extends Thread implements MessageListener {
@@ -22,7 +23,8 @@ public class ThreadedMessageListener extends Thread implements MessageListener {
 				MessageHandlerFactory.getMessageHandler(message.getType()).handleMessage(message, connectionHandler);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			MessageHandlerFactory.getMessageHandler(MessageType.DISCONNECT)
+					.handleMessage(new Message(new byte[] {}, MessageType.DISCONNECT), connectionHandler);
 		}
 	}
 

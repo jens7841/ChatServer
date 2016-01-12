@@ -20,6 +20,9 @@ public class MessageHandlerFactory {
 		case UPLOAD_REQUEST:
 			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.uploadRequestMessageHandler);
 
+		case DISCONNECT:
+			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.disconnectMessageHandler);
+
 		default:
 			break;
 
