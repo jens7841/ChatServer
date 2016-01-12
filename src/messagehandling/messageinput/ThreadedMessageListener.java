@@ -1,7 +1,9 @@
-package messagehandling;
+package messagehandling.messageinput;
 
 import java.io.IOException;
 
+import messagehandling.Message;
+import messagehandling.MessageHandlerFactory;
 import server.Connection;
 
 public class ThreadedMessageListener extends Thread implements MessageListener {
@@ -17,7 +19,7 @@ public class ThreadedMessageListener extends Thread implements MessageListener {
 		try {
 
 			Message message = connection.getInputstream().readMessage();
-			MessageHandlerFactory.getMessageHandler(message.getType()).handleMessage(message);
+			MessageHandlerFactory.getMessageHandler(message.getType()).handleMessage(message, connection);
 
 		} catch (IOException e) {
 			e.printStackTrace();

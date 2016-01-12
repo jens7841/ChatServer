@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import messagehandling.MessageInputStream;
-import messagehandling.MessageOutputstream;
-import messagehandling.ThreadedMessageListener;
+import messagehandling.messageinput.MessageInputStream;
+import messagehandling.messageinput.ThreadedMessageListener;
+import messagehandling.messageoutput.MessageOutputstream;
 
 public class ConnectionListener extends Thread {
 

@@ -1,7 +1,7 @@
 package server;
 
-import messagehandling.MessageInputStream;
-import messagehandling.MessageOutputstream;
+import messagehandling.messageinput.MessageInputStream;
+import messagehandling.messageoutput.MessageOutputstream;
 
 public class Connection {
 

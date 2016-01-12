@@ -8,8 +8,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import messagehandling.Message;
-import messagehandling.DefaultMessageSender;
 import messagehandling.MessageType;
+import messagehandling.messageoutput.DefaultMessageSender;
 
 public class MessageSenderTest {
 

@@ -1,10 +1,12 @@
-package messagehandling;
+package messagehandling.messagehandler;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import messagehandling.Message;
+import server.Connection;
 import usermanagement.UserManager;
 
 public class LoginMessageHandler implements MessageHandler {
@@ -16,7 +18,7 @@ public class LoginMessageHandler implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(Message message) {
+	public void handleMessage(Message message, Connection connection) {
 		DataInputStream in = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(message.getBytes())));
 		try {
 			int length = in.readInt();

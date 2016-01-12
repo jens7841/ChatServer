@@ -1,5 +1,6 @@
 package messagehandling;
 
+import messagehandling.messagehandler.MessageHandler;
 import server.ServiceRegistry;
 
 public class MessageHandlerFactory {

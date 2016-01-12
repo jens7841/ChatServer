@@ -1,9 +1,12 @@
-package messagehandling;
+package messagehandling.messageinput;
 
 import java.io.DataInputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import messagehandling.Message;
+import messagehandling.MessageType;
 
 public class MessageInputStream extends FilterInputStream {
 

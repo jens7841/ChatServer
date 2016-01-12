@@ -1,9 +1,11 @@
-package messagehandling;
+package messagehandling.messageoutput;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import messagehandling.Message;
 
 public class DefaultMessageSender implements MessageSender {
 

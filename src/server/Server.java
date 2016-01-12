@@ -1,9 +1,9 @@
 package server;
 
-import messagehandling.ChatMessageHandler;
-import messagehandling.LoginMessageHandler;
-import messagehandling.UploadPackageMessageHandler;
-import messagehandling.UploadRequestMessageHandler;
+import messagehandling.messagehandler.ChatMessageHandler;
+import messagehandling.messagehandler.LoginMessageHandler;
+import messagehandling.messagehandler.UploadPackageMessageHandler;
+import messagehandling.messagehandler.UploadRequestMessageHandler;
 import usermanagement.UserManager;
 
 public class Server extends Thread {
