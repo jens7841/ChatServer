@@ -14,8 +14,8 @@ public class DisconnectMessageHandler implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(Message message, UserHandler connectionHandler) {
-		User user = connectionHandler.getUser();
+	public void handleMessage(Message message, UserHandler userHandler) {
+		User user = userHandler.getUser();
 		if (user != null) {
 			userManager.logout(user);
 		} else {

@@ -23,7 +23,7 @@ public class LoginMessageHandler implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(Message message, UserHandler connectionHandler) {
+	public void handleMessage(Message message, UserHandler userHandler) {
 		DataInputStream in = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(message.getBytes())));
 		try {
 			int length = in.readInt();
@@ -40,24 +40,24 @@ public class LoginMessageHandler implements MessageHandler {
 				try {
 					usermanager.register(username, password);
 
-					connectionHandler.getUser().getMessageSender().sendMessage(
+					userHandler.getUser().getMessageSender().sendMessage(
 							new Message("Erfolgreich Registriert!".getBytes("UTF-8"), MessageType.SUCCESS_MESSAGE));
 
 				} catch (UserException e) {
-					connectionHandler.getUser().getMessageSender()
+					userHandler.getUser().getMessageSender()
 							.sendMessage(new Message(e.getMessage(), MessageType.LOGIN_ERROR_MESSAGE));
 				}
 			}
 			try {
 
-				User oldUser = connectionHandler.getUser();
-				connectionHandler.setUser(usermanager.login(username, password, oldUser.getConnection(),
+				User oldUser = userHandler.getUser();
+				userHandler.setUser(usermanager.login(username, password, oldUser.getConnection(),
 						oldUser.getMessageListener(), oldUser.getMessageSender()));
-				sendLoginSuccess(connectionHandler);
+				sendLoginSuccess(userHandler);
 
 			} catch (UserAlreadyExistsException e) {
 
-				connectionHandler.getUser().getMessageSender().sendMessage(
+				userHandler.getUser().getMessageSender().sendMessage(
 						new Message("Benutzer bereits eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_ERROR_MESSAGE));
 			}
 

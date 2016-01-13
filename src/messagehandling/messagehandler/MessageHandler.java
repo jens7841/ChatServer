@@ -6,6 +6,6 @@ import server.Service;
 
 public interface MessageHandler extends Service {
 
-	public void handleMessage(Message message, UserHandler connectionHandler);
+	public void handleMessage(Message message, UserHandler userHandler);
 
 }

@@ -17,9 +17,9 @@ public class ChatMessageHandler implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(Message message, UserHandler connectionHandler) {
+	public void handleMessage(Message message, UserHandler userHandler) {
 		try {
-			User user = connectionHandler.getUser();
+			User user = userHandler.getUser();
 			if (user != null) {
 				System.out.println("> " + user.getName() + ": " + new String(message.getBytes(), "UTF-8"));
 				userManager.sendToAllUsers(

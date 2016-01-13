@@ -11,8 +11,8 @@ public class ThreadedMessageListener extends Thread implements MessageListener {
 
 	private UserHandler connectionHandler;
 
-	public ThreadedMessageListener(UserHandler connectionHandler) {
-		this.connectionHandler = connectionHandler;
+	public ThreadedMessageListener(UserHandler userHandler) {
+		this.connectionHandler = userHandler;
 	}
 
 	@Override

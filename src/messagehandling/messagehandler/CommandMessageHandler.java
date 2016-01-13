@@ -14,12 +14,12 @@ public class CommandMessageHandler implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(Message message, UserHandler connectionHandler) {
+	public void handleMessage(Message message, UserHandler userHandler) {
 		if (commandHandler.commandKnown(message.toString())) {
 			commandHandler.handleCommand(message.toString());
 		} else {
 			System.out.println("Command nicht bekannt");
-			connectionHandler.getUser().getMessageSender()
+			userHandler.getUser().getMessageSender()
 					.sendMessage(new Message("-> Command nicht bekannt!", MessageType.ERROR_MESSAGE));
 		}
 	}
