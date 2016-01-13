@@ -3,10 +3,18 @@ package messagehandling.messagehandler;
 import java.io.UnsupportedEncodingException;
 
 import messagehandling.Message;
+import messagehandling.MessageType;
 import server.ConnectionHandler;
 import usermanagement.User;
+import usermanagement.UserManager;
 
 public class ChatMessageHandler implements MessageHandler {
+
+	private UserManager userManager;
+
+	public ChatMessageHandler(UserManager userManager) {
+		this.userManager = userManager;
+	}
 
 	@Override
 	public void handleMessage(Message message, ConnectionHandler connectionHandler) {
@@ -14,6 +22,10 @@ public class ChatMessageHandler implements MessageHandler {
 			User user = connectionHandler.getUser();
 			if (user != null) {
 				System.out.println("> " + user.getName() + ": " + new String(message.getBytes(), "UTF-8"));
+				userManager.sendToAllUsers(
+						new Message(("> " + user.getName() + ": " + message.toString()).getBytes("UTF-8"),
+								MessageType.CHAT_MESSAGE),
+						user);
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

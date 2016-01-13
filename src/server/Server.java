@@ -10,7 +10,6 @@ import usermanagement.UserManager;
 public class Server {
 
 	public static void main(String[] args) {
-		System.out.println(Long.MAX_VALUE);
 		new Server(12345, "users.csv").start();
 
 	}
@@ -26,7 +25,7 @@ public class Server {
 	public void start() {
 		UserManager userManager = new UserManager(filename);
 
-		ServiceRegistry.fillHashMap(new ChatMessageHandler(), ServiceRegistry.chatMessageHandler);
+		ServiceRegistry.fillHashMap(new ChatMessageHandler(userManager), ServiceRegistry.chatMessageHandler);
 		ServiceRegistry.fillHashMap(new LoginMessageHandler(userManager), ServiceRegistry.loginMessageHandler);
 		ServiceRegistry.fillHashMap(new DisconnectMessageHandler(userManager),
 				ServiceRegistry.disconnectMessageHandler);
