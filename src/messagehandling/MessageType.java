@@ -26,19 +26,26 @@ public enum MessageType {
 	}
 
 	/*
-	 * 
 	 * Upload Reject:
 	 * 
 	 * UPReject FilenameLength(int) Filename Filesize(long)
+	 * (MessageType.UPLOAD_REJECT, int filenameLength, String filename, long
+	 * fileSize)
 	 * 
 	 * 
 	 * Upload Request:
 	 * 
 	 * UPRequest FilenameLength(int) Filename Filesize(long)
+	 * (MessageType.UPLOAD_REQUEST, int filenameLength, String filename, long
+	 * fileSize)
+	 * 
 	 * 
 	 * Upload Confirmation
 	 * 
 	 * UPConfirm FilenameLeng(int) FileName FileSize(long) id(int)
+	 * (MessageType.UPLOAD_CONFIRMATION, int filenameLength, String filename,
+	 * long fileSize, int id)
+	 * 
 	 * 
 	 * Datei Sendeprotokoll:
 	 * 
