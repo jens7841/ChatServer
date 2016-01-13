@@ -18,7 +18,6 @@ public class DisconnectMessageHandler implements MessageHandler {
 		User user = connectionHandler.getUser();
 		if (user != null) {
 			userManager.logout(user);
-			System.out.println("Der Benutzer " + user.getName() + " hat sich ausgeloggt!");
 		} else {
 			System.out.println("Eine Verbindung wurde getrennt");
 		}

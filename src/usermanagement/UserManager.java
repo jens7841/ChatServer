@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import messagehandling.Message;
+import messagehandling.MessageType;
 import server.ConnectionHandler;
 
 public class UserManager {
@@ -176,6 +177,8 @@ public class UserManager {
 		}
 
 		onlineUsers.remove(user);
+		System.out.println("Der Benutzer " + user.getName() + " hat sich ausgeloggt!");
+		sendToAllUsers(new Message("-> " + user.getName() + " hat sich ausgeloggt!", MessageType.CHAT_MESSAGE));
 	}
 
 	public void login(String username, String password, ConnectionHandler con) {
@@ -189,6 +192,7 @@ public class UserManager {
 				onlineUsers.add(user);
 				con.setUser(user);
 				System.out.println("Der Benutzer " + user.getName() + " hat sich eingeloggt!");
+				sendToAllUsers(new Message("-> " + username + " hat sich eingeloggt!", MessageType.CHAT_MESSAGE), user);
 			}
 		} else {
 			throw new UserException("Benutzer nicht gefunden oder Passwort falsch!");
