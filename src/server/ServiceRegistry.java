@@ -9,6 +9,7 @@ public class ServiceRegistry {
 	public static final String disconnectMessageHandler = "dmh";
 	public static final String uploadRequestMessageHandler = "urmh";
 	public static final String uploadPackageMessageHandler = "upmh";
+	public static final String commandMessageHandler = "cmdmh";
 
 	private static final HashMap<String, Service> hashMap = new HashMap<>();
 

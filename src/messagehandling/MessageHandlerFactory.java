@@ -23,6 +23,9 @@ public class MessageHandlerFactory {
 		case DISCONNECT:
 			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.disconnectMessageHandler);
 
+		case COMMAND_MESSAGE:
+			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.commandMessageHandler);
+
 		default:
 			break;
 
