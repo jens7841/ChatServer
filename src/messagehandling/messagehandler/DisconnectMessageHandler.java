@@ -1,7 +1,7 @@
 package messagehandling.messagehandler;
 
 import messagehandling.Message;
-import server.ConnectionHandler;
+import server.UserHandler;
 import usermanagement.User;
 import usermanagement.UserManager;
 
@@ -14,7 +14,7 @@ public class DisconnectMessageHandler implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(Message message, ConnectionHandler connectionHandler) {
+	public void handleMessage(Message message, UserHandler connectionHandler) {
 		User user = connectionHandler.getUser();
 		if (user != null) {
 			userManager.logout(user);

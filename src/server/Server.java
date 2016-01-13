@@ -25,12 +25,12 @@ public class Server {
 	public void start() {
 		UserManager userManager = new UserManager(filename);
 
-		ServiceRegistry.fillHashMap(new ChatMessageHandler(userManager), ServiceRegistry.chatMessageHandler);
-		ServiceRegistry.fillHashMap(new LoginMessageHandler(userManager), ServiceRegistry.loginMessageHandler);
-		ServiceRegistry.fillHashMap(new DisconnectMessageHandler(userManager),
+		ServiceRegistry.register(new ChatMessageHandler(userManager), ServiceRegistry.chatMessageHandler);
+		ServiceRegistry.register(new LoginMessageHandler(userManager), ServiceRegistry.loginMessageHandler);
+		ServiceRegistry.register(new DisconnectMessageHandler(userManager),
 				ServiceRegistry.disconnectMessageHandler);
-		ServiceRegistry.fillHashMap(new UploadPackageMessageHandler(), ServiceRegistry.uploadPackageMessageHandler);
-		ServiceRegistry.fillHashMap(new UploadRequestMessageHandler(), ServiceRegistry.uploadRequestMessageHandler);
+		ServiceRegistry.register(new UploadPackageMessageHandler(), ServiceRegistry.uploadPackageMessageHandler);
+		ServiceRegistry.register(new UploadRequestMessageHandler(), ServiceRegistry.uploadRequestMessageHandler);
 
 		ConnectionListener connectionListener = new ConnectionListener(port);
 		connectionListener.start();

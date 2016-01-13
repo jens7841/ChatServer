@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 import messagehandling.Message;
 import messagehandling.MessageType;
-import server.ConnectionHandler;
+import server.UserHandler;
 import usermanagement.User;
 import usermanagement.UserManager;
 
@@ -17,7 +17,7 @@ public class ChatMessageHandler implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(Message message, ConnectionHandler connectionHandler) {
+	public void handleMessage(Message message, UserHandler connectionHandler) {
 		try {
 			User user = connectionHandler.getUser();
 			if (user != null) {

@@ -17,7 +17,9 @@ import java.util.List;
 
 import messagehandling.Message;
 import messagehandling.MessageType;
-import server.ConnectionHandler;
+import messagehandling.messageinput.MessageListener;
+import messagehandling.messageoutput.MessageSender;
+import server.Connection;
 
 public class UserManager {
 
@@ -162,18 +164,20 @@ public class UserManager {
 
 	public void logout(User user) {
 
-		if (user.getConnectionHandler() != null) {
+		if (user.getMessageListener() != null) {
 
 			try {
-				if (user.getConnectionHandler().getConnection().getOutputstream() != null) {
-					user.getConnectionHandler().getConnection().getOutputstream().close();
-					user.getConnectionHandler().getConnection().getInputstream().close();
+				if (user.getConnection().getOutputstream() != null) {
+					user.getConnection().getOutputstream().close();
+					user.getConnection().getInputstream().close();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
-			user.setConnectionHandler(null);
+			user.setConnection(null);
+			user.setMessageListener(null);
+			user.setMessageSender(null);
 		}
 
 		onlineUsers.remove(user);
@@ -181,22 +185,26 @@ public class UserManager {
 		sendToAllUsers(new Message("-> " + user.getName() + " hat sich ausgeloggt!", MessageType.CHAT_MESSAGE));
 	}
 
-	public void login(String username, String password, ConnectionHandler con) {
+	public User login(String username, String password, Connection connection, MessageListener messageListener,
+			MessageSender messageSender) {
 
 		User user = getUser(username);
 		if (user != null && user.getPassword().equals(getSHA(password))) {
 			if (onlineUsers.contains(user)) {
 				throw new UserAlreadyLoggedInException("Benutzer ist bereits eingeloggt!");
 			} else {
-				user.setConnectionHandler(con);
+				user.setConnection(connection);
+				user.setMessageListener(messageListener);
+				user.setMessageSender(messageSender);
 				onlineUsers.add(user);
-				con.setUser(user);
+
 				System.out.println("Der Benutzer " + user.getName() + " hat sich eingeloggt!");
 				sendToAllUsers(new Message("-> " + username + " hat sich eingeloggt!", MessageType.CHAT_MESSAGE), user);
 			}
 		} else {
 			throw new UserException("Benutzer nicht gefunden oder Passwort falsch!");
 		}
+		return user;
 	}
 
 	public void register(String username, String password) throws IOException {
@@ -237,7 +245,7 @@ public class UserManager {
 	public void sendToAllUsers(Message message, User user) {
 		for (User u : onlineUsers) {
 			if (!u.equals(user)) {
-				u.getConnectionHandler().getMessageSender().sendMessage(message);
+				u.getMessageSender().sendMessage(message);
 			}
 		}
 	}

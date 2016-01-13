@@ -5,13 +5,13 @@ import java.io.IOException;
 import messagehandling.Message;
 import messagehandling.MessageHandlerFactory;
 import messagehandling.MessageType;
-import server.ConnectionHandler;
+import server.UserHandler;
 
 public class ThreadedMessageListener extends Thread implements MessageListener {
 
-	private ConnectionHandler connectionHandler;
+	private UserHandler connectionHandler;
 
-	public ThreadedMessageListener(ConnectionHandler connectionHandler) {
+	public ThreadedMessageListener(UserHandler connectionHandler) {
 		this.connectionHandler = connectionHandler;
 	}
 
@@ -19,8 +19,9 @@ public class ThreadedMessageListener extends Thread implements MessageListener {
 	public void run() {
 		try {
 			while (true) {
-				Message message = connectionHandler.getConnection().getInputstream().readMessage();
+				Message message = connectionHandler.getUser().getConnection().getInputstream().readMessage();
 				MessageHandlerFactory.getMessageHandler(message.getType()).handleMessage(message, connectionHandler);
+
 			}
 		} catch (IOException e) {
 			MessageHandlerFactory.getMessageHandler(MessageType.DISCONNECT)

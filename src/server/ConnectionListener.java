@@ -9,29 +9,34 @@ import messagehandling.messageoutput.MessageOutputstream;
 
 public class ConnectionListener {
 
-	private ServerSocket serverSocket;
+	private int port;
 
 	public ConnectionListener(int port) {
-		try {
-			serverSocket = new ServerSocket(port);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.port = port;
 	}
 
 	public void start() {
-		while (!serverSocket.isClosed()) {
-			try {
+		ServerSocket serverSocket = null;
+		try {
+			serverSocket = new ServerSocket(port);
+
+			while (!serverSocket.isClosed()) {
 				Socket socket = serverSocket.accept();
 				System.out.println("Client connected to Server :o IP: " + socket.getInetAddress());
 
 				Connection connection = new Connection(new MessageOutputstream(socket.getOutputStream()),
 						new MessageInputStream(socket.getInputStream()));
 
-				new ConnectionHandler(connection);
+				new UserHandler(connection);
 
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				serverSocket.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}

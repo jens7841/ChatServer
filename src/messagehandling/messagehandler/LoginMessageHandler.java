@@ -8,7 +8,8 @@ import java.io.UnsupportedEncodingException;
 
 import messagehandling.Message;
 import messagehandling.MessageType;
-import server.ConnectionHandler;
+import server.UserHandler;
+import usermanagement.User;
 import usermanagement.UserAlreadyExistsException;
 import usermanagement.UserException;
 import usermanagement.UserManager;
@@ -22,7 +23,7 @@ public class LoginMessageHandler implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(Message message, ConnectionHandler connectionHandler) {
+	public void handleMessage(Message message, UserHandler connectionHandler) {
 		DataInputStream in = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(message.getBytes())));
 		try {
 			int length = in.readInt();
@@ -39,24 +40,25 @@ public class LoginMessageHandler implements MessageHandler {
 				try {
 					usermanager.register(username, password);
 
-					connectionHandler.getMessageSender().sendMessage(
+					connectionHandler.getUser().getMessageSender().sendMessage(
 							new Message("Erfolgreich Registriert!".getBytes("UTF-8"), MessageType.SUCCESS_MESSAGE));
 
 				} catch (UserException e) {
-					connectionHandler.getMessageSender()
+					connectionHandler.getUser().getMessageSender()
 							.sendMessage(new Message(e.getMessage(), MessageType.LOGIN_ERROR_MESSAGE));
 				}
 			}
 			try {
 
-				usermanager.login(username, password, connectionHandler);
+				User oldUser = connectionHandler.getUser();
+				connectionHandler.setUser(usermanager.login(username, password, oldUser.getConnection(),
+						oldUser.getMessageListener(), oldUser.getMessageSender()));
 				sendLoginSuccess(connectionHandler);
 
 			} catch (UserAlreadyExistsException e) {
 
-				connectionHandler.getMessageSender().sendMessage(
+				connectionHandler.getUser().getMessageSender().sendMessage(
 						new Message("Benutzer bereits eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_ERROR_MESSAGE));
-
 			}
 
 		} catch (IOException e) {
@@ -64,9 +66,9 @@ public class LoginMessageHandler implements MessageHandler {
 		}
 	}
 
-	private void sendLoginSuccess(ConnectionHandler connectionHandler) {
+	private void sendLoginSuccess(UserHandler connectionHandler) {
 		try {
-			connectionHandler.getMessageSender().sendMessage(
+			connectionHandler.getUser().getMessageSender().sendMessage(
 					new Message("Erfolgreich eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_SUCCESS_MESSAGE));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

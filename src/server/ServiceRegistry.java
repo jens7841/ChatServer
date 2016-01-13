@@ -12,7 +12,7 @@ public class ServiceRegistry {
 
 	private static final HashMap<String, Service> hashMap = new HashMap<>();
 
-	public static void fillHashMap(Service service, String key) {
+	public static void register(Service service, String key) {
 		hashMap.put(key, service);
 	}
 

@@ -1,12 +1,12 @@
 package messagehandling.messagehandler;
 
 import messagehandling.Message;
-import server.ConnectionHandler;
+import server.UserHandler;
 
 public class UploadPackageMessageHandler implements MessageHandler {
 
 	@Override
-	public void handleMessage(Message message, ConnectionHandler connectionHandler) {
+	public void handleMessage(Message message, UserHandler connectionHandler) {
 		// TODO Auto-generated method stub
 
 	}

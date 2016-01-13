@@ -1,6 +1,8 @@
 package usermanagement;
 
-import server.ConnectionHandler;
+import messagehandling.messageinput.MessageListener;
+import messagehandling.messageoutput.MessageSender;
+import server.Connection;
 
 public class User {
 
@@ -8,12 +10,38 @@ public class User {
 	private String password;
 	private int id;
 
-	private ConnectionHandler connectionHandler;
+	private MessageSender messageSender;
+	private MessageListener messageListener;
+	private Connection connection;
 
 	public User(String name, String password, int id) {
 		this.name = name;
 		this.password = password;
 		this.id = id;
+	}
+
+	public Connection getConnection() {
+		return connection;
+	}
+
+	public void setConnection(Connection connection) {
+		this.connection = connection;
+	}
+
+	public void setMessageListener(MessageListener messageListener) {
+		this.messageListener = messageListener;
+	}
+
+	public void setMessageSender(MessageSender messageSender) {
+		this.messageSender = messageSender;
+	}
+
+	public MessageListener getMessageListener() {
+		return messageListener;
+	}
+
+	public MessageSender getMessageSender() {
+		return messageSender;
 	}
 
 	public String getName() {
@@ -28,10 +56,6 @@ public class User {
 		return id;
 	}
 
-	public ConnectionHandler getConnectionHandler() {
-		return connectionHandler;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 
@@ -43,10 +67,6 @@ public class User {
 		}
 
 		return false;
-	}
-
-	public void setConnectionHandler(ConnectionHandler con) {
-		this.connectionHandler = con;
 	}
 
 }
