@@ -227,10 +227,14 @@ public class UserManager {
 	}
 
 	public void sendToAllUsers(Message message) {
-		for (User user : onlineUsers) {
-			// new
-			// MultiThreadedMessageSender(user.getConnection()).sendMessage(message);
-			// TODO
+		sendToAllUsers(message, null);
+	}
+
+	public void sendToAllUsers(Message message, User user) {
+		for (User u : onlineUsers) {
+			if (!u.equals(user)) {
+				u.getConnectionHandler().getMessageSender().sendMessage(message);
+			}
 		}
 	}
 
