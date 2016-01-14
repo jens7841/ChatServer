@@ -9,23 +9,23 @@ import server.UserHandler;
 
 public class ThreadedMessageListener extends Thread implements MessageListener {
 
-	private UserHandler connectionHandler;
+	private UserHandler userHandler;
 
 	public ThreadedMessageListener(UserHandler userHandler) {
-		this.connectionHandler = userHandler;
+		this.userHandler = userHandler;
 	}
 
 	@Override
 	public void run() {
 		try {
 			while (true) {
-				Message message = connectionHandler.getUser().getConnection().getInputstream().readMessage();
-				MessageHandlerFactory.getMessageHandler(message.getType()).handleMessage(message, connectionHandler);
+				Message message = userHandler.getUser().getConnection().getInputstream().readMessage();
+				MessageHandlerFactory.getMessageHandler(message.getType()).handleMessage(message, userHandler);
 
 			}
 		} catch (IOException e) {
 			MessageHandlerFactory.getMessageHandler(MessageType.DISCONNECT)
-					.handleMessage(new Message(new byte[] {}, MessageType.DISCONNECT), connectionHandler);
+					.handleMessage(new Message(new byte[] {}, MessageType.DISCONNECT), userHandler);
 		}
 	}
 

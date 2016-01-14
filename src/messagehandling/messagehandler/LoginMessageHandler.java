@@ -41,11 +41,11 @@ public class LoginMessageHandler implements MessageHandler {
 					usermanager.register(username, password);
 
 					userHandler.getUser().getMessageSender().sendMessage(
-							new Message("Erfolgreich Registriert!".getBytes("UTF-8"), MessageType.SUCCESS_MESSAGE));
+							new Message("Erfolgreich Registriert!".getBytes("UTF-8"), MessageType.SUCCESS));
 
 				} catch (UserException e) {
 					userHandler.getUser().getMessageSender()
-							.sendMessage(new Message(e.getMessage(), MessageType.LOGIN_ERROR_MESSAGE));
+							.sendMessage(new Message(e.getMessage(), MessageType.LOGIN_ERROR));
 				}
 			}
 			try {
@@ -58,7 +58,7 @@ public class LoginMessageHandler implements MessageHandler {
 			} catch (UserAlreadyExistsException e) {
 
 				userHandler.getUser().getMessageSender().sendMessage(
-						new Message("Benutzer bereits eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_ERROR_MESSAGE));
+						new Message("Benutzer bereits eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_ERROR));
 			}
 
 		} catch (IOException e) {
@@ -69,7 +69,7 @@ public class LoginMessageHandler implements MessageHandler {
 	private void sendLoginSuccess(UserHandler connectionHandler) {
 		try {
 			connectionHandler.getUser().getMessageSender().sendMessage(
-					new Message("Erfolgreich eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_SUCCESS_MESSAGE));
+					new Message("Erfolgreich eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_SUCCESS));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

@@ -9,6 +9,7 @@ public class User {
 	private String name;
 	private String password;
 	private int id;
+	private int simultaneosUploads = 0;
 
 	private MessageSender messageSender;
 	private MessageListener messageListener;
@@ -54,6 +55,14 @@ public class User {
 
 	public int getID() {
 		return id;
+	}
+
+	public int getSimultaneosUploads() {
+		return simultaneosUploads;
+	}
+
+	public void setSimultaneosUploads(int simultaneosUploads) {
+		this.simultaneosUploads = simultaneosUploads;
 	}
 
 	@Override

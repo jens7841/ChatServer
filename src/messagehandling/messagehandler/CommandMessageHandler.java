@@ -20,7 +20,7 @@ public class CommandMessageHandler implements MessageHandler {
 		} else {
 			System.out.println("Command nicht bekannt");
 			userHandler.getUser().getMessageSender()
-					.sendMessage(new Message("-> Command nicht bekannt!", MessageType.ERROR_MESSAGE));
+					.sendMessage(new Message("-> Command nicht bekannt!", MessageType.ERROR));
 		}
 	}
 
