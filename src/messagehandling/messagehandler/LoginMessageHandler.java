@@ -59,6 +59,11 @@ public class LoginMessageHandler implements MessageHandler {
 
 				userHandler.getUser().getMessageSender().sendMessage(
 						new Message("Benutzer bereits eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_ERROR));
+
+			} catch (UserException e) {
+				userHandler.getUser().getMessageSender()
+						.sendMessage(new Message(e.getMessage().getBytes("UTF-8"), MessageType.LOGIN_ERROR));
+
 			}
 
 		} catch (IOException e) {
@@ -68,8 +73,8 @@ public class LoginMessageHandler implements MessageHandler {
 
 	private void sendLoginSuccess(UserHandler connectionHandler) {
 		try {
-			connectionHandler.getUser().getMessageSender().sendMessage(
-					new Message("Erfolgreich eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_SUCCESS));
+			connectionHandler.getUser().getMessageSender()
+					.sendMessage(new Message("Erfolgreich eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_SUCCESS));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
