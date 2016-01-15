@@ -15,14 +15,14 @@ public class FileManager {
 	private List<UploadedFile> files;
 	private List<byte[]> packages;
 	private int lastID;
-	private String tempPath;
+	private final String tempPath;
 
 	public FileManager(String tempPath) {
 		this.tempPath = tempPath;
 
 		new File(tempPath).mkdir();
 		files = new ArrayList<>();
-		lastID = 0;
+		lastID = Integer.MIN_VALUE;
 		clearTempFolder();
 	}
 

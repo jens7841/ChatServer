@@ -2,9 +2,8 @@ package messagehandling;
 
 public enum MessageType {
 
-	CHAT_MESSAGE(0), LOGIN(1), LOGIN_ERROR(2), LOGIN_SUCCESS(3), ERROR(4), SUCCESS(
-			5), DISCONNECT(6), UPLOAD_REQUEST(7), UPLOAD_CONFIRMATION(8), UPLOAD_PACKAGE(9), UPLOAD_REJECT(
-					10), COMMAND(11);
+	CHAT_MESSAGE(0), LOGIN(1), LOGIN_ERROR(2), LOGIN_SUCCESS(3), ERROR(4), SUCCESS(5), DISCONNECT(6), UPLOAD_REQUEST(
+			7), UPLOAD_CONFIRMATION(8), UPLOAD_PACKAGE(9), UPLOAD_REJECT(10), COMMAND(11);
 
 	private int typeNumber;
 
@@ -28,7 +27,7 @@ public enum MessageType {
 	/*
 	 * Upload Reject:
 	 * 
-	 * UPReject FilenameLength(int) Filename Filesize(long)
+	 * UPReject FilenameLength(int) Filename Filesize(long) MesLeng(int) Message
 	 * 
 	 * 
 	 * Upload Request:

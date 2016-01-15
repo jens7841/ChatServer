@@ -13,7 +13,7 @@ import usermanagement.UserManager;
 public class Server {
 
 	public static void main(String[] args) {
-		new Server(12345, "users.csv").start();
+		new Server(12345, "users.csv", "tmpFiles").start();
 
 	}
 
@@ -23,21 +23,24 @@ public class Server {
 
 	private String filename;
 	private int port;
+	private String pathName;
 
-	public Server(int port, String filename) {
+	public Server(int port, String filename, String pathName) {
 		this.filename = filename;
 		this.port = port;
+		this.pathName = pathName;
 	}
 
 	public void start() {
 		UserManager userManager = new UserManager(filename);
-		FileManager fileManager = new FileManager("tmpFiles");
 
 		ServiceRegistry.register(new ChatMessageHandler(userManager), ServiceRegistry.chatMessageHandler);
 		ServiceRegistry.register(new LoginMessageHandler(userManager), ServiceRegistry.loginMessageHandler);
 		ServiceRegistry.register(new DisconnectMessageHandler(userManager), ServiceRegistry.disconnectMessageHandler);
-		ServiceRegistry.register(new UploadPackageMessageHandler(), ServiceRegistry.uploadPackageMessageHandler);
-		ServiceRegistry.register(new UploadRequestMessageHandler(), ServiceRegistry.uploadRequestMessageHandler);
+		ServiceRegistry.register(new UploadPackageMessageHandler(new FileManager(pathName)),
+				ServiceRegistry.uploadPackageMessageHandler);
+		ServiceRegistry.register(new UploadRequestMessageHandler(new FileManager(pathName)),
+				ServiceRegistry.uploadRequestMessageHandler);
 		ServiceRegistry.register(new CommandMessageHandler(new CommandHandler()),
 				ServiceRegistry.commandMessageHandler);
 
