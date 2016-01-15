@@ -5,9 +5,9 @@ import java.util.List;
 
 public class CommandHandler {
 
-	private static List<Command> commands = new ArrayList<>();
+	private List<Command> commands = new ArrayList<>();
 
-	public static void addCommand(Command command) {
+	public void addCommand(Command command) {
 		commands.add(command);
 	}
 
