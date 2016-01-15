@@ -34,6 +34,7 @@ public class Server {
 	public static final Properties PROPERTIES = new Properties();
 
 	public Server() {
+		loadProperties();
 		userManager = new UserManager(PROPERTIES.getProperty("user.path", "users.csv"));
 		try {
 			port = Integer.parseInt(PROPERTIES.getProperty("port"));
@@ -46,7 +47,6 @@ public class Server {
 	public void start() {
 
 		registerServices();
-		loadProperties();
 
 		ConnectionListener connectionListener = new ConnectionListener(port);
 		connectionListener.start();

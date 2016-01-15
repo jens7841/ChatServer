@@ -38,7 +38,6 @@ public class UploadRequestMessageHandler implements MessageHandler {
 		} catch (NumberFormatException e) {
 			maxSimultaneosUploads = 1;
 		}
-
 		TOO_BIG = "Datei darf " + maxFileSize / MB + "MB nicht überschreiten";
 	}
 
