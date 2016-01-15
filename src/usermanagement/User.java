@@ -14,11 +14,13 @@ public class User {
 	private MessageSender messageSender;
 	private MessageListener messageListener;
 	private Connection connection;
+	private boolean isLoggedIn;
 
 	public User(String name, String password, int id) {
 		this.name = name;
 		this.password = password;
 		this.id = id;
+		this.isLoggedIn = false;
 	}
 
 	public Connection getConnection() {
@@ -76,6 +78,18 @@ public class User {
 		}
 
 		return false;
+	}
+
+	public void login() {
+		isLoggedIn = true;
+	}
+
+	public void logout() {
+		isLoggedIn = false;
+	}
+
+	public boolean isLoggedIn() {
+		return isLoggedIn;
 	}
 
 }

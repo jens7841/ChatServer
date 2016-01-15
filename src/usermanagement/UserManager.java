@@ -181,8 +181,13 @@ public class UserManager {
 		}
 
 		onlineUsers.remove(user);
-		System.out.println("Der Benutzer " + user.getName() + " hat sich ausgeloggt!");
-		sendToAllUsers(new Message("-> " + user.getName() + " hat sich ausgeloggt!", MessageType.CHAT_MESSAGE));
+		if (user.isLoggedIn()) {
+			System.out.println("Der Benutzer " + user.getName() + " hat sich ausgeloggt!");
+			sendToAllUsers(new Message("-> " + user.getName() + " hat sich ausgeloggt!", MessageType.CHAT_MESSAGE));
+		} else {
+			System.out.println("Client hat die Verbindung getrennt");
+		}
+		user.logout();
 	}
 
 	public User login(String username, String password, Connection connection, MessageListener messageListener,
@@ -197,6 +202,7 @@ public class UserManager {
 				user.setMessageListener(messageListener);
 				user.setMessageSender(messageSender);
 				onlineUsers.add(user);
+				user.login();
 
 				System.out.println("Der Benutzer " + user.getName() + " hat sich eingeloggt!");
 				sendToAllUsers(new Message("-> " + username + " hat sich eingeloggt!", MessageType.CHAT_MESSAGE), user);
