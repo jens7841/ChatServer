@@ -19,7 +19,7 @@ import usermanagement.UserManager;
 public class Server {
 
 	public static void main(String[] args) {
-		new Server(12345, "users.csv", "tmpFiles").start();
+		new Server().start();
 
 	}
 
@@ -33,10 +33,14 @@ public class Server {
 
 	public static final Properties PROPERTIES = new Properties();
 
-	public Server(int port, String filename, String pathName) {
-		userManager = new UserManager(filename);
-		this.port = port;
-		this.fileManager = new FileManager(pathName);
+	public Server() {
+		userManager = new UserManager(PROPERTIES.getProperty("user.path", "users.csv"));
+		try {
+			port = Integer.parseInt(PROPERTIES.getProperty("port"));
+		} catch (NumberFormatException e) {
+			port = 12345;
+		}
+		this.fileManager = new FileManager(PROPERTIES.getProperty("files.path", "tmpFiles"));
 	}
 
 	public void start() {
