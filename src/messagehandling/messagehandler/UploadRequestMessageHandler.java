@@ -29,11 +29,16 @@ public class UploadRequestMessageHandler implements MessageHandler {
 		this.fileManager = fileManager;
 		try {
 			maxFileSize = MB * Integer.parseInt(Server.PROPERTIES.getProperty("max.file.size"));
-			maxSimultaneosUploads = Integer.parseInt(Server.PROPERTIES.getProperty("max.sim.uploads"));
 		} catch (NumberFormatException e) {
 			maxFileSize = MB * 200;
+		}
+
+		try {
+			maxSimultaneosUploads = Integer.parseInt(Server.PROPERTIES.getProperty("max.sim.uploads"));
+		} catch (NumberFormatException e) {
 			maxSimultaneosUploads = 1;
 		}
+
 		TOO_BIG = "Datei darf " + maxFileSize / MB + "MB nicht überschreiten";
 	}
 
