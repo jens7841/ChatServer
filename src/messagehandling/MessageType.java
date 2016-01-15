@@ -42,7 +42,7 @@ public enum MessageType {
 	 * 
 	 * Datei Sendeprotokoll:
 	 * 
-	 * FilePack packLeng FileID dataLeng data
+	 * FilePack FileID(int) packageLength(int) package
 	 */
 
 }
