@@ -12,6 +12,7 @@ public class CommandHandler {
 	}
 
 	public void handleCommand(String input) {
+		input = input.trim();
 		Command cmd = getCommand(input);
 		if (cmd != null) {
 			if (input.indexOf(" ") == -1) {
@@ -27,7 +28,6 @@ public class CommandHandler {
 		if (input.contains("/")) {
 			input = input.substring(1);
 		}
-
 		if (input.contains(" ")) {
 			input = input.substring(0, input.indexOf(" "));
 		}
