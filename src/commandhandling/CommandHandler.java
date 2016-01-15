@@ -12,9 +12,14 @@ public class CommandHandler {
 	}
 
 	public void handleCommand(String input) {
+		input = input.trim();
 		Command cmd = getCommand(input);
 		if (cmd != null) {
-			cmd.execute(input.substring(input.indexOf(' ') + 1));
+			if (input.indexOf(" ") == -1) {
+				cmd.execute(input);
+			} else {
+				cmd.execute(input.substring(input.indexOf(' ') + 1));
+			}
 		}
 	}
 
