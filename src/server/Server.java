@@ -1,5 +1,11 @@
 package server;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 import commandhandling.CommandHandler;
 import filehandling.FileManager;
 import messagehandling.messagehandler.ChatMessageHandler;
@@ -21,31 +27,60 @@ public class Server {
 		// hier commands mit CommandHandler.addCommand hinzufügen
 	}
 
-	private String filename;
+	private UserManager userManager;
 	private int port;
-	private String pathName;
+	private FileManager fileManager;
+
+	public static final Properties PROPERTIES = new Properties();
 
 	public Server(int port, String filename, String pathName) {
-		this.filename = filename;
+		userManager = new UserManager(filename);
 		this.port = port;
-		this.pathName = pathName;
+		this.fileManager = new FileManager(pathName);
 	}
 
 	public void start() {
-		UserManager userManager = new UserManager(filename);
 
-		ServiceRegistry.register(new ChatMessageHandler(userManager), ServiceRegistry.chatMessageHandler);
-		ServiceRegistry.register(new LoginMessageHandler(userManager), ServiceRegistry.loginMessageHandler);
-		ServiceRegistry.register(new DisconnectMessageHandler(userManager), ServiceRegistry.disconnectMessageHandler);
-		ServiceRegistry.register(new UploadPackageMessageHandler(new FileManager(pathName)),
-				ServiceRegistry.uploadPackageMessageHandler);
-		ServiceRegistry.register(new UploadRequestMessageHandler(new FileManager(pathName)),
-				ServiceRegistry.uploadRequestMessageHandler);
-		ServiceRegistry.register(new CommandMessageHandler(new CommandHandler()),
-				ServiceRegistry.commandMessageHandler);
+		registerServices();
+		loadProperties();
 
 		ConnectionListener connectionListener = new ConnectionListener(port);
 		connectionListener.start();
 
+	}
+
+	private void loadProperties() {
+
+		FileInputStream propFileStream = null;
+		try {
+			propFileStream = new FileInputStream(new File("server.properties"));
+
+			PROPERTIES.load(propFileStream);
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (propFileStream != null) {
+				try {
+					propFileStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private void registerServices() {
+		ServiceRegistry.register(new ChatMessageHandler(userManager), ServiceRegistry.chatMessageHandler);
+		ServiceRegistry.register(new LoginMessageHandler(userManager), ServiceRegistry.loginMessageHandler);
+		ServiceRegistry.register(new DisconnectMessageHandler(userManager), ServiceRegistry.disconnectMessageHandler);
+		ServiceRegistry.register(new UploadPackageMessageHandler(fileManager),
+				ServiceRegistry.uploadPackageMessageHandler);
+		ServiceRegistry.register(new UploadRequestMessageHandler(fileManager),
+				ServiceRegistry.uploadRequestMessageHandler);
+		ServiceRegistry.register(new CommandMessageHandler(new CommandHandler()),
+				ServiceRegistry.commandMessageHandler);
 	}
 }
