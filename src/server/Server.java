@@ -1,6 +1,7 @@
 package server;
 
 import commandhandling.CommandHandler;
+import filehandling.FileManager;
 import messagehandling.messagehandler.ChatMessageHandler;
 import messagehandling.messagehandler.CommandMessageHandler;
 import messagehandling.messagehandler.DisconnectMessageHandler;
@@ -30,6 +31,7 @@ public class Server {
 
 	public void start() {
 		UserManager userManager = new UserManager(filename);
+		FileManager fileManager = new FileManager("tmpFiles");
 
 		ServiceRegistry.register(new ChatMessageHandler(userManager), ServiceRegistry.chatMessageHandler);
 		ServiceRegistry.register(new LoginMessageHandler(userManager), ServiceRegistry.loginMessageHandler);
