@@ -8,6 +8,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import filehandling.FileManager;
+import filehandling.UploadedFile;
 import messagehandling.Message;
 import messagehandling.MessageType;
 import server.Server;
@@ -18,7 +19,7 @@ public class UploadRequestMessageHandler implements MessageHandler {
 
 	private final int KB = 1024;
 	private final int MB = KB * KB;
-	private int maxFileSize;
+	private long maxFileSize;
 	private int maxSimultaneosUploads;
 	private final String TOO_BIG;
 	private final String TOO_MANY_UPLOADS = "Es können nur max. " + maxSimultaneosUploads
@@ -28,7 +29,7 @@ public class UploadRequestMessageHandler implements MessageHandler {
 	public UploadRequestMessageHandler(FileManager fileManager) {
 		this.fileManager = fileManager;
 		try {
-			maxFileSize = MB * Integer.parseInt(Server.PROPERTIES.getProperty("max.file.size"));
+			maxFileSize = MB * Long.parseLong(Server.PROPERTIES.getProperty("max.file.size"));
 		} catch (NumberFormatException e) {
 			maxFileSize = MB * 200;
 		}
@@ -77,7 +78,11 @@ public class UploadRequestMessageHandler implements MessageHandler {
 							.sendMessage(new Message(byteArrayOutputStream.toByteArray(), MessageType.UPLOAD_REJECT));
 
 				} else {
-					out.writeInt(fileManager.getLastID());
+
+					UploadedFile file = fileManager.addFile(new String(filenameBytes, "UTF-8"), userHandler.getUser());
+
+					out.writeInt(file.getId());
+
 					user.getMessageSender().sendMessage(
 							new Message(byteArrayOutputStream.toByteArray(), MessageType.UPLOAD_CONFIRMATION));
 					user.setSimultaneosUploads(user.getSimultaneosUploads() + 1);

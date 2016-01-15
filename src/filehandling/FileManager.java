@@ -2,9 +2,9 @@ package filehandling;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +13,6 @@ import usermanagement.User;
 public class FileManager {
 
 	private List<UploadedFile> files;
-	private List<byte[]> packages;
 	private int lastID;
 	private final String tempPath;
 
@@ -41,38 +40,40 @@ public class FileManager {
 		}
 	}
 
-	public void addFile(UploadedFile file) {
+	public UploadedFile addFile(String fileName, User user) {
+		File savePath = new File(tempPath + "/" + user.getName() + "/");
+
+		System.out.println(savePath.mkdirs());
+
+		savePath = new File(savePath.getAbsolutePath() + "/" + fileName);
+
+		UploadedFile file = new UploadedFile(savePath, lastID, user);
 		lastID++;
 		files.add(file);
+		return file;
 	}
 
-	public UploadedFile saveFile(String filename, long size, User user) {
-		UploadedFile file = new UploadedFile(new File(tempPath + "/" + filename), lastID, user);
-		addFile(file);
-
+	public void savePackage(byte[] data, UploadedFile file) {
+		BufferedOutputStream out = null;
 		try {
-			OutputStream out = new BufferedOutputStream(new FileOutputStream(file.getFile(), true));
 
-			while (!file.isUploadFinished()) {
+			out = new BufferedOutputStream(new FileOutputStream(file.getFile(), true));
+			out.write(data);
+			out.flush();
 
-				while (packages.size() > 0) {
-					out.write(packages.get(0));
-					packages.remove(0);
-					if (file.getFile().length() >= size) {
-						file.setUploadFinished();
-						break;
-					}
-				}
-
-			}
-
-			out.close();
-
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-
-		return file;
 	}
 
 	public UploadedFile getFile(int id) {
@@ -82,14 +83,6 @@ public class FileManager {
 			}
 		}
 		return null;
-	}
-
-	public String getTempPath() {
-		return tempPath;
-	}
-
-	public int getLastID() {
-		return lastID;
 	}
 
 }
