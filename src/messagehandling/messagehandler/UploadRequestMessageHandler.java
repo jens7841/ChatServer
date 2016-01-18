@@ -81,6 +81,8 @@ public class UploadRequestMessageHandler implements MessageHandler {
 
 					UploadedFile file = fileManager.addFile(new String(filenameBytes, "UTF-8"), userHandler.getUser());
 
+					System.out.println("File ID (URMH): " + file.getId());
+
 					out.writeInt(file.getId());
 
 					user.getMessageSender().sendMessage(

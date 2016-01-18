@@ -27,6 +27,9 @@ public class UploadPackageMessageHandler implements MessageHandler {
 			int dataLength = in.readInt();
 			i += dataLength;
 
+			// System.out.println("ID (UPMH): " + id);
+			// System.out.println("Data length: " + dataLength);
+
 			UploadedFile file = fileManager.getFile(id);
 
 			if (file != null) {
@@ -34,13 +37,15 @@ public class UploadPackageMessageHandler implements MessageHandler {
 				byte[] data = new byte[dataLength];
 				in.read(data);
 
+				// System.out.println("UploadPackageMessageHandler.handleMessage()");
+
 				fileManager.savePackage(data, file);
 			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(i);
+		// System.out.println(i);
 	}
 
 }

@@ -14,7 +14,7 @@ public class DefaultMessageSender implements MessageSender {
 	}
 
 	@Override
-	public void sendMessage(Message message) {
+	public synchronized void sendMessage(Message message) {
 
 		try {
 			MessageOutputstream output = new MessageOutputstream(out);
