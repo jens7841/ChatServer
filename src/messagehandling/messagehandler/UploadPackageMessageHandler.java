@@ -17,15 +17,12 @@ public class UploadPackageMessageHandler implements MessageHandler {
 		this.fileManager = fileManager;
 	}
 
-	private static int i = 0;
-
 	@Override
 	public void handleMessage(Message message, UserHandler userHandler) {
 		DataInputStream in = new DataInputStream(new ByteArrayInputStream(message.getBytes()));
 		try {
 			int id = in.readInt();
 			int dataLength = in.readInt();
-			i += dataLength;
 
 			// System.out.println("ID (UPMH): " + id);
 			// System.out.println("Data length: " + dataLength);

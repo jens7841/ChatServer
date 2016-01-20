@@ -9,12 +9,13 @@ public class UploadedFile {
 	private int id;
 	private File file;
 	private User user;
-	private boolean uploadFinished;
+	private long expectedLength;
 
-	public UploadedFile(File file, int id, User user) {
+	public UploadedFile(File file, int id, User user, long expectedLength) {
 		this.file = file;
 		this.id = id;
 		this.user = user;
+		this.expectedLength = expectedLength;
 	}
 
 	public int getId() {
@@ -29,12 +30,8 @@ public class UploadedFile {
 		return user;
 	}
 
-	public void setUploadFinished() {
-		uploadFinished = true;
-	}
-
-	public boolean isUploadFinished() {
-		return uploadFinished;
+	public long getExpectedLength() {
+		return expectedLength;
 	}
 
 	@Override

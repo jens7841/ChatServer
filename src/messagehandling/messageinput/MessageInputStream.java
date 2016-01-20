@@ -15,7 +15,7 @@ public class MessageInputStream extends FilterInputStream {
 
 	public MessageInputStream(InputStream in) {
 		super(in);
-		input = new DataInputStream(new BufferedInputStream(in));
+		input = new DataInputStream(new BufferedInputStream(in, 65536));
 	}
 
 	public Message readMessage() throws IOException {

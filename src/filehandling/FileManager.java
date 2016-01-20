@@ -1,23 +1,26 @@
 package filehandling;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import usermanagement.User;
 
 public class FileManager {
 
 	private List<UploadedFile> files;
+	private Map<UploadedFile, Filesaver> uploadingFiles;
+
 	private int lastID;
 	private final String tempPath;
 
 	public FileManager(String tempPath) {
 		this.tempPath = tempPath;
+		this.uploadingFiles = new HashMap<>();
 
 		new File(tempPath).mkdir();
 		files = new ArrayList<>();
@@ -40,40 +43,40 @@ public class FileManager {
 		}
 	}
 
-	public UploadedFile addFile(String fileName, User user) {
+	public UploadedFile addFile(String fileName, User user, long expectedLength) {
 		File savePath = new File(tempPath + "/" + user.getName() + "/");
 
-		System.out.println(savePath.mkdirs());
-
+		savePath.mkdirs();
 		savePath = new File(savePath.getAbsolutePath() + "/" + fileName);
 
-		UploadedFile file = new UploadedFile(savePath, lastID, user);
+		UploadedFile file = new UploadedFile(savePath, lastID, user, expectedLength);
 		lastID++;
 		files.add(file);
+		try {
+			Filesaver saver = new Filesaver(savePath, expectedLength);
+			uploadingFiles.put(file, saver);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
 		return file;
 	}
 
 	public void savePackage(byte[] data, UploadedFile file) {
-		BufferedOutputStream out = null;
-		try {
 
-			out = new BufferedOutputStream(new FileOutputStream(file.getFile(), true));
-			out.write(data);
-			out.flush();
+		Filesaver filesaver = uploadingFiles.get(file);
+		if (filesaver != null) {
+			if (!filesaver.isRunning()) {
+				filesaver.start();
+			}
+			try {
+				filesaver.savePackage(data);
+			} catch (IOException e) {
 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				e.printStackTrace();
 			}
 		}
+
 	}
 
 	public UploadedFile getFile(int id) {
