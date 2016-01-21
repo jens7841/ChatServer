@@ -7,9 +7,9 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import messagehandling.Message;
-import messagehandling.MessageType;
-import messagehandling.messageoutput.DefaultMessageSender;
+import chatserver.messagehandling.Message;
+import chatserver.messagehandling.MessageType;
+import chatserver.messagehandling.messageoutput.DefaultMessageSender;
 
 public class MessageSenderTest {
 
