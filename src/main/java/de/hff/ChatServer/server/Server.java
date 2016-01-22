@@ -3,7 +3,9 @@ package de.hff.ChatServer.server;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import de.hff.ChatServer.commandhandling.CommandHandler;
@@ -50,24 +52,49 @@ public class Server {
 
 	private void loadProperties() {
 
-		FileInputStream propFileStream = null;
-		try {
-			File file = new File("server.properties");
-			System.out.println(file.getAbsolutePath());
-			propFileStream = new FileInputStream(file);
+		FileInputStream in = null;
+		File file = new File("server.properties");
 
-			PROPERTIES.load(propFileStream);
+		if (file.exists()) {
 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (propFileStream != null) {
-				try {
-					propFileStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+			try {
+				in = new FileInputStream(file);
+
+				PROPERTIES.load(in);
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+
+			} finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+		} else {
+			FileOutputStream out = null;
+			try {
+				InputStream input = getClass().getResourceAsStream("/server.properties");
+				out = new FileOutputStream(file);
+				for (int read = 0; (read = input.read()) != -1;) {
+					out.write(read);
+				}
+				input.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				if (out != null) {
+					try {
+						out.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
