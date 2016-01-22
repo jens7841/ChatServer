@@ -45,6 +45,8 @@ public class FilesaverTest {
 			Thread.sleep(20);
 		}
 
+		Thread.sleep(100);
+
 		Assert.assertEquals(expected.length(), actual.length());
 
 		InputStream readActual = new BufferedInputStream(new FileInputStream(actual));
