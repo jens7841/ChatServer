@@ -2,11 +2,11 @@ package de.hff.ChatServer.messagehandling.messagehandler;
 
 import java.io.UnsupportedEncodingException;
 
-import de.hff.ChatServer.messagehandling.Message;
-import de.hff.ChatServer.messagehandling.MessageType;
 import de.hff.ChatServer.server.UserHandler;
 import de.hff.ChatServer.usermanagement.User;
 import de.hff.ChatServer.usermanagement.UserManager;
+import de.hff.ChatShared.messagehandling.Message;
+import de.hff.ChatShared.messagehandling.MessageType;
 
 public class ChatMessageHandler implements MessageHandler {
 

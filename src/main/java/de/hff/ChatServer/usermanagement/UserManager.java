@@ -15,11 +15,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hff.ChatServer.messagehandling.Message;
-import de.hff.ChatServer.messagehandling.MessageType;
 import de.hff.ChatServer.messagehandling.messageinput.MessageListener;
 import de.hff.ChatServer.messagehandling.messageoutput.MessageSender;
 import de.hff.ChatServer.server.Connection;
+import de.hff.ChatShared.messagehandling.Message;
+import de.hff.ChatShared.messagehandling.MessageType;
 
 public class UserManager {
 

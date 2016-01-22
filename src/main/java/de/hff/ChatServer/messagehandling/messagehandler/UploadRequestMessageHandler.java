@@ -9,11 +9,11 @@ import java.io.IOException;
 
 import de.hff.ChatServer.filehandling.FileManager;
 import de.hff.ChatServer.filehandling.UploadedFile;
-import de.hff.ChatServer.messagehandling.Message;
-import de.hff.ChatServer.messagehandling.MessageType;
 import de.hff.ChatServer.server.Server;
 import de.hff.ChatServer.server.UserHandler;
 import de.hff.ChatServer.usermanagement.User;
+import de.hff.ChatShared.messagehandling.Message;
+import de.hff.ChatShared.messagehandling.MessageType;
 
 public class UploadRequestMessageHandler implements MessageHandler {
 

@@ -3,7 +3,8 @@ package de.hff.ChatServer.messagehandling.messageoutput;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import de.hff.ChatServer.messagehandling.Message;
+import de.hff.ChatShared.messagehandling.Message;
+import de.hff.ChatShared.messagehandling.messageoutput.MessageOutputstream;
 
 public class DefaultMessageSender implements MessageSender {
 

@@ -56,5 +56,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>de.hff</groupId>
+			<artifactId>ChatShared</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>deploy</scope>
+		</dependency>
+
 	</dependencies>
 </project>

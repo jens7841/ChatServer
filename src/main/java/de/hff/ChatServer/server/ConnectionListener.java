@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import de.hff.ChatServer.messagehandling.messageinput.MessageInputStream;
-import de.hff.ChatServer.messagehandling.messageoutput.MessageOutputstream;
+import de.hff.ChatShared.messagehandling.messageinput.MessageInputStream;
+import de.hff.ChatShared.messagehandling.messageoutput.MessageOutputstream;
 
 public class ConnectionListener {
 

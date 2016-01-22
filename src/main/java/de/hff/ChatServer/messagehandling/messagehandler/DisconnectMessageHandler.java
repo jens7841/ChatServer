@@ -1,9 +1,9 @@
 package de.hff.ChatServer.messagehandling.messagehandler;
 
-import de.hff.ChatServer.messagehandling.Message;
 import de.hff.ChatServer.server.UserHandler;
 import de.hff.ChatServer.usermanagement.User;
 import de.hff.ChatServer.usermanagement.UserManager;
+import de.hff.ChatShared.messagehandling.Message;
 
 public class DisconnectMessageHandler implements MessageHandler {
 

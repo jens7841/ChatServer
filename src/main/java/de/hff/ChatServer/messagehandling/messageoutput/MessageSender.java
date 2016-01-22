@@ -1,6 +1,6 @@
 package de.hff.ChatServer.messagehandling.messageoutput;
 
-import de.hff.ChatServer.messagehandling.Message;
+import de.hff.ChatShared.messagehandling.Message;
 
 public interface MessageSender {
 

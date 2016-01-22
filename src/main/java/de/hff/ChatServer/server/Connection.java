@@ -1,7 +1,7 @@
 package de.hff.ChatServer.server;
 
-import de.hff.ChatServer.messagehandling.messageinput.MessageInputStream;
-import de.hff.ChatServer.messagehandling.messageoutput.MessageOutputstream;
+import de.hff.ChatShared.messagehandling.messageinput.MessageInputStream;
+import de.hff.ChatShared.messagehandling.messageoutput.MessageOutputstream;
 
 public class Connection {
 

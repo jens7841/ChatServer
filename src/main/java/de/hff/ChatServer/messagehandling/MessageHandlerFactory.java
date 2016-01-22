@@ -2,6 +2,7 @@ package de.hff.ChatServer.messagehandling;
 
 import de.hff.ChatServer.messagehandling.messagehandler.MessageHandler;
 import de.hff.ChatServer.server.ServiceRegistry;
+import de.hff.ChatShared.messagehandling.MessageType;
 
 public class MessageHandlerFactory {
 

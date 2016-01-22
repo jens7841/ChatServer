@@ -2,10 +2,10 @@ package de.hff.ChatServer.messagehandling.messageinput;
 
 import java.io.IOException;
 
-import de.hff.ChatServer.messagehandling.Message;
 import de.hff.ChatServer.messagehandling.MessageHandlerFactory;
-import de.hff.ChatServer.messagehandling.MessageType;
 import de.hff.ChatServer.server.UserHandler;
+import de.hff.ChatShared.messagehandling.Message;
+import de.hff.ChatShared.messagehandling.MessageType;
 
 public class ThreadedMessageListener extends Thread implements MessageListener {
 
