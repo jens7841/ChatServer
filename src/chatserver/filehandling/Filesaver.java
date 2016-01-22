@@ -20,7 +20,6 @@ public class Filesaver extends Thread {
 	public Filesaver(File file, long expectedLength) throws FileNotFoundException {
 		this.out = new BufferedOutputStream(new FileOutputStream(file));
 		this.expectedLength = expectedLength;
-		System.out.println("Expected Length: " + expectedLength);
 		this.file = file;
 		this.buffer = new LinkedBlockingQueue<>();
 	}
@@ -34,7 +33,11 @@ public class Filesaver extends Thread {
 	public void savePackage(byte[] pack) throws IOException {
 		if (!running)
 			throw new IllegalStateException("Filesaver is not running");
-		buffer.add(pack);
+		try {
+			buffer.put(pack);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void endSave() {
@@ -46,12 +49,15 @@ public class Filesaver extends Thread {
 
 		try {
 			while (running) {
-				out.write(buffer.take());
+				while (buffer.size() > 0) {
 
-				if (file.length() == expectedLength) {
-					out.flush();
-					out.close();
-					running = false;
+					out.write(buffer.take());
+					if (file.length() == expectedLength) {
+						out.flush();
+						out.close();
+						running = false;
+					}
+
 				}
 			}
 
