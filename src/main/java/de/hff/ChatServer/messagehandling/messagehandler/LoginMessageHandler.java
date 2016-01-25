@@ -6,10 +6,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import de.hff.ChatServer.server.UserHandler;
 import de.hff.ChatServer.usermanagement.User;
 import de.hff.ChatServer.usermanagement.UserAlreadyExistsException;
 import de.hff.ChatServer.usermanagement.UserException;
+import de.hff.ChatServer.usermanagement.UserHandler;
 import de.hff.ChatServer.usermanagement.UserManager;
 import de.hff.ChatShared.messagehandling.Message;
 import de.hff.ChatShared.messagehandling.MessageType;

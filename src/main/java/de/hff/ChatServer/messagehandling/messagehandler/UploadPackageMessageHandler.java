@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import de.hff.ChatServer.filehandling.FileManager;
 import de.hff.ChatServer.filehandling.UploadedFile;
-import de.hff.ChatServer.server.UserHandler;
+import de.hff.ChatServer.usermanagement.UserHandler;
 import de.hff.ChatShared.messagehandling.Message;
 
 public class UploadPackageMessageHandler implements MessageHandler {
