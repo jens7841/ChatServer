@@ -24,7 +24,7 @@ public class FileManager {
 
 		new File(tempPath).mkdir();
 		files = new ArrayList<>();
-		lastID = Integer.MIN_VALUE;
+		lastID = 1;
 		clearTempFolder();
 	}
 
