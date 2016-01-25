@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 
+import de.hff.ChatShared.filehandling.Filesaver;
+
 public class FilesaverTest {
 
 	@Test

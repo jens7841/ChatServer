@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.hff.ChatServer.usermanagement.User;
+import de.hff.ChatShared.filehandling.Filesaver;
 
 public class FileManager {
 
