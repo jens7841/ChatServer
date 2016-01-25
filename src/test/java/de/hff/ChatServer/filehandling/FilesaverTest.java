@@ -41,7 +41,7 @@ public class FilesaverTest {
 
 		filesaver.endSave();
 
-		while (filesaver.isRunning()) {
+		while (filesaver.isRunning() || actual.length() == 0) {
 			Thread.yield();
 		}
 

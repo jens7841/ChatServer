@@ -58,6 +58,7 @@ public class Filesaver extends Thread {
 
 				}
 			}
+			out.flush();
 
 		} catch (IOException e) {
 			e.printStackTrace();
