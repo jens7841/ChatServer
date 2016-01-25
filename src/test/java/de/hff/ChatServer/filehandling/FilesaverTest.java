@@ -30,7 +30,7 @@ public class FilesaverTest {
 
 		File actual = new File("testFile.txt");
 
-		Filesaver filesaver = new Filesaver(actual, fileText.length());
+		Filesaver filesaver = new Filesaver(actual);
 		filesaver.start();
 		while (!filesaver.isAlive()) {
 		}
@@ -41,11 +41,9 @@ public class FilesaverTest {
 
 		filesaver.endSave();
 
-		while (filesaver.isAlive()) {
-			Thread.sleep(20);
+		while (filesaver.isRunning()) {
+			Thread.yield();
 		}
-
-		Thread.sleep(100);
 
 		Assert.assertEquals(expected.length(), actual.length());
 

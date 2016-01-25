@@ -11,15 +11,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Filesaver extends Thread {
 
-	private final OutputStream out;
 	private boolean running;
 	private BlockingQueue<byte[]> buffer;
-	private long expectedLength;
 	private File file;
 
-	public Filesaver(File file, long expectedLength) throws FileNotFoundException {
-		this.out = new BufferedOutputStream(new FileOutputStream(file));
-		this.expectedLength = expectedLength;
+	public Filesaver(File file) throws FileNotFoundException {
 		this.file = file;
 		this.buffer = new LinkedBlockingQueue<>();
 	}
@@ -31,8 +27,13 @@ public class Filesaver extends Thread {
 	}
 
 	public void savePackage(byte[] pack) throws IOException {
-		if (!running)
-			throw new IllegalStateException("Filesaver is not running");
+
+		if (getState() == State.NEW) {
+			start();
+		} else if (getState() == State.TERMINATED) {
+			throw new IllegalStateException("Filesaver-Thread has stopped running");
+		}
+
 		try {
 			buffer.put(pack);
 		} catch (InterruptedException e) {
@@ -46,17 +47,14 @@ public class Filesaver extends Thread {
 
 	@Override
 	public void run() {
-
+		OutputStream out = null;
 		try {
+
+			out = new BufferedOutputStream(new FileOutputStream(file));
 			while (running) {
 				while (buffer.size() > 0) {
 
 					out.write(buffer.take());
-					if (file.length() == expectedLength) {
-						out.flush();
-						out.close();
-						running = false;
-					}
 
 				}
 			}
@@ -66,16 +64,17 @@ public class Filesaver extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				out.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 	}
 
 	public boolean isRunning() {
-		return running;
+		return isAlive();
 	}
 
 }

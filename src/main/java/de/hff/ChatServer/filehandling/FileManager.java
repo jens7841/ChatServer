@@ -53,7 +53,7 @@ public class FileManager {
 		lastID++;
 		files.add(file);
 		try {
-			Filesaver saver = new Filesaver(savePath, expectedLength);
+			Filesaver saver = new Filesaver(savePath);
 			uploadingFiles.put(file, saver);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
