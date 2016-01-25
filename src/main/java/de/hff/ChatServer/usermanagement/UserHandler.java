@@ -1,9 +1,9 @@
-package de.hff.ChatServer.server;
+package de.hff.ChatServer.usermanagement;
 
 import de.hff.ChatServer.messagehandling.messageinput.ThreadedMessageListener;
 import de.hff.ChatServer.messagehandling.messageoutput.DefaultMessageSender;
 import de.hff.ChatServer.messagehandling.messageoutput.MessageSender;
-import de.hff.ChatServer.usermanagement.User;
+import de.hff.ChatServer.server.Connection;
 
 public class UserHandler {
 
