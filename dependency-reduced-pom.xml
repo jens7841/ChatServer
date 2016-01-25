@@ -40,7 +40,8 @@
           </execution>
         </executions>
         <configuration>
-          <finalName>${artifactId}-${version}</finalName>
+          <minimizeJar>true</minimizeJar>
+          <outputDirectory>${project.build.directory}/shadedJars/</outputDirectory>
         </configuration>
       </plugin>
     </plugins>

@@ -47,21 +47,22 @@
 
 
 			<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-shade-plugin</artifactId>
-			<version>2.4.3</version>
-			<configuration>
-				<finalName>${artifactId}-${project.version}</finalName>
-			</configuration>
-			<executions>
-				<execution>
-					<phase>package</phase>
-					<goals>
-						<goal>shade</goal>
-					</goals>
-				</execution>
-			</executions>
-		</plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.4.3</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<minimizeJar>true</minimizeJar>
+					<outputDirectory>${project.build.directory}/shadedJars/</outputDirectory>
+				</configuration>
+			</plugin>
 
 		</plugins>
 	</build>
@@ -80,6 +81,7 @@
 			<groupId>de.hff</groupId>
 			<artifactId>ChatShared</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
 		</dependency>
 
 	</dependencies>
