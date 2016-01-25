@@ -12,6 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mainClass>de.hff.ChatServer.ChatServerMain</mainClass>
 	</properties>
 
 
@@ -27,7 +28,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>de.hff.ChatServer.ChatServerMain</mainClass>
+							<mainClass>${mainClass}</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -42,6 +43,25 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+
+
+
+			<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-shade-plugin</artifactId>
+			<version>2.4.3</version>
+			<configuration>
+				<finalName>${artifactId}-${project.version}</finalName>
+			</configuration>
+			<executions>
+				<execution>
+					<phase>package</phase>
+					<goals>
+						<goal>shade</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
 
 		</plugins>
 	</build>
@@ -60,7 +80,6 @@
 			<groupId>de.hff</groupId>
 			<artifactId>ChatShared</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<scope>deploy</scope>
 		</dependency>
 
 	</dependencies>
