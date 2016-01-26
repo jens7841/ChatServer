@@ -67,13 +67,12 @@ public class FileManager {
 
 		Filesaver filesaver = uploadingFiles.get(file);
 		if (filesaver != null) {
-			if (!filesaver.isRunning()) {
-				filesaver.start();
-			}
 			try {
 				filesaver.savePackage(data);
+				if (filesaver.getReceivedBytes() >= file.getExpectedLength()) {
+					filesaver.endSave();
+				}
 			} catch (IOException e) {
-
 				e.printStackTrace();
 			}
 		}
