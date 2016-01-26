@@ -6,7 +6,6 @@ import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 
 import de.hff.ChatServer.messagehandling.messageoutput.MessageSender;
 import de.hff.ChatServer.server.Server;
@@ -53,9 +52,6 @@ public class Uploader extends Thread {
 			} while (packages < expectedPackages);
 
 			in.close();
-
-			byte[] msg = ByteBuffer.allocate(4).putInt(file.getId()).array();
-			sender.sendMessage(new Message(msg, MessageType.DOWNLOAD_END));
 
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -31,6 +31,10 @@ public class DownloadRequestMessageHandler implements MessageHandler {
 		}
 		UploadedFile file = fileManager.getFile(id);
 		if (file != null) {
+			byte[] fileNameBytes = file.getFile().getName().getBytes();
+			byte[] msg = ByteBuffer.allocate(16 + fileNameBytes.length).putInt(fileNameBytes.length).put(fileNameBytes)
+					.putLong(file.getFile().length()).putInt(id).array();
+			userHandler.getUser().getMessageSender().sendMessage(new Message(msg, MessageType.DOWNLOAD_CONFIRMATION));
 			new Uploader(userHandler.getUser().getMessageSender(), file).start();
 		} else {
 			byte[] msg = ByteBuffer.allocate(4).putInt(id).array();
