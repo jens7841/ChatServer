@@ -10,22 +10,25 @@ public class MessageHandlerFactory {
 
 		switch (type) {
 		case CHAT_MESSAGE:
-			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.chatMessageHandler);
+			return ServiceRegistry.getService(ServiceRegistry.CHAT_MESSAGE_HANDLER, MessageHandler.class);
 
 		case LOGIN:
-			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.loginMessageHandler);
+			return ServiceRegistry.getService(ServiceRegistry.LOGIN_MESSAGE_HANDLER, MessageHandler.class);
 
 		case UPLOAD_PACKAGE:
-			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.uploadPackageMessageHandler);
+			return ServiceRegistry.getService(ServiceRegistry.UPLOAD_PACKAGE_MESSAGE_HANDLER, MessageHandler.class);
 
 		case UPLOAD_REQUEST:
-			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.uploadRequestMessageHandler);
+			return ServiceRegistry.getService(ServiceRegistry.UPLOAD_REQUEST_MESSAGE_HANDLER, MessageHandler.class);
 
 		case DISCONNECT:
-			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.disconnectMessageHandler);
+			return ServiceRegistry.getService(ServiceRegistry.DISCONNECT_MESSAGE_HANDLER, MessageHandler.class);
 
 		case COMMAND:
-			return (MessageHandler) ServiceRegistry.getService(ServiceRegistry.commandMessageHandler);
+			return ServiceRegistry.getService(ServiceRegistry.COMMAND_MESSAGE_HANDLER, MessageHandler.class);
+
+		case DOWNLOAD_REQUEST:
+			return ServiceRegistry.getService(ServiceRegistry.DOWNLOAD_REQUEST_MESSAGE_HANDLER, MessageHandler.class);
 
 		default:
 			break;

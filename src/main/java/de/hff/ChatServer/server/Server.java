@@ -13,6 +13,7 @@ import de.hff.ChatServer.filehandling.FileManager;
 import de.hff.ChatServer.messagehandling.messagehandler.ChatMessageHandler;
 import de.hff.ChatServer.messagehandling.messagehandler.CommandMessageHandler;
 import de.hff.ChatServer.messagehandling.messagehandler.DisconnectMessageHandler;
+import de.hff.ChatServer.messagehandling.messagehandler.DownloadRequestMessageHandler;
 import de.hff.ChatServer.messagehandling.messagehandler.LoginMessageHandler;
 import de.hff.ChatServer.messagehandling.messagehandler.UploadPackageMessageHandler;
 import de.hff.ChatServer.messagehandling.messagehandler.UploadRequestMessageHandler;
@@ -101,14 +102,16 @@ public class Server {
 	}
 
 	private void registerServices() {
-		ServiceRegistry.register(new ChatMessageHandler(userManager), ServiceRegistry.chatMessageHandler);
-		ServiceRegistry.register(new LoginMessageHandler(userManager), ServiceRegistry.loginMessageHandler);
-		ServiceRegistry.register(new DisconnectMessageHandler(userManager), ServiceRegistry.disconnectMessageHandler);
+		ServiceRegistry.register(new ChatMessageHandler(userManager), ServiceRegistry.CHAT_MESSAGE_HANDLER);
+		ServiceRegistry.register(new LoginMessageHandler(userManager), ServiceRegistry.LOGIN_MESSAGE_HANDLER);
+		ServiceRegistry.register(new DisconnectMessageHandler(userManager), ServiceRegistry.DISCONNECT_MESSAGE_HANDLER);
 		ServiceRegistry.register(new UploadPackageMessageHandler(fileManager),
-				ServiceRegistry.uploadPackageMessageHandler);
+				ServiceRegistry.UPLOAD_PACKAGE_MESSAGE_HANDLER);
 		ServiceRegistry.register(new UploadRequestMessageHandler(fileManager),
-				ServiceRegistry.uploadRequestMessageHandler);
+				ServiceRegistry.UPLOAD_REQUEST_MESSAGE_HANDLER);
 		ServiceRegistry.register(new CommandMessageHandler(new CommandHandler()),
-				ServiceRegistry.commandMessageHandler);
+				ServiceRegistry.COMMAND_MESSAGE_HANDLER);
+		ServiceRegistry.register(new DownloadRequestMessageHandler(fileManager),
+				ServiceRegistry.DOWNLOAD_REQUEST_MESSAGE_HANDLER);
 	}
 }
