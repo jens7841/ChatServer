@@ -9,16 +9,17 @@ import de.hff.ChatShared.messagehandling.messageoutput.MessageOutputstream;
 public class DefaultMessageSender implements MessageSender {
 
 	private OutputStream out;
+	MessageOutputstream output;
 
-	public DefaultMessageSender(OutputStream out) {
+	public DefaultMessageSender(MessageOutputstream out) {
 		this.out = out;
+		output = out;
 	}
 
 	@Override
 	public synchronized void sendMessage(Message message) {
 
 		try {
-			MessageOutputstream output = new MessageOutputstream(out);
 
 			output.writeMessage(message);
 			output.flush();

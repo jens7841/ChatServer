@@ -40,10 +40,6 @@ public class Uploader extends Thread {
 
 			do {
 
-				for (int i = 0; i < buffer.length; i++) {
-					buffer[i] = -1;
-				}
-
 				int readBytes = in.read(buffer);
 				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 				DataOutputStream out = new DataOutputStream(byteArrayOutputStream);
