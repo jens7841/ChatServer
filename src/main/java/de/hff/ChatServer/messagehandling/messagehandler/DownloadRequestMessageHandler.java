@@ -34,10 +34,12 @@ public class DownloadRequestMessageHandler implements MessageHandler {
 			byte[] fileNameBytes = file.getFile().getName().getBytes();
 			byte[] msg = ByteBuffer.allocate(16 + fileNameBytes.length).putInt(fileNameBytes.length).put(fileNameBytes)
 					.putLong(file.getFile().length()).putInt(id).array();
+			System.out.println("-> Download Request von " + userHandler.getUser().getName() + " confirmed!");
 			userHandler.getUser().getMessageSender().sendMessage(new Message(msg, MessageType.DOWNLOAD_CONFIRMATION));
 			new Uploader(userHandler.getUser().getMessageSender(), file).start();
 		} else {
 			byte[] msg = ByteBuffer.allocate(4).putInt(id).array();
+			System.out.println("-> Download Request von " + userHandler.getUser().getName() + " rejected!");
 			userHandler.getUser().getMessageSender().sendMessage(new Message(msg, MessageType.DOWNLOAD_REJECT));
 		}
 	}
