@@ -80,6 +80,14 @@ public class User {
 		return currentUploads;
 	}
 
+	public void setCurrentDownloads(int currentDownloads) {
+		this.currentDownloads = currentDownloads;
+	}
+
+	public void setCurrentUploads(int currentUploads) {
+		this.currentUploads = currentUploads;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof User) {

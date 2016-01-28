@@ -26,25 +26,36 @@ public class UploadRequestMessageHandler implements MessageHandler {
 	private final String TOO_MANY_UPLOADS = "Es k�nnen nur max. " + maxSimultaneosUploads
 			+ " Dateien gleichzeitig hochgeladen werden";
 	private FileManager fileManager;
+	private UserHandler userHandler;
 
-	public UploadRequestMessageHandler(FileManager fileManager) {
+	public UploadRequestMessageHandler(FileManager fileManager, UserHandler userHandler) {
 		this.fileManager = fileManager;
+		this.userHandler = userHandler;
 		try {
 			maxFileSize = MB * Long.parseLong(Server.PROPERTIES.getProperty("max.file.size"));
 		} catch (NumberFormatException e) {
+			System.err.println("Property 'max.file.size' is incorrect");
 			maxFileSize = MB * 200;
 		}
 
 		try {
 			maxSimultaneosUploads = Integer.parseInt(Server.PROPERTIES.getProperty("max.sim.uploads"));
 		} catch (NumberFormatException e) {
+			System.err.println("Property 'max.sim.uploads' is incorrect");
 			maxSimultaneosUploads = 1;
 		}
 		TOO_BIG = "Datei darf " + maxFileSize / MB + "MB nicht �berschreiten";
 	}
 
 	@Override
-	public void handleMessage(Message message, UserHandler userHandler) {
+	public void receiveMessage(Message message) {
+		if (message.getType().equals(MessageType.UPLOAD_REQUEST)) {
+			handleMessage(message);
+		}
+	}
+
+	@Override
+	public void handleMessage(Message message) {
 
 		User user = userHandler.getUser();
 		DataInputStream in = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(message.getBytes())));
@@ -72,7 +83,7 @@ public class UploadRequestMessageHandler implements MessageHandler {
 					user.getMessageSender()
 							.sendMessage(new Message(byteArrayOutputStream.toByteArray(), MessageType.UPLOAD_REJECT));
 
-				} else if (user.getSimultaneosUploads() >= maxSimultaneosUploads) {
+				} else if (user.getCurrentUploads() >= maxSimultaneosUploads) {
 					out.writeInt(TOO_MANY_UPLOADS.length());
 					out.write(TOO_MANY_UPLOADS.getBytes("UTF-8"));
 					user.getMessageSender()
@@ -87,7 +98,7 @@ public class UploadRequestMessageHandler implements MessageHandler {
 
 					user.getMessageSender().sendMessage(
 							new Message(byteArrayOutputStream.toByteArray(), MessageType.UPLOAD_CONFIRMATION));
-					user.setSimultaneosUploads(user.getSimultaneosUploads() + 1);
+					user.setCurrentUploads(user.getCurrentUploads() + 1);
 				}
 
 			} catch (IOException e) {
