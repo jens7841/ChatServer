@@ -1,22 +1,20 @@
 package de.hff.ChatServer.usermanagement;
 
-import de.hff.ChatServer.messagehandling.messageinput.ThreadedMessageListener;
-import de.hff.ChatServer.messagehandling.messageoutput.DefaultMessageSender;
-import de.hff.ChatServer.messagehandling.messageoutput.MessageSender;
 import de.hff.ChatShared.connectionhandling.Connection;
+import de.hff.ChatShared.messagehandling.messageinput.MessageReceiver;
+import de.hff.ChatShared.messagehandling.messageoutput.MessageSender;
 
 public class UserHandler {
 
 	private User user;
 
 	public UserHandler(Connection connection) {
-		ThreadedMessageListener listener = new ThreadedMessageListener(this);
-		MessageSender messageSender = new DefaultMessageSender(connection.getOutputstream());
-		this.user = new User("", "", -100);
-		this.user.setConnection(connection);
-		this.user.setMessageListener(listener);
-		this.user.setMessageSender(messageSender);
-		listener.start();
+		MessageReceiver messageReceiver = new MessageReceiver(connection.getInputstream());
+
+		MessageSender messageSender = new MessageSender(connection.getOutputstream());
+
+		this.user = new User("", "", -100, connection, messageReceiver, messageSender);
+
 	}
 
 	public void setUser(User u) {
