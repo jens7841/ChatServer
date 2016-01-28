@@ -22,8 +22,9 @@ public class ChatMessageHandler implements MessageHandler {
 
 	@Override
 	public void receiveMessage(Message message) {
-		// TODO Auto-generated method stub
-
+		if (message.getType().equals(MessageType.CHAT_MESSAGE)) {
+			handleMessage(message);
+		}
 	}
 
 	@Override

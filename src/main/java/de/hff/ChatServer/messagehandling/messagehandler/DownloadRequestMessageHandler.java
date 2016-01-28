@@ -16,13 +16,22 @@ import de.hff.ChatShared.messagehandling.MessageType;
 public class DownloadRequestMessageHandler implements MessageHandler {
 
 	private FileManager fileManager;
+	private UserHandler userHandler;
 
-	public DownloadRequestMessageHandler(FileManager fileManager) {
+	public DownloadRequestMessageHandler(FileManager fileManager, UserHandler userHandler) {
 		this.fileManager = fileManager;
+		this.userHandler = userHandler;
 	}
 
 	@Override
-	public void handleMessage(Message message, UserHandler userHandler) {
+	public void receiveMessage(Message message) {
+		if (message.getType().equals(MessageType.DOWNLOAD_REQUEST)) {
+			handleMessage(message);
+		}
+	}
+
+	@Override
+	public void handleMessage(Message message) {
 		DataInputStream in = new DataInputStream(new ByteArrayInputStream(message.getBytes()));
 		int id = 0;
 		try {
