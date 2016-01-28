@@ -64,6 +64,10 @@ public class User {
 		this.messageSender = messageSender;
 	}
 
+	public MessageSender getMessageSender() {
+		return messageSender;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof User) {
