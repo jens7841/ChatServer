@@ -68,6 +68,10 @@ public class User {
 		return messageSender;
 	}
 
+	public MessageReceiver getMessageReceiver() {
+		return messageReceiver;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof User) {
