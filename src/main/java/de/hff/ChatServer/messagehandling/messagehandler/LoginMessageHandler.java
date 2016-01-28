@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import de.hff.ChatServer.usermanagement.User;
 import de.hff.ChatServer.usermanagement.UserAlreadyExistsException;
@@ -18,18 +17,37 @@ import de.hff.ChatShared.messagehandling.MessageType;
 public class LoginMessageHandler implements MessageHandler {
 
 	private UserManager usermanager;
+	private UserHandler userHandler;
 
-	public LoginMessageHandler(UserManager usermanager) {
+	public LoginMessageHandler(UserManager usermanager, UserHandler userHandler) {
 		this.usermanager = usermanager;
+		this.userHandler = userHandler;
+	}
+
+	private void sendLoginSuccess(UserHandler connectionHandler) {
+		try {
+			userHandler.getUser().getMessageSender()
+					.sendMessage(new Message("Erfolgreich eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_SUCCESS));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void handleMessage(Message message, UserHandler userHandler) {
-		if (userHandler.getUser().isLoggedIn()) {
+	public void receiveMessage(Message message) {
+		if (message.getType() == MessageType.LOGIN) {
+			handleMessage(message);
+		}
+	}
+
+	@Override
+	public void handleMessage(Message message) {
+
+		if (usermanager.isUserOnline(userHandler.getUser())) {
 			try {
 				userHandler.getUser().getMessageSender()
 						.sendMessage(new Message("Bereits eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_ERROR));
-			} catch (UnsupportedEncodingException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else {
@@ -48,7 +66,7 @@ public class LoginMessageHandler implements MessageHandler {
 				if (usermanager.getUser(username) == null) {
 
 					try {
-						usermanager.register(username, password);
+						usermanager.registerUser(username, password);
 
 						userHandler.getUser().getMessageSender().sendMessage(
 								new Message("Erfolgreich Registriert!".getBytes("UTF-8"), MessageType.SUCCESS));
@@ -61,8 +79,8 @@ public class LoginMessageHandler implements MessageHandler {
 				try {
 
 					User oldUser = userHandler.getUser();
-					userHandler.setUser(usermanager.login(username, password, oldUser.getConnection(),
-							oldUser.getMessageListener(), oldUser.getMessageSender()));
+					userHandler.setUser(usermanager.loginUser(username, password, oldUser.getConnection(),
+							oldUser.getMessageReceiver(), oldUser.getMessageSender()));
 					sendLoginSuccess(userHandler);
 
 				} catch (UserAlreadyExistsException e) {
@@ -80,15 +98,7 @@ public class LoginMessageHandler implements MessageHandler {
 				e.printStackTrace();
 			}
 		}
-	}
 
-	private void sendLoginSuccess(UserHandler connectionHandler) {
-		try {
-			connectionHandler.getUser().getMessageSender()
-					.sendMessage(new Message("Erfolgreich eingeloggt!".getBytes("UTF-8"), MessageType.LOGIN_SUCCESS));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 	}
 
 }
