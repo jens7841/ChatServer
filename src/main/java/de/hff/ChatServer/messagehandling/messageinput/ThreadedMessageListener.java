@@ -6,6 +6,7 @@ import de.hff.ChatServer.messagehandling.MessageHandlerFactory;
 import de.hff.ChatServer.usermanagement.UserHandler;
 import de.hff.ChatShared.messagehandling.Message;
 import de.hff.ChatShared.messagehandling.MessageType;
+import de.hff.ChatShared.messagehandling.messageinput.MessageListener;
 
 public class ThreadedMessageListener extends Thread implements MessageListener {
 

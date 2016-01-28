@@ -6,6 +6,7 @@ import de.hff.ChatServer.usermanagement.User;
 import de.hff.ChatServer.usermanagement.UserHandler;
 import de.hff.ChatServer.usermanagement.UserManager;
 import de.hff.ChatShared.messagehandling.Message;
+import de.hff.ChatShared.messagehandling.MessageHandler;
 import de.hff.ChatShared.messagehandling.MessageType;
 
 public class ChatMessageHandler implements MessageHandler {

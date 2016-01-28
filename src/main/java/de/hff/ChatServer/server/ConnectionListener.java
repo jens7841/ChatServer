@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import de.hff.ChatServer.usermanagement.UserHandler;
+import de.hff.ChatShared.connectionhandling.Connection;
 import de.hff.ChatShared.messagehandling.messageinput.MessageInputStream;
 import de.hff.ChatShared.messagehandling.messageoutput.MessageOutputstream;
 

@@ -10,6 +10,7 @@ import de.hff.ChatServer.filehandling.UploadedFile;
 import de.hff.ChatServer.filehandling.Uploader;
 import de.hff.ChatServer.usermanagement.UserHandler;
 import de.hff.ChatShared.messagehandling.Message;
+import de.hff.ChatShared.messagehandling.MessageHandler;
 import de.hff.ChatShared.messagehandling.MessageType;
 
 public class DownloadRequestMessageHandler implements MessageHandler {

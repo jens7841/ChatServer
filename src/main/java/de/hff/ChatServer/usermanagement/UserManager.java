@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -15,37 +14,33 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hff.ChatServer.messagehandling.messageinput.MessageListener;
-import de.hff.ChatServer.messagehandling.messageoutput.MessageSender;
-import de.hff.ChatServer.server.Connection;
-import de.hff.ChatShared.messagehandling.Message;
-import de.hff.ChatShared.messagehandling.MessageType;
+import de.hff.ChatShared.connectionhandling.Connection;
+import de.hff.ChatShared.messagehandling.messageinput.MessageReceiver;
+import de.hff.ChatShared.messagehandling.messageoutput.MessageSender;
 
 public class UserManager {
 
+	private String fileName;
+
+	private int lastID;
+
 	private List<User> userList;
 	private List<User> onlineUsers;
-	private String fileName;
-	private int lastID;
 
 	public UserManager(String fileName) {
 		this.fileName = fileName;
-		try {
-			userList = readUserData();
-			lastID = readLastID();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		onlineUsers = new ArrayList<>();
+		this.userList = new ArrayList<>();
+		this.onlineUsers = new ArrayList<>();
 	}
 
-	public void writeUserData(OutputStream out) {
-		PrintWriter writer = new PrintWriter(out);
+	public void saveUserData() throws FileNotFoundException, IOException {
+		PrintWriter writer = new PrintWriter(new FileOutputStream(getUserFile()));
+
 		writer.println(lastID);
 
 		for (User user : userList) {
 			StringBuilder builder = new StringBuilder();
-			builder.append(user.getID());
+			builder.append(user.getId());
 			builder.append(';');
 			builder.append(user.getName());
 			builder.append(';');
@@ -53,167 +48,93 @@ public class UserManager {
 			writer.println(builder.toString());
 		}
 
-		writer.flush();
+		writer.close();
+
 	}
 
-	private void saveUserData() {
-		File file = new File(fileName);
-
-		try {
-			FileOutputStream out = new FileOutputStream(file);
-			writeUserData(out);
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private List<User> readUserData() throws IOException {
-
+	public void loadUsersFromFile() throws FileNotFoundException, IOException {
 		LineNumberReader reader = new LineNumberReader(new FileReader(getUserFile()));
-		reader.readLine();
-		List<User> user = new ArrayList<>();
-		String s;
-		while ((s = reader.readLine()) != null) {
-			if (!s.isEmpty()) {
-				String[] userData = s.split(";");
+
+		lastID = Integer.parseInt(reader.readLine());
+		userList = new ArrayList<>();
+		String line;
+		while ((line = reader.readLine()) != null) {
+			if (!line.isEmpty()) {
+				String[] userData = line.split("\\;");
 				if (userData.length == 3) {
-					user.add(new User(userData[1], userData[2], Integer.parseInt(userData[0])));
+					userList.add(new User(userData[1], userData[2], Integer.parseInt(userData[0])));
 				}
 			}
 		}
 		reader.close();
-		return user;
 
 	}
 
-	private File getUserFile() {
-		File file = new File(fileName);
+	private File getUserFile() throws IOException {
+		File userDatabase = new File(fileName);
+		if (userDatabase.isDirectory())
+			throw new IOException("UserFile is a directory!");
 
-		if (!file.exists()) {
-			createEmtpyUserFile();
-		}
+		if (!userDatabase.exists())
+			createEmptyUserFile(userDatabase);
 
-		return file;
+		return userDatabase;
 	}
 
-	public void clearUserList() {
-		userList.clear();
-		onlineUsers.clear();
-		lastID = 0;
-		createEmtpyUserFile();
-	}
-
-	private File createEmtpyUserFile() {
-		File file = new File(fileName);
-
-		try {
-
-			PrintWriter writer = new PrintWriter(new FileWriter(file));
-			writer.println(0);
-			writer.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return file;
-	}
-
-	private int readLastID() throws IOException {
-		LineNumberReader reader = new LineNumberReader(new FileReader(getUserFile()));
-		String s;
-		if ((s = reader.readLine()) != null) {
-			s.trim();
-			if (!s.isEmpty()) {
-				reader.close();
-				return Integer.parseInt(s);
-			}
-		}
-		reader.close();
-		return 0;
-	}
-
-	public void addUser(User user) {
-		if (getUser(user.getName()) != null) {
-			throw new UserAlreadyExistsException("User " + user.getName() + " does already exists!");
-		}
-		userList.add(user);
-		lastID++;
-		saveUserData();
-	}
-
-	public User addUser(String userName, String password, int id) {
-		User user = new User(userName, getSHA(password), id);
-		addUser(user);
-		return user;
-	}
-
-	public User addUser(String userName, String password) {
-		return addUser(userName, password, lastID);
-	}
-
-	public boolean isUserOnline(User user) {
-		return onlineUsers.contains(user);
-	}
-
-	public int getNextID() {
-		return lastID;
+	private void createEmptyUserFile(File file) throws IOException {
+		PrintWriter writer = new PrintWriter(new FileWriter(file));
+		writer.println(0);
+		writer.close();
 	}
 
 	public void logout(User user) {
-
-		if (user.getMessageListener() != null) {
-
-			try {
-				if (user.getConnection().getOutputstream() != null) {
+		if (user.getConnection() != null) {
+			if (user.getConnection().getOutputstream() != null) {
+				try {
 					user.getConnection().getOutputstream().close();
-					user.getConnection().getInputstream().close();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
-
+			if (user.getConnection().getInputstream() != null) {
+				try {
+					user.getConnection().getInputstream().close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 			user.setConnection(null);
-			user.setMessageListener(null);
+			user.setMessageReceiver(null);
 			user.setMessageSender(null);
-		}
+			onlineUsers.remove(user);
 
-		onlineUsers.remove(user);
-		if (user.isLoggedIn()) {
-			System.out.println("Der Benutzer " + user.getName() + " hat sich ausgeloggt!");
-			sendToAllUsers(new Message("-> " + user.getName() + " hat sich ausgeloggt!", MessageType.CHAT_MESSAGE));
-		} else {
-			System.out.println("Client hat die Verbindung getrennt");
+			// SYSO
+			System.out.println();
+
 		}
-		user.logout();
 	}
 
-	public User login(String username, String password, Connection connection, MessageListener messageListener,
+	public User loginUser(String username, String password, Connection connection, MessageReceiver messageReceiver,
 			MessageSender messageSender) {
 
-		User user = getUser(username);
-		if (user != null && user.getPassword().equals(getSHA(password))) {
-			if (onlineUsers.contains(user)) {
-				throw new UserAlreadyLoggedInException("Benutzer ist bereits eingeloggt!");
-			} else {
-				user.setConnection(connection);
-				user.setMessageListener(messageListener);
-				user.setMessageSender(messageSender);
-				onlineUsers.add(user);
-				user.login();
+		if (onlineUsers.contains(getUser(username)))
+			throw new UserAlreadyLoggedInException("Benutzer bereits eingeloggt!");
 
-				System.out.println("Der Benutzer " + user.getName() + " hat sich eingeloggt!");
-				sendToAllUsers(new Message("-> " + username + " hat sich eingeloggt!", MessageType.CHAT_MESSAGE), user);
+		for (User user : userList) {
+			if (user.getName().equalsIgnoreCase(username) && user.getPassword().equals(password)) {
+				User newUser = new User(username, password, lastID, connection, messageReceiver, messageSender);
+				onlineUsers.add(newUser);
+				return newUser;
 			}
-		} else {
-			throw new UserException("Benutzer nicht gefunden oder Passwort falsch!");
 		}
-		return user;
+		return null;
 	}
 
-	public void register(String username, String password) throws IOException {
+	public void registerUser(String username, String password) throws FileNotFoundException, IOException {
+
+		if (username.length() > 10 | username.length() < 2) {
+			throw new UserException("Benutzername muss zwischen 2 und 10 Zeichen lang sein!");
+		}
 
 		for (User user : userList) {
 			if (user.getName().equalsIgnoreCase(username)) {
@@ -221,54 +142,33 @@ public class UserManager {
 			}
 		}
 
-		if (username.length() > 10 || username.length() < 2) {
-			throw new UserException("Benutzername muss zwischen 2 und 10 Zeichen lang sein!");
-		}
-
 		lastID++;
-		userList.add(new User(username, getSHA(password), lastID));
-		FileOutputStream out = new FileOutputStream(createEmtpyUserFile());
-		writeUserData(out);
-		out.close();
-		System.out.println("User " + username + " hat sich soeben registriert!");
+		userList.add(new User(username, getHash(password), lastID));
+		saveUserData();
 	}
 
-	public User getUser(String name) {
+	public boolean isUserOnline(User user) {
+		return onlineUsers.contains(user);
+	}
 
+	public User getUser(String username) {
 		for (User user : userList) {
-			if (user.getName().equalsIgnoreCase(name)) {
+			if (user.getName().equalsIgnoreCase(username))
 				return user;
-			}
 		}
-
 		return null;
 	}
 
-	public void sendToAllUsers(Message message) {
-		sendToAllUsers(message, null);
-	}
-
-	public void sendToAllUsers(Message message, User user) {
-		for (User u : onlineUsers) {
-			if (!u.equals(user)) {
-				u.getMessageSender().sendMessage(message);
-			}
-		}
-	}
-
-	public String getSHA(String s) {
+	public String getHash(String input) {
 		MessageDigest m = null;
 		try {
 			m = MessageDigest.getInstance("SHA-512");
-			m.update(s.getBytes(), 0, s.length());
+			m.update(input.getBytes(), 0, input.length());
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		return new BigInteger(1, m.digest()).toString(16);
-	}
 
-	public List<User> getOnlineUsers() {
-		return onlineUsers;
+		return new BigInteger(1, m.digest()).toString(16);
 	}
 
 }

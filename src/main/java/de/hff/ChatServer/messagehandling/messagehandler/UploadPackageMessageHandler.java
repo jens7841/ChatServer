@@ -8,6 +8,7 @@ import de.hff.ChatServer.filehandling.FileManager;
 import de.hff.ChatServer.filehandling.UploadedFile;
 import de.hff.ChatServer.usermanagement.UserHandler;
 import de.hff.ChatShared.messagehandling.Message;
+import de.hff.ChatShared.messagehandling.MessageHandler;
 
 public class UploadPackageMessageHandler implements MessageHandler {
 

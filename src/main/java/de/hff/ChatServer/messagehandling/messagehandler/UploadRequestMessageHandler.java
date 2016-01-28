@@ -13,6 +13,7 @@ import de.hff.ChatServer.server.Server;
 import de.hff.ChatServer.usermanagement.User;
 import de.hff.ChatServer.usermanagement.UserHandler;
 import de.hff.ChatShared.messagehandling.Message;
+import de.hff.ChatShared.messagehandling.MessageHandler;
 import de.hff.ChatShared.messagehandling.MessageType;
 
 public class UploadRequestMessageHandler implements MessageHandler {
