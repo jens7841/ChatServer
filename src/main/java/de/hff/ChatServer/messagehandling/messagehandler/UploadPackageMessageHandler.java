@@ -6,9 +6,9 @@ import java.io.IOException;
 
 import de.hff.ChatServer.filehandling.FileManager;
 import de.hff.ChatServer.filehandling.UploadedFile;
-import de.hff.ChatServer.usermanagement.UserHandler;
 import de.hff.ChatShared.messagehandling.Message;
 import de.hff.ChatShared.messagehandling.MessageHandler;
+import de.hff.ChatShared.messagehandling.MessageType;
 
 public class UploadPackageMessageHandler implements MessageHandler {
 
@@ -19,7 +19,14 @@ public class UploadPackageMessageHandler implements MessageHandler {
 	}
 
 	@Override
-	public void handleMessage(Message message, UserHandler userHandler) {
+	public void receiveMessage(Message message) {
+		if (message.getType() == MessageType.UPLOAD_PACKAGE) {
+			handleMessage(message);
+		}
+	}
+
+	@Override
+	public void handleMessage(Message message) {
 		DataInputStream in = new DataInputStream(new ByteArrayInputStream(message.getBytes()));
 		try {
 			int id = in.readInt();
