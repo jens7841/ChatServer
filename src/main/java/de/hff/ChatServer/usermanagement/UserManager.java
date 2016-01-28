@@ -81,7 +81,7 @@ public class UserManager {
 		return userDatabase;
 	}
 
-	private void createEmptyUserFile(File file) throws IOException {
+	public void createEmptyUserFile(File file) throws IOException {
 		PrintWriter writer = new PrintWriter(new FileWriter(file));
 		writer.println(0);
 		writer.close();
@@ -103,19 +103,21 @@ public class UserManager {
 					e.printStackTrace();
 				}
 			}
-			user.setConnection(null);
-			user.setMessageReceiver(null);
-			user.setMessageSender(null);
-			onlineUsers.remove(user);
-
-			// SYSO
-			System.out.println();
-
 		}
+		user.setConnection(null);
+		user.setMessageReceiver(null);
+		user.setMessageSender(null);
+		onlineUsers.remove(user);
+
+		// SYSO
+		System.out.println("-> Logout: " + user.getName());
+
 	}
 
 	public User loginUser(String username, String password, Connection connection, MessageReceiver messageReceiver,
 			MessageSender messageSender) {
+
+		password = getHash(password);
 
 		if (onlineUsers.contains(getUser(username)))
 			throw new UserAlreadyLoggedInException("Benutzer bereits eingeloggt!");
