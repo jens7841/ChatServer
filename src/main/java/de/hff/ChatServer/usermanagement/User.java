@@ -72,6 +72,14 @@ public class User {
 		return messageReceiver;
 	}
 
+	public int getCurrentDownloads() {
+		return currentDownloads;
+	}
+
+	public int getCurrentUploads() {
+		return currentUploads;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof User) {

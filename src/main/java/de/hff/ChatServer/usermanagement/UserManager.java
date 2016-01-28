@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hff.ChatShared.connectionhandling.Connection;
+import de.hff.ChatShared.messagehandling.Message;
 import de.hff.ChatShared.messagehandling.messageinput.MessageReceiver;
 import de.hff.ChatShared.messagehandling.messageoutput.MessageSender;
 
@@ -158,7 +159,28 @@ public class UserManager {
 			if (user.getName().equalsIgnoreCase(username))
 				return user;
 		}
+
 		return null;
+	}
+
+	public void sendToAllUsers(Message message, User from, User... blacklist) throws IOException {
+		for (User user : onlineUsers) {
+			if (blacklist.length == 0) {
+				user.getMessageSender().sendMessage(message);
+			} else {
+
+				for (int i = 0; i < blacklist.length; i++) {
+					User listedUser = blacklist[i];
+
+					if (user.equals(listedUser))
+						break;
+					if (i == blacklist.length - 1) {
+						user.getMessageSender().sendMessage(message);
+					}
+				}
+
+			}
+		}
 	}
 
 	public String getHash(String input) {
