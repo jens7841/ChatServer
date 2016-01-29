@@ -1,17 +1,16 @@
 package de.hff.ChatServer.messagehandling.messagehandler;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 
-import de.hff.ChatServer.filehandling.FileManager;
-import de.hff.ChatServer.filehandling.UploadedFile;
-import de.hff.ChatServer.server.Server;
 import de.hff.ChatServer.usermanagement.User;
 import de.hff.ChatServer.usermanagement.UserHandler;
+import de.hff.ChatShared.filehandling.FileManager;
+import de.hff.ChatShared.filehandling.TransferFile;
 import de.hff.ChatShared.messagehandling.Message;
 import de.hff.ChatShared.messagehandling.MessageHandler;
 import de.hff.ChatShared.messagehandling.MessageType;
@@ -23,27 +22,19 @@ public class UploadRequestMessageHandler implements MessageHandler {
 	private long maxFileSize;
 	private int maxSimultaneosUploads;
 	private final String TOO_BIG;
-	private final String TOO_MANY_UPLOADS = "Es k�nnen nur max. " + maxSimultaneosUploads
+	private final String TOO_MANY_UPLOADS = "Es können nur max. " + maxSimultaneosUploads
 			+ " Dateien gleichzeitig hochgeladen werden";
 	private FileManager fileManager;
 	private UserHandler userHandler;
 
-	public UploadRequestMessageHandler(FileManager fileManager, UserHandler userHandler) {
+	public UploadRequestMessageHandler(FileManager fileManager, UserHandler userHandler, long maxFileSize,
+			int maxSimultaneosUploads) {
 		this.fileManager = fileManager;
 		this.userHandler = userHandler;
-		try {
-			maxFileSize = MB * Long.parseLong(Server.PROPERTIES.getProperty("max.file.size"));
-		} catch (NumberFormatException e) {
-			System.err.println("Property 'max.file.size' is incorrect");
-			maxFileSize = MB * 200;
-		}
 
-		try {
-			maxSimultaneosUploads = Integer.parseInt(Server.PROPERTIES.getProperty("max.sim.uploads"));
-		} catch (NumberFormatException e) {
-			System.err.println("Property 'max.sim.uploads' is incorrect");
-			maxSimultaneosUploads = 1;
-		}
+		this.maxFileSize = maxFileSize;
+		this.maxSimultaneosUploads = maxSimultaneosUploads;
+
 		TOO_BIG = "Datei darf " + maxFileSize / MB + "MB nicht �berschreiten";
 	}
 
@@ -58,7 +49,7 @@ public class UploadRequestMessageHandler implements MessageHandler {
 	public void handleMessage(Message message) {
 
 		User user = userHandler.getUser();
-		DataInputStream in = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(message.getBytes())));
+		DataInputStream in = new DataInputStream(new ByteArrayInputStream(message.getBytes()));
 		if (user != null) {
 
 			System.out.println("-> Upload Request von " + user.getName());
@@ -92,9 +83,12 @@ public class UploadRequestMessageHandler implements MessageHandler {
 				} else {
 
 					String fileName = new String(filenameBytes, "UTF-8");
-					UploadedFile file = fileManager.addFile(fileName, userHandler.getUser(), filesize);
+					TransferFile transferFile = new TransferFile(
+							new File(fileManager.getTempFolder().getAbsolutePath() + "/" + fileName), filesize,
+							fileManager.getDownloadCounter());
+					fileManager.addDownloadFile(transferFile);
 
-					out.writeInt(file.getId());
+					out.writeInt(transferFile.getId());
 
 					user.getMessageSender().sendMessage(
 							new Message(byteArrayOutputStream.toByteArray(), MessageType.UPLOAD_CONFIRMATION));

@@ -4,8 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import de.hff.ChatServer.filehandling.FileManager;
-import de.hff.ChatServer.filehandling.UploadedFile;
+import de.hff.ChatShared.filehandling.FileManager;
+import de.hff.ChatShared.filehandling.Filesaver;
+import de.hff.ChatShared.filehandling.TransferFile;
 import de.hff.ChatShared.messagehandling.Message;
 import de.hff.ChatShared.messagehandling.MessageHandler;
 import de.hff.ChatShared.messagehandling.MessageType;
@@ -35,16 +36,25 @@ public class UploadPackageMessageHandler implements MessageHandler {
 			// System.out.println("ID (UPMH): " + id);
 			// System.out.println("Data length: " + dataLength);
 
-			UploadedFile file = fileManager.getFile(id);
+			TransferFile transferFile = fileManager.getDownloadFile(id);
 
-			if (file != null) {
+			if (transferFile != null) {
 
 				byte[] data = new byte[dataLength];
 				in.read(data);
 
 				// System.out.println("UploadPackageMessageHandler.handleMessage()");
 
-				fileManager.savePackage(data, file);
+				Filesaver filesaver = fileManager.getFilesaver(transferFile);
+
+				if (filesaver != null) {
+					filesaver.savePackage(data);
+					if (filesaver.getReceivedBytes() >= transferFile.getExpectedLength()) {
+						filesaver.endSave();
+					} // TODO Gesamten Upload mit request etc testen
+
+				}
+
 			}
 
 		} catch (IOException e) {

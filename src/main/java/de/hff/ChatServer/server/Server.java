@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import de.hff.ChatServer.commandhandling.CommandHandler;
-import de.hff.ChatServer.filehandling.FileManager;
 import de.hff.ChatServer.messagehandling.messagehandler.ChatMessageHandler;
 import de.hff.ChatServer.messagehandling.messagehandler.CommandMessageHandler;
 import de.hff.ChatServer.messagehandling.messagehandler.DisconnectMessageHandler;
@@ -18,6 +17,7 @@ import de.hff.ChatServer.messagehandling.messagehandler.LoginMessageHandler;
 import de.hff.ChatServer.messagehandling.messagehandler.UploadPackageMessageHandler;
 import de.hff.ChatServer.messagehandling.messagehandler.UploadRequestMessageHandler;
 import de.hff.ChatServer.usermanagement.UserManager;
+import de.hff.ChatShared.filehandling.FileManager;
 
 public class Server {
 

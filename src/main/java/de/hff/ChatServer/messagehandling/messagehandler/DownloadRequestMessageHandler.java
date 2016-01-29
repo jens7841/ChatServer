@@ -5,10 +5,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import de.hff.ChatServer.filehandling.FileManager;
-import de.hff.ChatServer.filehandling.UploadedFile;
-import de.hff.ChatServer.filehandling.Uploader;
 import de.hff.ChatServer.usermanagement.UserHandler;
+import de.hff.ChatShared.filehandling.FileManager;
+import de.hff.ChatShared.filehandling.TransferFile;
+import de.hff.ChatShared.filehandling.Uploader;
 import de.hff.ChatShared.messagehandling.Message;
 import de.hff.ChatShared.messagehandling.MessageHandler;
 import de.hff.ChatShared.messagehandling.MessageType;
@@ -39,14 +39,14 @@ public class DownloadRequestMessageHandler implements MessageHandler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		UploadedFile file = fileManager.getFile(id);
-		if (file != null) {
-			byte[] fileNameBytes = file.getFile().getName().getBytes();
+		TransferFile transferFile = fileManager.getDownloadFile(id);
+		if (transferFile != null) {
+			byte[] fileNameBytes = transferFile.getFile().getName().getBytes();
 			byte[] msg = ByteBuffer.allocate(16 + fileNameBytes.length).putInt(fileNameBytes.length).put(fileNameBytes)
-					.putLong(file.getFile().length()).putInt(id).array();
+					.putLong(transferFile.getFile().length()).putInt(id).array();
 			System.out.println("-> Download Request von " + userHandler.getUser().getName() + " confirmed!");
 			userHandler.getUser().getMessageSender().sendMessage(new Message(msg, MessageType.DOWNLOAD_CONFIRMATION));
-			new Uploader(userHandler.getUser().getMessageSender(), file).start();
+			new Uploader(userHandler.getUser().getMessageSender(), transferFile).start();
 		} else {
 			byte[] msg = ByteBuffer.allocate(4).putInt(id).array();
 			System.out.println("-> Download Request von " + userHandler.getUser().getName() + " rejected!");
