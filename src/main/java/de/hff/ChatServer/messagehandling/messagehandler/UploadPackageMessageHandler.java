@@ -51,7 +51,7 @@ public class UploadPackageMessageHandler implements MessageHandler {
 					filesaver.savePackage(data);
 					if (filesaver.getReceivedBytes() >= transferFile.getExpectedLength()) {
 						filesaver.endSave();
-					} // TODO Gesamten Upload mit request etc testen
+					}
 
 				}
 
