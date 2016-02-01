@@ -15,6 +15,7 @@ import de.hff.ChatShared.messagehandling.MessageType;
 
 public class DownloadRequestMessageHandler implements MessageHandler {
 
+	private static final int BUFFER_SIZE = 1024 * 1024;
 	private FileManager fileManager;
 	private UserHandler userHandler;
 
@@ -45,12 +46,21 @@ public class DownloadRequestMessageHandler implements MessageHandler {
 			byte[] msg = ByteBuffer.allocate(16 + fileNameBytes.length).putInt(fileNameBytes.length).put(fileNameBytes)
 					.putLong(transferFile.getFile().length()).putInt(id).array();
 			System.out.println("-> Download Request von " + userHandler.getUser().getName() + " confirmed!");
-			userHandler.getUser().getMessageSender().sendMessage(new Message(msg, MessageType.DOWNLOAD_CONFIRMATION));
-			new Uploader(userHandler.getUser().getMessageSender(), transferFile).start();
+			try {
+				userHandler.getUser().getMessageSender()
+						.sendMessage(new Message(msg, MessageType.DOWNLOAD_CONFIRMATION));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			new Uploader(userHandler.getUser().getMessageSender(), transferFile, BUFFER_SIZE).start();
 		} else {
 			byte[] msg = ByteBuffer.allocate(4).putInt(id).array();
 			System.out.println("-> Download Request von " + userHandler.getUser().getName() + " rejected!");
-			userHandler.getUser().getMessageSender().sendMessage(new Message(msg, MessageType.DOWNLOAD_REJECT));
+			try {
+				userHandler.getUser().getMessageSender().sendMessage(new Message(msg, MessageType.DOWNLOAD_REJECT));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
